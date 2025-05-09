@@ -16,6 +16,8 @@ import CustomCake from '../userDashboard/customCake/CustomCake.jsx';
 import Register from '../register/Register.jsx';
 import Login from '../login/Login.jsx';
 import Cart from '../userDashboard/cart/Cart.jsx'
+import SendCode from '../sendCode/SendCode.jsx';
+import ForgetPassword from '../forgetPassword/ForgetPassword.jsx';
 export const router = createBrowserRouter([
     {
         path: "/",
@@ -45,6 +47,14 @@ export const router = createBrowserRouter([
             {
                 path: "cart",
                 element: <Cart/>,
+            },
+            {
+                path: "send-code",
+                element: <SendCode/>,
+            },
+            {
+                path: "forget-password",
+                element: <ForgetPassword/>,
             },
             {
                 path: "*",

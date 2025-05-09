@@ -7,7 +7,9 @@ import validationSchema from './validationSchema'
 import inputs from './inputs'
 import { Link as RouterLink } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import styles from './styles';
+import styles from '../register/styles';
+import LeftSideAth from '../../pages/LeftSideAth'
+import { Password } from '@mui/icons-material'
 
 function Login() {
     const navigate = useNavigate()
@@ -41,41 +43,37 @@ function Login() {
     })
 
     const renderInput = inputs(formik).map((input, index) => (
-        <Input
-            type={input.type}
-            title={input.title}
-            id={input.id}
-            name={input.name}
-            key={index}
-            value={input.value}
-            onChange={formik.handleChange}
-            errors={formik.errors}
-            onBlur={formik.handleBlur}
-            touched={formik.touched}
-        />
+        <>
+            {input.type === 'password' && <MuiLink variant="body2" component={RouterLink} to="/send-code" sx={{ textAlign: 'right', display: 'block', color: '#637381', textDecoration: 'none' }}>
+                Forget Password?
+            </MuiLink>}
+            <Input
+                type={input.type}
+                title={input.title}
+                id={input.id}
+                name={input.name}
+                key={index}
+                value={input.value}
+                onChange={formik.handleChange}
+                errors={formik.errors}
+                onBlur={formik.handleBlur}
+                touched={formik.touched}
+                disabled={false}
+            />
+        </>
     ))
 
     return (
         <>
             <Box sx={styles.container}>
-                <Box sx={styles.containerLeft}>
-                    <Box sx={styles.textBox}>
-                        <img src="./img/3.png" alt="Illustration" width="100%" />
-                        <Typography variant="h4" sx={styles.title}>
-                            Welcome to Bimi Cakes
-                        </Typography>
-                        <Typography variant="body1" sx={styles.description}>
-                            Enjoy the best cake customization experience. Simple, elegant, and delicious!
-                        </Typography>
-                    </Box>
-                </Box>
 
+                <LeftSideAth />
                 <Box sx={styles.containerRight}>
                     <Card sx={styles.card}>
                         <Typography variant="h5" sx={{ mb: 1 }}>
                             Sign in to your account
                         </Typography>
-                        <Typography variant="body2" sx={{ mb: 1 }}>
+                        <Typography variant="body2" sx={{ mb: 1, color: '#637381' }}>
                             Don’t have an account?{' '}
                             <MuiLink component={RouterLink} to="/register" sx={styles.loginLink}>
                                 Get started
@@ -92,6 +90,11 @@ function Login() {
                             {renderInput}
                             <Button variant="contained" fullWidth type="submit" sx={styles.submitButton}>
                                 Sign In
+                            </Button>
+                            <Button variant="contained" fullWidth type="submit" sx={{ ...styles.exploreButton, display: { xs: 'flex', md: 'none' } }}
+                                onClick={() => navigate('/home')}
+                            >
+                                Explore As Guest
                             </Button>
                         </Box>
                     </Card>
