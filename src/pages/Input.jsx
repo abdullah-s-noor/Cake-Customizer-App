@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, IconButton, InputAdornment } from '@mui/material';
 import { Email, Person, Phone, Visibility, VisibilityOff } from '@mui/icons-material';
-function Input({ type, title, id, name, value, onChange, errors,onBlur,touched }) {
+function Input({ type, title, id, name, value, onChange, errors,onBlur,touched,disabled }) {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword(prev => !prev);
 // console.log(touched) 
@@ -14,6 +14,7 @@ function Input({ type, title, id, name, value, onChange, errors,onBlur,touched }
         name={name}
         value={value}
         onChange={onChange}
+        disabled={disabled}
         fullWidth
         variant="outlined"
         error={Boolean(errors[name]&&touched[name])}
