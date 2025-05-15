@@ -60,7 +60,11 @@ const styles = {
     fontSize: { xs: '1.8rem', md: '2.4rem' },
     letterSpacing: '0.5px',
     lineHeight: 1.3,
-  },
+    fontFamily: '"Dancing Script", cursive',
+    fontStyle: 'normal',
+    fontOpticalSizing: 'auto',
+}
+,
 
 
   description: {
