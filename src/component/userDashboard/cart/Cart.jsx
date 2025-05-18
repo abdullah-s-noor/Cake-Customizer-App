@@ -17,6 +17,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {toast} from "react-toastify";
 import axios from "axios";
+import ConfDelete from "../../Conformation/ConfDelete";
 const Logo = "/image/da.png"; // Replace with actual image path
 
 const initialCartItems = [
@@ -38,20 +39,7 @@ const initialCartItems = [
   },
 ];
 
-const handleDelete = async (itemId) => {
-  try {
-    // Optional: confirm before deleting
-    const confirm = window.confirm("Are you sure you want to delete this item?");
-    if (!confirm) return;
-    // Delete request to backend
-    await axios.delete(`/api/items/${itemId}`);
-    // Show success toast
-    toast.success("Item deleted successfully");
-  } 
-  catch (err) {
-    toast.error(err.response?.data?.message || "Failed to delete item");
-  }
-};
+
 
 
 
@@ -59,6 +47,7 @@ const handleDelete = async (itemId) => {
 export default function Cart() {
   document.title = "Cart";
  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
  const [cartItems, setCartItems] = useState(initialCartItems);
 
 
@@ -78,7 +67,18 @@ export default function Cart() {
     )
   );
 };
-
+const handleDelete = async (itemId) => {
+  try {
+    if (!confirm) return;
+    // Delete request to backend
+    await axios.delete(`/api/items/${itemId}`);
+    // Show success toast
+    toast.success("Item deleted successfully");
+  } 
+  catch (err) {
+    toast.error(err.message);
+  }
+};
   const total = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
@@ -87,6 +87,18 @@ export default function Cart() {
   
 
   return (
+    <>
+    <ConfDelete 
+      open={open}
+      title="Delete Item"
+      description="Are you sure you want to delete this item?"
+      onClose={() => setOpen(false)}
+      onConfirm={() => {
+        setOpen(false);
+        handleDelete();
+      }}
+    
+    />
     <Box
       maxWidth={800}
       mx="auto"
@@ -150,7 +162,7 @@ export default function Cart() {
             justifyContent="center"
             pr={2}
           >
-            <IconButton color="inherit" size="small"  onClick={() => handleDelete(item.id)}>
+            <IconButton color="inherit" size="small"  onClick={() => setOpen(true)}>
               <DeleteOutlineIcon fontSize="small" />
             </IconButton>
             <IconButton onClick={() => handleAdd(item.id)}>
@@ -223,5 +235,6 @@ export default function Cart() {
         </Button>
       </Box>
     </Box>
+    </>
   );
 }
