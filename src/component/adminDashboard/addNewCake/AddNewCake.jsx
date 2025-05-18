@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -7,26 +7,109 @@ import {
   Button,
   IconButton,
   InputAdornment,
+  CircularProgress,
 } from "@mui/material";
-import { useState } from "react";
 import CakeIcon from "@mui/icons-material/Cake";
 import CollectionsIcon from "@mui/icons-material/Collections";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import IcecreamIcon from "@mui/icons-material/Icecream";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import PercentIcon from "@mui/icons-material/Percent";
+import BrushTwoToneIcon from "@mui/icons-material/BrushTwoTone";
+import ColorLensIcon from "@mui/icons-material/ColorLens";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
+import { toast } from "react-toastify";
+import axios from "axios";
+import Conformation from "../../Conformation/Conformation";
 
 export default function AddNewCake() {
+  document.title = "Add New Cake";
+  const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [cakeData, setCakeData] = useState({
+    name: "",
+    collection: "",
+    shape: "",
+    flavour: "",
+    topping: "",
+    color: "",
+    image: null,
+  });
+
+
+   const handleChange = (e) => {
+        setCakeData({ ...cakeData, [e.target.name]: e.target.value });
+    };
+
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedImage(imageUrl);
+      setCakeData((prev) => ({ ...prev, image: file }));
+      setSelectedImage(URL.createObjectURL(file));
     }
   };
+  const handleConfirm = () => {
+     toast.error("Please select an image");
+  if (loading) return;
+
+  const required = ["name", "collection", "shape", "flavour", "topping", "color", "image"];
+  for (const field of required) {
+    if (!cakeData[field]) {
+      toast.error(`Please fill in ${field}`);
+      return;
+    }
+  }
+  setOpen(true); // Show confirmation dialog
+};
+
+
+  const handleButton = async () => {
+       
+
+    try {
+    const formData = new FormData();
+    Object.entries(cakeData).forEach(([key, value]) => {
+      if (key === "image" && !value) return;
+      formData.append(key, value);
+    });
+
+    await axios.post("https://bimicake.onrender.com/cake", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    toast.success("Cake added successfully!");
+    setCakeData({
+      name: "",
+      collection: "",
+      shape: "",
+      flavour: "",
+      topping: "",
+      color: "",
+      image: null,
+    });
+    setSelectedImage(null);
+  } catch (err) {
+    toast.error(err.message);
+  }
+   finally {
+    setLoading(false); 
+  }
+
+
+};
+
+
   return (
+    <>
+    <Conformation
+      open={open}
+      title="Add New Cake"
+      description="Are you sure you want to add this cake?"
+      onClose={ () => setOpen(false) }
+      onConfirm={() => {
+        setOpen(false);
+        handleButton();
+      }}
+    />
     <Box
       maxWidth={500}
       mx="auto"
@@ -35,19 +118,14 @@ export default function AddNewCake() {
       textAlign="center"
       sx={{ fontFamily: "Arial, sans-serif" }}
     >
-      {/* Title */}
       <Typography variant="h6" fontWeight="bold" mb={1} color="#E0BFBF">
-        Add New Cake{" "}
-        <CakeIcon
-          fontSize="small"
-          sx={{ verticalAlign: "middle", marginBottom: 1 }}
-        />
+        Add New Cake <CakeIcon fontSize="small" sx={{ mb: 0.5 }} />
       </Typography>
 
-      {/* Upload Section */}
       <Typography variant="subtitle2" fontWeight="bold" color="#E0BFBF" mb={1}>
         Add Image
       </Typography>
+
       <Box
         component="label"
         htmlFor="upload-button"
@@ -72,6 +150,8 @@ export default function AddNewCake() {
             sx={{
               width: "100%",
               height: "100%",
+              objectFit: "cover",
+              borderRadius: 2,
             }}
           />
         ) : (
@@ -87,14 +167,13 @@ export default function AddNewCake() {
           onChange={handleImageChange}
         />
       </Box>
-
-      {/* Form Fields */}
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
             placeholder="Cake Name"
-            // label="Cake Name"
+            value={cakeData.name}
+            onChange={handleChange}
             required
             InputProps={{
               startAdornment: (
@@ -110,7 +189,8 @@ export default function AddNewCake() {
           <TextField
             fullWidth
             placeholder="Collections"
-            // label="Collections"
+            value={cakeData.collection}
+            onChange={handleChange}
             required
             InputProps={{
               startAdornment: (
@@ -125,8 +205,26 @@ export default function AddNewCake() {
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
-            placeholder="Cake Filling"
-            // label="Cake Filling"
+            placeholder="Shape"
+            value={cakeData.shape}
+            onChange={handleChange}
+            required
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <CakeIcon fontSize="small" />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            placeholder="Flavour"
+            value={cakeData.flavour}
+            onChange={handleChange}
             required
             InputProps={{
               startAdornment: (
@@ -142,12 +240,13 @@ export default function AddNewCake() {
           <TextField
             fullWidth
             placeholder="Topping"
-            // label="Topping"
+            value={cakeData.topping}
+            onChange={handleChange}
             required
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <CakeIcon fontSize="small" />
+                  <BrushTwoToneIcon fontSize="small" />
                 </InputAdornment>
               ),
             }}
@@ -157,29 +256,14 @@ export default function AddNewCake() {
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
-            placeholder="Price"
-            // label="Price"
+            placeholder="Color"
+            value={cakeData.color}
+            onChange={handleChange}
             required
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <AttachMoneyIcon fontSize="small" />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            placeholder="Discount"
-            // label="Discount"
-            required
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <PercentIcon fontSize="small" />
+                  <ColorLensIcon fontSize="small" />
                 </InputAdornment>
               ),
             }}
@@ -187,11 +271,14 @@ export default function AddNewCake() {
         </Grid>
       </Grid>
 
-      {/* Submit Button */}
       <Box mt={4}>
-        <Button
+        <Button  onClick={handleConfirm}
           variant="contained"
           fullWidth
+          type="submit"
+          disabled={loading}
+          
+
           sx={{
             background: "linear-gradient(to right, #f7e4e4, #e0bfbf)",
             color: "white",
@@ -202,9 +289,17 @@ export default function AddNewCake() {
             py: 1.5,
           }}
         >
-          Add
+          {
+            loading ? (
+              <CircularProgress size={24} sx={{ color: "#fff" }} />
+            ) : (
+              "Add"
+            )
+          }
+          
         </Button>
       </Box>
     </Box>
+    </>
   );
 }
