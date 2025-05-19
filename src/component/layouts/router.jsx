@@ -17,9 +17,11 @@ import Cart from "../userDashboard/cart/Cart.jsx";
 import SendCode from "../sendCode/SendCode.jsx";
 import ForgetPassword from "../forgetPassword/ForgetPassword.jsx";
 import EditUserInformation from "../EditUserInformation/EditUserInformation.jsx";
-import AdminManage from "../adminDashboard/Admin_Manage/Admin_Manage.jsx";
+import AdminManageUsers from "../adminDashboard/Admin_Manage/AdminManageUsers.jsx";
+import  AdminManageOrders  from "../adminDashboard/Admin_Manage/AdminManageOrders.jsx";
 import AddNewCake from "../adminDashboard/addNewCake/AddNewCake.jsx";
 import ChangePassword from "../changePassword/changePassword.jsx";
+import CakeInformation from "../userDashboard/cakeInformation/CakeInformation.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -32,8 +34,17 @@ export const router = createBrowserRouter([
         element: <Login />,
       },
       {
-        path: "admin-manage",
-        element: <AdminManage />,
+        path: "adminmanageusers",
+        element: <AdminManageUsers />,
+      },
+      
+       {
+        path: "adminmanageorders",
+        element: <AdminManageOrders />,
+      },
+      {
+        path: "cakeinformation",
+        element: <CakeInformation />,
       },
 
       {
