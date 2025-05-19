@@ -1,6 +1,10 @@
 import axios from 'axios';
 
+const token = localStorage.getItem("token");
 
 export const api = axios.create({
-  baseURL: "https://86f4c748-2a70-40d7-93b9-09c7aa25f5bb.mock.pstmn.io", // you can customize this
+  baseURL: "https://bimicake.onrender.com", // you can customize this
+  headers:{
+    Authorization: `Bearer ${token}`,
+  }
 });
