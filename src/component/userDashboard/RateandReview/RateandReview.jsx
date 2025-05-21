@@ -11,31 +11,49 @@ import {
   Rating,
 } from "@mui/material";
 import {toast} from "react-toastify";
+import { api } from "../../../api/api.js";
 
-export default function ReviewModal({ open, onClose }) {
+export default function ReviewModal({ open, onClose, cakeId  }) {
   const [reviewData, setReviewData] = useState({
     rating: 0,
-    review: "",
-    
+    comment: "",
   });
 
-  const handleChange = (field, value) => {
-    setReviewData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleSubmit = () => {
-    if (!reviewData.review) {
+  const submitReview = async () => {
+    if (!reviewData.comment) {
       toast.error("Please fill in all fields");
       return;
     }
 
-    console.log("Review submitted:", reviewData);
-    toast.success("Review submitted successfully!");
-    setReviewData({
-        rating: 0,
-        review: "",
-    });
-    onClose();
+    const formData = new FormData();
+    formData.append("cakeId", cakeId);
+    for(const key in reviewData){
+        formData.append(key, reviewData[key]);
+    }
+
+    try {
+      const response = await api.post("/rate/add/",formData, 
+        {
+          headers: {
+            "Content-Type": "form-data",
+          },
+        }
+      );
+
+      toast.success("Review submitted successfully!");
+      return response.data; 
+    }
+     
+     catch (error) {
+      // Handle error (e.g., show error message)
+      toast.error(error.message);
+    }finally{
+        onClose();
+    }
+  };
+
+  const handleChange = (field, value) => {
+    setReviewData((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
@@ -56,9 +74,10 @@ export default function ReviewModal({ open, onClose }) {
             fullWidth
             multiline
             rows={3}
-            label="Review *"
-            value={reviewData.review}
-            onChange={(e) => handleChange("review", e.target.value)}
+            name="comment"
+            label="Comment *"
+            value={reviewData.comment}
+            onChange={(e) => handleChange("comment", e.target.value)}
             margin="dense"
           />
         </Box>
@@ -67,7 +86,7 @@ export default function ReviewModal({ open, onClose }) {
         <Button onClick={onClose} variant="outlined">
           Cancel
         </Button>
-        <Button onClick={handleSubmit} variant="contained" sx={{ fontWeight: "bold" }}>
+        <Button onClick={submitReview} variant="contained" sx={{ fontWeight: "bold" }}>
           Post
         </Button>
       </DialogActions>
