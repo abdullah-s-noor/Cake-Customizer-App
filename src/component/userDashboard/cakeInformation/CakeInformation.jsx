@@ -3,6 +3,7 @@ import { Box, Typography, Grid, Button, Chip, Rating } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import RateandReview from "../RateandReview/RateandReview.jsx";
 
+
 const StyledRating = styled(Rating)({
   "& .MuiRating-iconFilled": {
     color: "#ffc107", // yellow stars
@@ -13,14 +14,37 @@ const StyledRating = styled(Rating)({
 });
 
 export default function CakeDetails() {
-  const [userRating, setUserRating] = useState(4); // 🔹 Start with a default rating
+  // const [userRating, setUserRating] = useState(4); // 🔹 Start with a default rating
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
   };
-
+  const reviews = [
+    {
+      cakeid:1,
+      userid: 1,
+      user: "Alice",
+      rating: 4,
+      comment: "Delicious cake! Highly recommend.",
+    },
+    {
+      cakeid:1,
+      userid: 2,
+      user: "Bob",
+      rating: 3,
+      comment: "Good, but a bit too sweet for my taste.",
+    },
+    {
+      cakeid:1,
+      userid: 3,
+      user: "Charlie",
+      rating: 5,
+      comment: "Absolutely loved it! Perfect for my birthday.",
+    },
+  ];
   const cakeData = {
+    id:"111111111111111111111111",
     name: "Deluxe Celebration Cake",
     Collections: "Birthday",
     image: "/image/da.png",
@@ -31,12 +55,18 @@ export default function CakeDetails() {
     color: "Pink",
     topping: "Fresh Berries",
     price: "120₪",
-    
   };
+  const avgRating =
+    reviews.length > 0
+      ? (
+          reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+        ).toFixed(1)
+      : 0;
+
 
   return (
     <>
-      <RateandReview open={open} onClose={handleClose} />
+      <RateandReview open={open} onClose={handleClose} cakeId={cakeData.id}   />
 
       <Box py={4} sx={{ px: { xs: 6, md: 2 }, maxWidth: 1200, mx: "auto" }}>
         <Grid container spacing={4}>
@@ -54,22 +84,26 @@ export default function CakeDetails() {
             <Typography variant="h5" fontWeight="bold" textAlign={"center"}>
               {cakeData.name}
             </Typography>
-            {/* <Typography variant="h6" color="black" textAlign={"center"}>
-            {cakeData.Collections}
-          </Typography> */}
-
             <Typography variant="body2" color="text.secondary" mt={3}>
               {cakeData.description}
             </Typography>
-            <Box display="flex" justifyContent="end" mt={2}>
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="end"
+              mt={2}
+              gap={1}
+            >
               <StyledRating
-                name="user-rating"
-                value={userRating}
+                name="avg-rating"
+                value={Number(avgRating)}
                 precision={0.5}
-                onChange={(event, newValue) => {
-                  setUserRating(newValue);
-                }}
+                readOnly
+                size="medium"
               />
+              <Typography variant="subtitle2" color="text.secondary">
+                {avgRating} / 5
+              </Typography>
             </Box>
 
             {/* Cake Options */}
@@ -78,46 +112,38 @@ export default function CakeDetails() {
               <Typography variant="subtitle2" fontWeight="bold">
                 Shape:
               </Typography>
-              <Chip label={cakeData.shape} />
+              <Typography>{cakeData.shape}</Typography>
             </Box>
 
-            <Box mt={3} display="flex" justifyContent={"space-between"}>
+            <Box mt={4} display="flex" justifyContent={"space-between"}>
               <Typography variant="subtitle2" fontWeight="bold">
                 Flavour:
               </Typography>
-              <Chip label={cakeData.flavour} color="primary" />
+              <Typography>{cakeData.flavour}</Typography>
             </Box>
 
-            <Box mt={3} display="flex" justifyContent={"space-between"}>
+            <Box mt={4} display="flex" justifyContent={"space-between"}>
               <Typography variant="subtitle2" fontWeight="bold">
                 Color:
               </Typography>
-              <Chip
-                label={cakeData.color}
-                sx={{
-                  backgroundColor: cakeData.color.toLowerCase(),
-                  color: "#fff",
-                }}
-              />
+                            <Typography>{cakeData.color}</Typography>
+
             </Box>
 
-            <Box mt={3} display="flex" justifyContent={"space-between"}>
+            <Box mt={4} display="flex" justifyContent={"space-between"}>
               <Typography variant="subtitle2" fontWeight="bold">
                 Topping:
               </Typography>
-              <Chip label={cakeData.topping} />
               <Typography>{cakeData.topping}</Typography>
             </Box>
-            <Box mt={3} display="flex" justifyContent={"space-between"}>
+            <Box mt={4} display="flex" justifyContent={"space-between"}>
               <Typography variant="subtitle2" fontWeight="bold">
                 Price:
               </Typography>
-                
-              <Chip label={cakeData.price} />
-
-             </Box>
+              <Typography color={"#42a5f5"} fontWeight={"bold"}>{cakeData.price}</Typography>
+            </Box>
             {/* ⭐ User Rating */}
-            <Box mt={3} display="flex" justifyContent={"space-between"}>
+            <Box mt={4} display="flex" justifyContent={"space-between"}>
               <Typography variant="subtitle2" fontWeight="bold">
                 Review:
               </Typography>
@@ -126,7 +152,8 @@ export default function CakeDetails() {
                 variant="outlined"
                 size="small"
                 onClick={() => setOpen(true)}
-                sx={{ ml: 1 }}
+                sx={{color: "#42a5f5", borderColor: "#42a5f5", fontWeight: "bold"}}
+               
               >
                 Write Review
               </Button>
@@ -142,10 +169,11 @@ export default function CakeDetails() {
                 sx={{
                   py: 1.5,
                   fontWeight: "bold",
-                  backgroundColor: "#e0bfbf",
+                  backgroundColor:"#42a5f5",
                   color: "white",
                   borderRadius: 2,
                 }}
+                
               >
                 Add to Cart
               </Button>
@@ -155,7 +183,7 @@ export default function CakeDetails() {
                 sx={{
                   py: 1.5,
                   fontWeight: "bold",
-                  backgroundColor: "#e0bfbf",
+                  backgroundColor: "#42a5f5",
                   color: "white",
                   borderRadius: 2,
                 }}
@@ -165,6 +193,38 @@ export default function CakeDetails() {
             </Box>
           </Grid>
         </Grid>
+        <Box mt={3}>
+          <Typography variant="h6" fontWeight="bold" mb={1}>
+            Customer Reviews
+          </Typography>
+          {reviews.length === 0 ? (
+            <Typography color="text.secondary">No reviews yet.</Typography>
+          ) : (
+            reviews.map((review) => (
+              <Box
+                key={review.id}
+                mb={2}
+                p={2}
+                sx={{ background: "#f9f9f9", borderRadius: 2 }}
+              >
+                <Box display="flex" gap={2}>
+                  <Typography fontWeight="bold" mb="20px">
+                    {review.user}
+                  </Typography>
+                  <StyledRating
+                    value={review.rating}
+                    precision={0.5}
+                    readOnly
+                    size="small"
+                  />
+                </Box>
+                <Typography variant="body2" color="text.secondary">
+                  {review.comment}
+                </Typography>
+              </Box>
+            ))
+          )}
+        </Box>
       </Box>
     </>
   );
