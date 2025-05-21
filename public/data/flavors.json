@@ -1,0 +1,75 @@
+{
+  "message": "flavor options",
+  "items": [
+    {
+      "_id": "67c137d2aeb79d6539586a92",
+      "name": "Fruits",
+      "price": 4,
+      "image": {
+        "secure_url": "/image/flavors/Fruits.png",
+        "public_id": "Fruits"
+      },
+      "__v": 0
+    },
+    {
+      "_id": "67c8b9be2fc07fcd5627dcaf",
+      "name": "Vanilla",
+      "price": 0,
+      "image": {
+        "secure_url": "/image/flavors/Vanilla.png",
+        "public_id": "Vanilla"
+      },
+      "__v": 0
+    },
+    {
+      "_id": "67c8ba532fc07fcd5627dcb5",
+      "name": "Choco Crunch",
+      "price": 7,
+      "image": {
+        "secure_url": "/image/flavors/ChocoCrunch.png",
+        "public_id": "ChocoCrunch"
+      },
+      "__v": 0
+    },
+    {
+      "_id": "67c8ba992fc07fcd5627dcb8",
+      "name": "Nutella",
+      "price": 6,
+      "image": {
+        "secure_url": "/image/flavors/Nutella.png",
+        "public_id": "Nutella"
+      },
+      "__v": 0
+    },
+    {
+      "_id": "67c8bd252fc07fcd5627dcc1",
+      "name": "Cinnamon",
+      "price": 0,
+      "image": {
+        "secure_url": "/image/flavors/Cinnamon.png",
+        "public_id": "Cinnamon"
+      },
+      "__v": 0
+    },
+    {
+      "_id": "67c8bd702fc07fcd5627dcc4",
+      "name": "Red Velvet",
+      "price": 10,
+      "image": {
+        "secure_url": "/image/flavors/RedVelvet.png",
+        "public_id": "RedVelvet"
+      },
+      "__v": 0
+    },
+    {
+      "_id": "67c8bdb22fc07fcd5627dcc7",
+      "name": "Pistachio",
+      "price": 15,
+      "image": {
+        "secure_url": "/image/flavors/Pistachio.png",
+        "public_id": "Pistachio"
+      },
+      "__v": 0
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+    "message": "shape options",
+    "items": [
+        {
+            "_id": "1",
+            "name": "Base",
+            "capacity": 10,
+            "weight": "500 g",
+            "dimensions": "20x20 cm",
+            "price": 100,
+            "image": {
+                "secure_url": "/image/shape/base.png",
+                "public_id": "base"
+            }
+        },
+        {
+            "_id": "2",
+            "name": "Mini Base",
+            "capacity": 2,
+            "weight": "200 g",
+            "dimensions": "15x15 cm",
+            "price": 35,
+            "image": {
+                "secure_url": "/image/shape/minibase.png",
+                "public_id": "minibase"
+            }
+        },
+        {
+            "_id": "3",
+            "name": "Square",
+            "capacity": 8,
+            "weight": "700 g",
+            "dimensions": "40x40 cm",
+            "price": 60,
+            "image": {
+                "secure_url": "/image/shape/square.png",
+                "public_id": "square"
+            }
+        },
+        {
+            "_id": "4",
+            "name": "Rectangle",
+            "capacity": 6,
+            "weight": "500 g",
+            "dimensions": "30x30 cm",
+            "price": 50,
+            "image": {
+                "secure_url": "/image/shape/rectangle.png",
+                "public_id": "rectangle"
+            }
+        },
+        {
+            "_id": "5",
+            "name": "2 Layer",
+            "capacity": 10,
+            "weight": "950 g",
+            "dimensions": "35x35 cm",
+            "price": 80,
+            "image": {
+                "secure_url": "/image/shape/2layer.png",
+                "public_id": "2layer"
+            }
+        },
+        {
+            "_id": "6",
+            "name": "Heart",
+            "capacity": 15,
+            "weight": "1600 g",
+            "dimensions": "65x65 cm",
+            "price": 110,
+            "image": {
+                "secure_url": "/image/shape/heart.png",
+                "public_id": "heart"
+            },
+            "mostPopular": true
+        }
+    ]
+}
