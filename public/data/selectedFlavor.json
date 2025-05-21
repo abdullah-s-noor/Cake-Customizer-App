@@ -1,0 +1,16 @@
+{
+  "message": "flavor options",
+  "items": [
+    {
+      "_id": "67c8b9be2fc07fcd5627dcaf",
+      "name": "Vanilla",
+      "price": 0,
+      "image": {
+        "secure_url": "/image/selectedFlavor/vanilla.png",
+        "public_id": "Vanilla"
+      },
+      "__v": 0
+    }
+
+  ]
+}
