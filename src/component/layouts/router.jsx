@@ -18,7 +18,7 @@ import SendCode from "../sendCode/SendCode.jsx";
 import ForgetPassword from "../forgetPassword/ForgetPassword.jsx";
 import EditUserInformation from "../EditUserInformation/EditUserInformation.jsx";
 import AdminManageUsers from "../adminDashboard/Admin_Manage/AdminManageUsers.jsx";
-import  AdminManageOrders  from "../adminDashboard/Admin_Manage/AdminManageOrders.jsx";
+import AdminManageOrders from "../adminDashboard/Admin_Manage/AdminManageOrders.jsx";
 import AddNewCake from "../adminDashboard/addNewCake/AddNewCake.jsx";
 import ChangePassword from "../changePassword/changePassword.jsx";
 import CakeInformation from "../userDashboard/cakeInformation/CakeInformation.jsx";
@@ -37,8 +37,8 @@ export const router = createBrowserRouter([
         path: "adminmanageusers",
         element: <AdminManageUsers />,
       },
-      
-       {
+
+      {
         path: "adminmanageorders",
         element: <AdminManageOrders />,
       },

@@ -3,62 +3,26 @@
     "items": [
         {
             "_id": "1",
-            "name": "Base",
+            "name": "small standard",
             "capacity": 10,
             "weight": "500 g",
             "dimensions": "20x20 cm",
             "price": 100,
             "image": {
-                "secure_url": "/image/shape/base.png",
+                "secure_url": "/image/shape/small standard.png",
                 "public_id": "base"
             }
         },
         {
             "_id": "2",
-            "name": "Mini Base",
+            "name": "standard",
             "capacity": 2,
             "weight": "200 g",
             "dimensions": "15x15 cm",
             "price": 35,
             "image": {
-                "secure_url": "/image/shape/minibase.png",
+                "secure_url": "/image/shape/standard.png",
                 "public_id": "minibase"
-            }
-        },
-        {
-            "_id": "3",
-            "name": "Square",
-            "capacity": 8,
-            "weight": "700 g",
-            "dimensions": "40x40 cm",
-            "price": 60,
-            "image": {
-                "secure_url": "/image/shape/square.png",
-                "public_id": "square"
-            }
-        },
-        {
-            "_id": "4",
-            "name": "Rectangle",
-            "capacity": 6,
-            "weight": "500 g",
-            "dimensions": "30x30 cm",
-            "price": 50,
-            "image": {
-                "secure_url": "/image/shape/rectangle.png",
-                "public_id": "rectangle"
-            }
-        },
-        {
-            "_id": "5",
-            "name": "2 Layer",
-            "capacity": 10,
-            "weight": "950 g",
-            "dimensions": "35x35 cm",
-            "price": 80,
-            "image": {
-                "secure_url": "/image/shape/2layer.png",
-                "public_id": "2layer"
             }
         },
         {
@@ -73,6 +37,33 @@
                 "public_id": "heart"
             },
             "mostPopular": true
+        },
+        {
+            "_id": "3",
+            "name": "Classic Square",
+            "capacity": 8,
+            "weight": "700 g",
+            "dimensions": "40x40 cm",
+            "price": 60,
+            "image": {
+                "secure_url": "/image/shape/classic square.png",
+                "public_id": "square"
+            }
+        },
+        {
+            "_id": "5",
+            "name": "Double Barrel",
+            "capacity": 10,
+            "weight": "950 g",
+            "dimensions": "35x35 cm",
+            "price": 80,
+            "image": {
+                "secure_url": "/image/shape/double barrel.png",
+                "public_id": "2layer"
+            }
         }
+
+        
+        
     ]
 }
