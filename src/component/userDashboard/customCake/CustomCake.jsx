@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState ,useEffect} from 'react';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -15,6 +15,7 @@ import CakePreview from './CakePreview';
 import ToppingTab from './tabs/ToppingTab';
 import ColorTab from './tabs/ColorTab';
 import CollectionTab from './tabs/CollectionTab';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -64,14 +65,31 @@ export default function VerticalTabs() {
   const [extraInstructions, setExtraInstructions] = useState('');
   const [uploadedFile, setUploadedFile] = useState(null);
 
+  const navigate = useNavigate();
+  const location = useLocation();
 
+  useEffect(() => {
+    const editingData = location.state;
+    if (editingData) {
+      setSelectedShape(editingData.shape);
+      setSelectedFlavor(editingData.flavor);
+      setSelectedFlavorId(editingData.flavor?._id);
+      setSelectedTopping(editingData.topping);
+      setSelectedToppingId(editingData.topping?._id);
+      setSelectedColor(editingData.color);
+      setCakeMessage(editingData.message || '');
+      setUploadedFile(editingData.file || null);
+      setExtraInstructions(editingData.instructions || '');
+    }
+  }, []);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
   const totalTabs = 5;
   const isAllSelected = selectedShape && selectedFlavor && selectedColor && selectedTopping;
   const handleCakeInfo = () => {
-    console.log('Cake Info:', {
+
+    const cakeInfo = {
       shape: selectedShape,
       flavor: selectedFlavor,
       color: selectedColor,
@@ -79,7 +97,11 @@ export default function VerticalTabs() {
       message: cakeMessage,
       instructions: extraInstructions,
       file: uploadedFile,
+    };
+    console.log('Cake Info:', {
+      cakeInfo,
     });
+    navigate('/cakeinformation', { state: cakeInfo });
     alert('✅ Displaying Cake Info! See console.');
   }
   const handleNext = () => {
