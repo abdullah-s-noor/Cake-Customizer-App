@@ -1,8 +1,8 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 
 const CakePreview = ({
-  baseType = 'base',
+  baseType = 'small standard',
   flavor = null,
   topping = null,
   color = null, // Frosting color
@@ -13,8 +13,8 @@ const CakePreview = ({
     <Box
       sx={{
         position: 'relative',
-        width: { xs: 240, sm: 280, md: 380 },
-        height: { xs: 240, sm: 280, md: 380 },
+        width: { xs: 240, sm: 280, md: 450 },
+        height: { xs: 240, sm: 280, md: 450 },
         margin: 'auto',
       }}
     >
@@ -27,7 +27,7 @@ const CakePreview = ({
           height: '100%',
           objectFit: 'contain',
           position: 'absolute',
-          top: 0,
+          bottom: '50px',
           left: 0,
         }}
       />
@@ -42,7 +42,7 @@ const CakePreview = ({
             height: '100%',
             objectFit: 'contain',
             position: 'absolute',
-            top: 0,
+            bottom: '50px',
             left: 0,
             pointerEvents: 'none',
           }}
@@ -57,7 +57,7 @@ const CakePreview = ({
             width: '100%',
             height: '100%',
             position: 'absolute',
-            top: 0,
+            bottom: '50px',
             left: 0,
             mixBlendMode: 'multiply',
             pointerEvents: 'none',
@@ -81,7 +81,7 @@ const CakePreview = ({
             height: '100%',
             objectFit: 'contain',
             position: 'absolute',
-            top: 0,
+            bottom: '50px',
             left: 0,
             pointerEvents: 'none',
           }}
