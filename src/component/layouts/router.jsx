@@ -22,6 +22,7 @@ import AdminManageOrders from "../adminDashboard/Admin_Manage/AdminManageOrders.
 import AddNewCake from "../adminDashboard/addNewCake/AddNewCake.jsx";
 import ChangePassword from "../changePassword/changePassword.jsx";
 import CakeInformation from "../userDashboard/cakeInformation/CakeInformation.jsx";
+import AdminManageCollections from "../adminDashboard/Admin_Manage/AdminManageCollections.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ export const router = createBrowserRouter([
       {
         path: "adminmanageorders",
         element: <AdminManageOrders />,
+      },
+      { 
+        path: "adminmanagecollections",
+        element: <AdminManageCollections />,
       },
       {
         path: "cakeinformation",
