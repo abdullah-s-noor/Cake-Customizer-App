@@ -1,139 +1,35 @@
-import * as React from "react";
+import { useState, useEffect } from "react";
+
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
+import { api } from '../../../api/api'
+import axios from "axios";
+import Loader from "../../Loaders/Loader";
+import { toast } from "react-toastify";
 
-const initialRows = [
-  {
-    id: 1,
-    fullName: "Jon Snow",
-    birthDate: "2009-02-15",
-    email: "jon.snow@example.com",
-    phone: "123-456-7890",
-    role: "Admin",
-    status: "Active",
-  },
-  {
-    id: 2,
-    fullName: "Cersei Lannister",
-    birthDate: "1992-06-01",
-    email: "cersei@example.com",
-    phone: "234-567-8901",
-    role: "Manager",
-    status: "Inactive",
-  },
-  {
-    id: 3,
-    fullName: "Jaime Lannister",
-    birthDate: "1992-06-01",
-    email: "jaime@example.com",
-    phone: "345-678-9012",
-    role: "Editor",
-    status: "Active",
-  },
-  {
-    id: 4,
-    fullName: "Arya Stark",
-    birthDate: "2012-07-04",
-    email: "arya@example.com",
-    phone: "456-789-0123",
-    role: "User",
-    status: "Active",
-  },
-  {
-    id: 5,
-    fullName: "Daenerys Targaryen",
-    birthDate: "1998-03-21",
-    email: "dany@example.com",
-    phone: "567-890-1234",
-    role: "Admin",
-    status: "Inactive",
-  },
-  {
-    id: 6,
-    fullName: "Daenerys Targaryen",
-    birthDate: "1998-03-21",
-    email: "dany@example.com",
-    phone: "567-890-1234",
-    role: "Admin",
-    status: "Inactive",
-  },
-  {
-    id: 7,
-    fullName: "Daenerys Targaryen",
-    birthDate: "1998-03-21",
-    email: "dany@example.com",
-    phone: "567-890-1234",
-    role: "Admin",
-    status: "Inactive",
-  },
-  {
-    id: 8,
-    fullName: "Daenerys Targaryen",
-    birthDate: "1998-03-21",
-    email: "dany@example.com",
-    phone: "567-890-1234",
-    role: "Admin",
-    status: "Inactive",
-  },
-  {
-    id: 9,
-    fullName: "Daenerys Targaryen",
-    birthDate: "1998-03-21",
-    email: "dany@example.com",
-    phone: "567-890-1234",
-    role: "Admin",
-    status: "Inactive",
-  },
-  {
-    id: 10,
-    fullName: "Daenerys Targaryen",
-    birthDate: "1998-03-21",
-    email: "dany@example.com",
-    phone: "567-890-1234",
-    role: "Admin",
-    status: "Inactive",
-  },
-  {
-    id: 11,
-    fullName: "Daenerys Targaryen",
-    birthDate: "1998-03-21",
-    email: "dany@example.com",
-    phone: "567-890-1234",
-    role: "Admin",
-    status: "Inactive",
-  },
-  {
-    id: 12,
-    fullName: "Daenerys Targaryen",
-    birthDate: "1998-03-21",
-    email: "dany@example.com",
-    phone: "567-890-1234",
-    role: "Admin",
-    status: "Inactive",
-  },
-];
+function formatDateToLong(dateString) {
+  if (!dateString) return '—';
+
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return '—';
+
+  const options = { day: 'numeric', month: 'long', year: 'numeric' };
+  return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(date);
+}
+
 
 export default function Admin_Manage() {
-  const [rows, setRows] = React.useState(initialRows);
-
-  const handleDelete = (id) => {
-    setRows((prevRows) => prevRows.filter((row) => row.id !== id));
-  };
-  const handleDeleteAll = () => {
-    setRows([]);
-  };
-
   const columns = [
     {
-      field: "id",
+      field: "_id",
       headerName: "ID",
       width: 90,
       align: "center",
       headerAlign: "center",
     },
     {
-      field: "fullName",
+      field: "username",
       headerName: "Full Name",
       width: 200,
       editable: true,
@@ -173,12 +69,15 @@ export default function Admin_Manage() {
       headerAlign: "center",
     },
     {
-      field: "birthDate",
+      field: "birthdate",
       headerName: "Birth Date",
       width: 130,
       editable: true,
       align: "center",
       headerAlign: "center",
+      renderCell: (params) => {
+        return formatDateToLong(params.value);
+      }
     },
     {
       field: "action",
@@ -210,48 +109,65 @@ export default function Admin_Manage() {
       ),
     },
   ];
+  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+
+    const fetchData = async () => {
+
+      try {
+
+        const responseData = (await api.get('/user?page=1&limit=5')).data
+        setRows(responseData.users)
+
+      } catch (error) {
+
+        toast.error("An error occured during fetching users")
+
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchData()
+  }, [])
+
+  const handleDelete = (id) => {
+    setRows((prevRows) => prevRows.filter((row) => row.id !== id));
+  }
+
   return (
-    <Box
-      sx={{
-        height: 500,
-        width: "100%",
-        mt: 7,
-        justifyContent: "center",
-        mx: "auto",
-      }}
-    >
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: { pageSize: 5 },
-          },
-        }}
-        pageSizeOptions={[5]}
-        checkboxSelection
-        disableRowSelectionOnClick
-        disableSelectionOnClick
-        autoHeight
-      />
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-        <Button
+    <>
+      {loading ? <Loader /> :
+        <Box
           sx={{
-            backgroundColor: "#f44336",
-            color: "white",
-            borderRadius: "5px",
-            padding: "5px 5px",
-            border: "none",
-            cursor: "pointer",
-            "&:hover": {
-              backgroundColor: "#d32f2f",
-            },
+            height: 500,
+            width: "100%",
+            mt: 7,
+            justifyContent: "center",
+            mx: "auto",
           }}
-          onClick={handleDeleteAll}
         >
-          Delete All
-        </Button>
-      </Box>
-    </Box>
+          <DataGrid
+            rows={rows}
+            // @ts-ignore
+            columns={columns}
+            getRowId={(row) => row._id}
+            initialState={{
+              pagination: {
+                paginationModel: { pageSize: 5 },
+              },
+            }}
+            pageSizeOptions={[5]}
+            checkboxSelection
+            disableRowSelectionOnClick
+            disableSelectionOnClick
+            autoHeight
+
+          />
+
+        </Box>
+      }
+    </>
   );
 }
