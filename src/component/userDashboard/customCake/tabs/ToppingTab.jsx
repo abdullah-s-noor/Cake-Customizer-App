@@ -2,11 +2,12 @@ import { CheckCircleOutline } from '@mui/icons-material'
 import { Box, ImageList, ImageListItem, ImageListItemBar, Typography } from '@mui/material'
 import React from 'react'
 
-function ToppingTab({ toppings, selectedTopping, setSelectedTopping,setFlavorFlag }) {
-  setFlavorFlag(false);
+function ToppingTab({ toppings, selectedTopping, setSelectedTopping }) {
+
   const handleSelectedTopping = (topping) => {
     setSelectedTopping(topping);
   }
+  
   return (
     <ImageList
       sx={{

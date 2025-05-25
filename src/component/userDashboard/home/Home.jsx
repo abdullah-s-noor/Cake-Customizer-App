@@ -6,14 +6,16 @@ import {
   CardMedia,
   CardContent,
   IconButton,
+  Button,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-
+import "./homePageStyle.css"; // Assuming you have a CSS file for styles
 // Use direct paths since these are in public/
 const Logo = "/image/da.png";
 const Make = "/image/makecake.png";
+import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 
 // Mock data
 const mockCakes = [
@@ -71,7 +73,11 @@ const CakeCard = ({ cake }) => (
   </Card>
 );
 // Carousel Component
+import { useOutletContext } from "react-router-dom";
+
 const CakeCarousel = ({ title, cakes }) => {
+
+  // @ts-ignore
   // @ts-ignore
   const scrollRef = useRef();
 
@@ -101,7 +107,7 @@ const CakeCarousel = ({ title, cakes }) => {
       >
         {title}
       </Typography>
-      <Box  position="relative" display="flex" alignItems="center">
+      <Box position="relative" display="flex" alignItems="center">
         {/* Left Arrow */}
         <IconButton
           onClick={() => scroll("left")}
@@ -153,26 +159,54 @@ export default function Home() {
       {/* Banner */}
       <Box
         sx={{
-          width: { xs: "100%", sm: "80%", md: "70%", lg: "60%" },
+          // width: { xs: "100%", sm: "80%", md: "70%", lg: "60%" },
           height: "auto",
           margin: "0 auto",
           display: "block",
           cursor: "pointer",
         }}
       >
-        <img
-          src={Make}
-          alt="Banner"
-          style={{
-            marginTop: "30px",
-            width: "100%",
-          }}
-          onClick={() => navigate("/custom-cake")}
-        />
+        <div className="home-page-wallpaper">
+          <Typography variant="h1"
+            sx={{ fontSize: { xs: "50px", md: "70px", lg: '80px' }, color: "white", fontWeight: "bold" }}
+          >
+            Bimi Cake
+          </Typography>
+          <Typography variant="h2"
+            sx={{ fontSize: { xs: "18px", md: "20px", lg: '30px' }, color: "white", mt: 2 }}
+          >
+            Delicious Cakes Made to Order
+          </Typography>
+          <Typography variant="h2"
+            sx={{ fontSize: { xs: "18px", md: "20px", lg: '30px' }, color: "white", mt: 2 }}
+          >
+            Fresh, Beautiful, and Baked with Love!
+          </Typography>
+
+          <Button variant="contained"
+            onClick={() => navigate('/custom-cake', { state: { fromHome: true } })}
+            endIcon={<ArrowOutwardIcon />}
+            size="large"
+            sx={{
+              textTransform: 'none',
+              bgcolor: '#f77f00',
+              color: 'white',
+              mt: 3,
+              fontSize: { xs: '14px', md: '16px' },
+              borderRadius: 0,
+              '&:hover': {
+                bgcolor: '#fb5607',
+              }
+            }}
+          >
+            Customize your cake
+          </Button>
+        </div>
+
       </Box>
 
       {/* Carousels */}
-      <CakeCarousel  title="Wedding Vibes Collection" cakes={mockCakes} />
+      <CakeCarousel title="Wedding Vibes Collection" cakes={mockCakes} />
       <CakeCarousel title="Girl Vibes Collection" cakes={girlCakes} />
     </Box>
   );
