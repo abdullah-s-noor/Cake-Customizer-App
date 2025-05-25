@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography, Grid, Button, Rating } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useLocation, useNavigate } from 'react-router-dom';
 import RateandReview from '../RateandReview/RateandReview';
 import CakePreview from '../customCake/CakePreview';
+import { Cake } from '@mui/icons-material';
 
 const StyledRating = styled(Rating)({
   '& .MuiRating-iconFilled': {
@@ -15,8 +16,28 @@ const StyledRating = styled(Rating)({
 });
 
 export default function CakeDetails() {
-  const { state: cakeData } = useLocation();
+
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const [orderDetails, setOrderDetails] = useState({
+    shape: null,
+    flavor: null,
+    topping: null,
+    color: null,
+  });
+
+  /** Authorization: if no state, you are not allowd to preview this component */
+  useEffect(() => {
+    
+    if (!location.state || !location.state.orderDetails) {
+      navigate('/custom-cake');
+    }
+    setOrderDetails(location.state.orderDetails)
+
+  }, [])
+
+
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
@@ -38,16 +59,16 @@ export default function CakeDetails() {
 
   return (
     <>
-      <RateandReview open={open} onClose={handleClose} cakeId={cakeData?.shape?._id || 'unknown'} />
+      <RateandReview open={open} onClose={handleClose} cakeId={orderDetails?.shape?._id || 'unknown'} />
 
       <Box py={4} sx={{ px: { xs: 6, md: 2 }, maxWidth: 1200, mx: 'auto' }}>
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
             <CakePreview
-              baseType={cakeData?.shape?.baseType || 'base'}
-              flavor={cakeData?.flavor}
-              topping={cakeData?.topping}
-              color={cakeData?.color}
+              selectedShape={orderDetails.shape}
+              selectedFlavor={orderDetails.flavor}
+              selectedTopping={orderDetails.topping}
+              selectedColor={orderDetails.color}
             />
 
           </Grid>
@@ -75,24 +96,25 @@ export default function CakeDetails() {
 
             <Box mt={6} display="flex" justifyContent="space-between">
               <Typography variant="subtitle2" fontWeight="bold">Shape:</Typography>
-              <Typography>{cakeData?.shape?.name}</Typography>
+              <Typography>{orderDetails?.shape?.name}</Typography>
             </Box>
             <Box mt={4} display="flex" justifyContent="space-between">
               <Typography variant="subtitle2" fontWeight="bold">Flavor:</Typography>
-              <Typography>{cakeData?.flavor?.name}</Typography>
+              <Typography>{orderDetails?.flavor?.name}</Typography>
             </Box>
             <Box mt={4} display="flex" justifyContent="space-between">
               <Typography variant="subtitle2" fontWeight="bold">Color:</Typography>
-              <Box sx={{ width: 24, height: 24, bgcolor: cakeData?.color, borderRadius: '50%' }} />
+              <Box sx={{ width: 24, height: 24, bgcolor: orderDetails?.color, borderRadius: '50%' }} />
+              {!orderDetails.color && <Typography variant="subtitle2" fontWeight="bold">None</Typography>}
             </Box>
             <Box mt={4} display="flex" justifyContent="space-between">
               <Typography variant="subtitle2" fontWeight="bold">Topping:</Typography>
-              <Typography>{cakeData?.topping?.name}</Typography>
+              <Typography>{orderDetails?.topping?.name}</Typography>
             </Box>
             <Box mt={4} display="flex" justifyContent="space-between">
               <Typography variant="subtitle2" fontWeight="bold">Price:</Typography>
               <Typography color="#42a5f5" fontWeight="bold">
-                {cakeData?.shape?.price} ₪
+                {orderDetails?.shape?.price} ₪
               </Typography>
             </Box>
 
@@ -120,7 +142,7 @@ export default function CakeDetails() {
                 variant="contained"
                 fullWidth
                 sx={{ py: 1.5, fontWeight: 'bold', backgroundColor: '#42a5f5', color: 'white', borderRadius: 2 }}
-                onClick={() => navigate('/custom-cake', { state: cakeData })}
+                onClick={() => navigate('/custom-cake', { state: {orderDetails} })} // Navigate back to custom cake creation
               >
                 Edit Cake
               </Button>

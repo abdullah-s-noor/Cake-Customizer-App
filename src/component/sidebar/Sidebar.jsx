@@ -9,6 +9,7 @@ import Search from '../../pages/Search'
 import styles from './styles'
 
 function Sidebar({ sidebarDisplay, sidebarType, setSidebarDisplay }) {
+  
   const navigate = useNavigate();
 
   return (

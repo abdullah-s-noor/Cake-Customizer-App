@@ -1,0 +1,35 @@
+.home-page-wallpaper{
+    width: 100%;
+    height: 110vh;
+    background-image: linear-gradient(rgba(12, 10, 10, 0.4), rgba(5, 4, 4, 0.4)), 
+                      url('../../../../public/image/wallpaper.jpg');
+    background-blend-mode: multiply;
+    background-position: center;
+    background-size:cover;
+    background-repeat: no-repeat;
+    flex-grow: 1;
+    cursor: initial;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    background-attachment: fixed;
+    padding-left: 70px;
+}
+
+*{
+    font-family: "42dot Sans", sans-serif !important;
+}
+.home-page-wallpaper h1{ 
+    font-family: "Dancing Script", cursive !important;
+}
+.home-page-wallpaper h2{
+    font-family: "42dot Sans", sans-serif !important;
+    font-weight: 400;
+}
+@media screen and (max-width: 768px) {
+    .home-page-wallpaper {
+        align-items: center;
+        padding: 0px;
+    }
+}

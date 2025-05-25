@@ -19,6 +19,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Test from './Test';
 import axios from 'axios';
 import Loader from '../../Loaders/Loader';
+import { order } from '@mui/system';
+import { useOutletContext } from 'react-router-dom';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -54,55 +56,82 @@ function a11yProps(index) {
 }
 
 export default function VerticalTabs() {
+
+  // @ts-ignore
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  console.log(location);
+
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(true);
+
   const [shapes, setShapes] = useState([]);
-  const [selectedShape, setSelectedShape] = useState(null);
+  const [selectedShape, setSelectedShape] = useState(location?.state?.orderDetails?.shape || null);
 
   const [flavors, setFlavors] = useState([]);
-  const [selectedFlavor, setSelectedFlavor] = useState(null);
+  const [selectedFlavor, setSelectedFlavor] = useState(location?.state?.orderDetails?.flavor ||null);
 
-  const [toppings,setToppings]=useState([]);
-  const [selectedTopping, setSelectedTopping] = useState(null);
+  const [toppings, setToppings] = useState([]);
+  const [selectedTopping, setSelectedTopping] = useState(location?.state?.orderDetails?.topping ||null);
 
-  const [selectedColor,setSelectedColor] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(location?.state?.orderDetails?.color || null);
 
-  const [flavorFlag, setFlavorFlag] = useState(false);
-
-  const fetchData = async () => {
-    try {
-      const { data } = await axios.get('/data/data.json');
-      setShapes(data.shapes);
-      const initialShape = await data.shapes[0];
-      setSelectedShape(initialShape);
-      setFlavors(initialShape.flavors);
-      setToppings(initialShape.toppings);
-    } catch (err) {
-
-    } finally {
-      setLoading(false);
-    }
-  }
   useEffect(() => {
+  
+
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get('/data/data.json');
+        setShapes(data.shapes);
+        const initialShape = await data.shapes[0];
+        setSelectedShape(location?.state?.orderDetails?.shape || initialShape);
+        setFlavors(initialShape.flavors);
+        setToppings(initialShape.toppings);
+      } catch (err) {
+
+      } finally {
+        setLoading(false);
+      }
+    }
+
     fetchData();
-  }, []);
+  }, [])
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
   const handleSelectedShape = (shape) => {
-    setSelectedShape(shape);
+
+    const { flavors, toppings, ...thisShape } = shape
+    setSelectedShape(thisShape);
     setFlavors(shape.flavors);
     const matchedFlavor = shape.flavors.find(
       (flavor) => flavor.name === selectedFlavor?.name
     );
     setSelectedFlavor(matchedFlavor);
-    
 
     setToppings(shape.toppings);
     const matchedtopping = shape.toppings.find(
       (topping) => topping.name === selectedTopping?.name
     );
     setSelectedTopping(matchedtopping);
+  }
+
+  const handleSubmit = () => {
+
+    /** collect details in one object */
+    const orderDetails = {
+      shape: selectedShape,
+      flavor: selectedFlavor,
+      topping: selectedTopping,
+      color: selectedColor,
+    }
+
+    navigate('/cakeinformation', { state: { orderDetails } });
+
   }
   return (
     <>
@@ -140,37 +169,42 @@ export default function VerticalTabs() {
 
               {/* CONTENT RIGHT OF TABS */}
               <Box sx={{ width: { xs: '75%', sm: 'none' }, position: 'relative' }}>
+
                 <TabPanel value={value} index={0}>
+
                   <ShapeTab
                     shapes={shapes}
                     selectedShape={selectedShape}
                     setSelectedShape={handleSelectedShape}
-                    setFlavorFlag={setFlavorFlag}
+
                   />
                 </TabPanel>
+
                 <TabPanel value={value} index={1}>
                   <FlavorTab
                     flavors={flavors}
                     selectedFlavor={selectedFlavor}
                     setSelectedFlavor={setSelectedFlavor}
-                    setFlavorFlag={setFlavorFlag}
+
                   />
                 </TabPanel>
+
                 <TabPanel value={value} index={2}>
                   <ColorTab
                     selectedColor={selectedColor}
                     setSelectedColor={setSelectedColor}
-                    setFlavorFlag={setFlavorFlag}
+
                   />
                 </TabPanel>
+
                 <TabPanel value={value} index={3}>
                   <ToppingTab
                     toppings={toppings}
                     selectedTopping={selectedTopping}
                     setSelectedTopping={setSelectedTopping}
-                    setFlavorFlag={setFlavorFlag}
                   />
                 </TabPanel>
+
               </Box>
             </Box>
 
@@ -190,12 +224,17 @@ export default function VerticalTabs() {
                 selectedFlavor={selectedFlavor}
                 selectedTopping={selectedTopping}
                 selectedColor={selectedColor}
-                flavorFlag={flavorFlag}
 
               />
             </Box>
+
+
           </Box>
+
       }
+      <Button onClick={handleSubmit} variant='outlined'>
+        Order now
+      </Button>
     </>
   );
 }

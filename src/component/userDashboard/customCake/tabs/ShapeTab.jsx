@@ -2,10 +2,8 @@ import { CheckCircleOutline } from '@mui/icons-material';
 import { Box, ImageList, ImageListItem, ImageListItemBar, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 
-function ShapeTab({ shapes, selectedShape, setSelectedShape, setFlavorFlag }) {
-useEffect(() => {
-    setFlavorFlag(false);
-}, [setFlavorFlag]);
+function ShapeTab({ shapes, selectedShape, setSelectedShape }) {
+
 return (
     <ImageList
         sx={{

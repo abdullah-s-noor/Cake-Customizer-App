@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box, Button } from '@mui/material';
 
-const CakePreview = ({ selectedShape: shape, selectedFlavor: flavor, selectedTopping: topping, selectedColor: color,flavorFlag:flag }) => {
-console.log( flag);
+const CakePreview = ({ selectedShape: shape, selectedFlavor: flavor, selectedTopping: topping, selectedColor: color, }) => {
+
   return (
     <Box
       sx={{
