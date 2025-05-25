@@ -9,12 +9,12 @@ const predefinedColors = [
     '#fbe9e7', '#ffe0b2', '#5d4037'
 ];
 
-const ColorTab = ({ onSelect, selectedColor }) => {
+const ColorTab = ({ setSelectedColor, selectedColor}) => {
     const [customColor, setCustomColor] = useState(null);
-
+    
     const handleCustomColorChange = (e) => {
         setCustomColor(e.target.value);
-        onSelect?.(e.target.value);
+        setSelectedColor?.(e.target.value);
     };
 
     return (
@@ -63,7 +63,7 @@ const ColorTab = ({ onSelect, selectedColor }) => {
             {predefinedColors.map((color, index) => (
                 <Box
                     key={index}
-                    onClick={() => onSelect?.(color)}
+                    onClick={() => setSelectedColor?.(color)}
                     sx={{
                         width: 50,
                         height: 50,

@@ -1,53 +1,965 @@
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+import * as React from 'react';
+import { useState ,useEffect} from 'react';
+import PropTypes from 'prop-types';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import {
+  BrushTwoTone, Cake, Collections, ColorLens, Icecream,
+} from '@mui/icons-material';
+import ShapeTab from './tabs/ShapeTab';
+import FlavorTab from './tabs/FlavorTab';
+import { Button } from '@mui/material';
+import CakePreview from './CakePreview';
+import ToppingTab from './tabs/ToppingTab';
+import ColorTab from './tabs/ColorTab';
+import CollectionTab from './tabs/CollectionTab';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Test from './Test';
 
-const getCategories = async () => {
-  const response = await axios.get('https://bimicake.onrender.com/category');
-    return response.data.categories;
-
-};
-
-const getCategoryById = async (id) => {
-  const response = await axios.get(`https://bimicake.onrender.com/category/${id}`);
-    return response.data.category;
-};
-
-function Categories() {
-  const { data: categories, isLoading, error } = useQuery({
-    queryKey: ['categories'],
-    queryFn: getCategories,
-  });
-
-  const categoryId = '67d9d555a1fb810d7dc31cb8'; // for example purposes
-
-  const { data: singleCategory } = useQuery({
-    queryKey: ['category', categoryId],
-    queryFn: () => getCategoryById(categoryId),
-    enabled: !!categoryId // only fetch if ID exists
-  });
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
 
   return (
-    <div>
-      <h2>All Categories</h2>
-      <ul>
-        {categories.map((category) => (
-          <li key={category._id}>{category.name}</li>
-        ))}
-      </ul>
-
-      {singleCategory && (
-        <div style={{ marginTop: '20px' }}>
-          <h3>Category Details</h3>
-          <p><strong>ID:</strong> {singleCategory._id}</p>
-          <p><strong>Name:</strong> {singleCategory.name}</p>
-        </div>
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`vertical-tabpanel-${index}`}
+      aria-labelledby={`vertical-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 0 }}>
+          {children} {/* ✅ Removed <Typography> to fix hydration error */}
+        </Box>
       )}
     </div>
   );
 }
 
-export default Categories;
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `vertical-tab-${index}`,
+    'aria-controls': `vertical-tabpanel-${index}`,
+  };
+}
+
+export default function VerticalTabs() {
+  const [value, setValue] = useState(0);
+  const [selectedShape, setSelectedShape] = useState(null);
+  const [selectedFlavor, setSelectedFlavor] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedTopping, setSelectedTopping] = useState(null);
+
+  const [selectedShapeId, setSelectedShapeId] = useState(null);
+  const [selectedFlavorId, setSelectedFlavorId] = useState(null);
+  const [selectedToppingId, setSelectedToppingId] = useState(null);
+
+  const [cakeMessage, setCakeMessage] = useState('');
+  const [extraInstructions, setExtraInstructions] = useState('');
+  const [uploadedFile, setUploadedFile] = useState(null);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const editingData = location.state;
+    if (editingData) {
+      setSelectedShape(editingData.shape);
+      setSelectedFlavor(editingData.flavor);
+      setSelectedFlavorId(editingData.flavor?._id);
+      setSelectedTopping(editingData.topping);
+      setSelectedToppingId(editingData.topping?._id);
+      setSelectedColor(editingData.color);
+      setCakeMessage(editingData.message || '');
+      setUploadedFile(editingData.file || null);
+      setExtraInstructions(editingData.instructions || '');
+    }
+  }, []);
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+  const totalTabs = 5;
+  const isAllSelected = selectedShape && selectedFlavor && selectedColor && selectedTopping;
+  const handleCakeInfo = () => {
+
+    const cakeInfo = {
+      shape: selectedShape,
+      flavor: selectedFlavor,
+      color: selectedColor,
+      topping: selectedTopping,
+      message: cakeMessage,
+      instructions: extraInstructions,
+      file: uploadedFile,
+    };
+    console.log('Cake Info:', {
+      cakeInfo,
+    });
+    navigate('/cakeinformation', { state: cakeInfo });
+    alert('✅ Displaying Cake Info! See console.');
+  }
+  const handleNext = () => {
+    if (value < totalTabs - 1) {
+      setValue((prev) => prev + 1);
+      return;
+    }
+
+    if (isAllSelected) {
+      handleCakeInfo();
+    } else {
+      if (!selectedShape) setValue(0);
+      else if (!selectedFlavor) setValue(1);
+      else if (!selectedColor) setValue(2);
+      else if (!selectedTopping) setValue(3);
+    }
+  };
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column-reverse', flexWrap: 'wrap', width: '100%', height: { sm: 500, md: 600 } }}>
+      {/* TABS */}
+      <Box
+        sx={{
+          width: { xs: '100%', sm: '50%' },
+          flexGrow: 1,
+          bgcolor: 'background.paper',
+          display: 'flex',
+          height: 'inherit',
+        }}
+      >
+        <Tabs
+          orientation="vertical"
+          variant="scrollable"
+          value={value}
+          onChange={handleChange}
+          aria-label="Vertical tabs example"
+          sx={{
+            borderRight: 1,
+            borderColor: 'divider',
+            width: { xs: '25%', sm: 'none' },
+          }}
+        >
+          <Tab icon={<Cake />} label="shape" {...a11yProps(0)} sx={{ p: 0, minWidth: '0px', fontSize: { xs: '10px', md: '14px' } }} />
+          <Tab icon={<Icecream />} label="flavors" {...a11yProps(1)} sx={{ p: 0, minWidth: '0px', fontSize: { xs: '10px', md: '14px' } }} />
+          <Tab icon={<ColorLens />} label="color" {...a11yProps(2)} sx={{ p: 0, minWidth: '0px', fontSize: { xs: '10px', md: '14px' } }} />
+          <Tab icon={<BrushTwoTone />} label="topping" {...a11yProps(3)} sx={{ p: 0, minWidth: '0px', fontSize: { xs: '10px', md: '14px' } }} />
+          <Tab icon={<Collections />} label="cake Collection" {...a11yProps(4)} sx={{ p: 0, minWidth: '0px', fontSize: { xs: '10px', md: '14px' } }} />
+        </Tabs>
+
+        {/* CONTENT RIGHT OF TABS */}
+        <Box sx={{ width: { xs: '75%', sm: 'none' }, position: 'relative' }}>
+          <TabPanel value={value} index={0}>
+            <ShapeTab
+              onSelect={setSelectedShape}
+              selectedId={selectedShapeId}
+              onSelectId={setSelectedShapeId}
+            />
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <FlavorTab
+              onSelect={setSelectedFlavor}
+              shape={selectedShape}
+              selectedId={selectedFlavorId}
+              onSelectId={setSelectedFlavorId}
+            />
+
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            <ColorTab onSelect={setSelectedColor} selectedColor={selectedColor} />
+
+          </TabPanel>
+          <TabPanel value={value} index={3}>
+            <ToppingTab
+              onSelect={setSelectedTopping}
+              shape={selectedShape}
+              selectedId={selectedToppingId}
+              onSelectId={setSelectedToppingId}
+            />
+          </TabPanel>
+          <TabPanel value={value} index={4}>
+            <CollectionTab
+              message={cakeMessage}
+              setMessage={setCakeMessage}
+              file={uploadedFile}
+              setFile={setUploadedFile}
+              instructions={extraInstructions}
+              setInstructions={setExtraInstructions}
+            />
+          </TabPanel>
+
+          <Box sx={{ position: 'absolute', bottom: 33, left: 0, right: 0, display: 'flex', justifyContent: 'center' }}>
+            <Button variant="contained" color="primary" onClick={handleNext} sx={{ bgcolor: '#42a5f5' }}>
+              {value === totalTabs - 1 && isAllSelected ? 'Display Cake Info' : 'Next'}
+            </Button>
+          </Box>
+        </Box>
+      </Box>
+
+      {/* PREVIEW SIDE */}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: { xs: '100%', sm: '50%' },
+          height: { xs: 300, sm: 'inherit' },
+          position: 'relative',
+        }}
+      >
+        {selectedShape ? (
+          <>
+            {/* <Box
+              component="img"
+              srcSet={`${selectedShape?.image?.secure_url}?w=248&fit=crop&auto=format&dpr=2 2x`}
+              src={`${selectedShape?.image?.secure_url}?w=248&fit=crop&auto=format`}
+              alt="cake"
+              sx={{
+                width: { xs: 220, sm: 280, md: 330 },
+                height: { xs: 220, sm: 280, md: 330 },
+                display: 'block',
+              }}
+            /> */}
+            <CakePreview
+              baseType={selectedShape?.baseType}
+              flavor={selectedFlavor}
+              topping={selectedTopping}
+              color={selectedColor}
+            />
+
+            <Typography sx={{ position: 'absolute', right: 16, top: 16, color: '#42a5f5' }} variant="h6">
+              {selectedShape?.price} ₪
+            </Typography>
+            <Test/>
+          </>
+        ) : (
+          <Typography color="text.secondary">Please select a cake shape</Typography>
+        )}
+      </Box>
+    </Box>
+  );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import React, { useEffect, useState } from 'react';
+import {
+    ImageList,
+    ImageListItem,
+    ImageListItemBar,
+    Box,
+    Typography,
+    Chip,
+    Alert,
+    CircularProgress,
+} from '@mui/material';
+import axios from 'axios';
+import { CheckCircleOutline } from '@mui/icons-material';
+
+const ShapeTab = ({ onSelect, selectedId, onSelectId }) => {
+    const [shapes, setShapes] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const fetchShapes = async () => {
+        try {
+            const res = await axios.get('/data/shapes.json');
+            setShapes(res.data.items);
+        } catch (err) {
+            console.error("Failed to load shapes", err);
+            setError('Unable to load shapes. Please try again later.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchShapes();
+    }, []);
+
+    if (loading) return <Box sx={{ textAlign: 'center', py: 4 }}><CircularProgress /></Box>;
+    if (error) return <Alert severity="error">{error}</Alert>;
+
+    return (
+        <ImageList
+            sx={{
+                m: '1px',
+                height: { xs: 360, sm: 500, md: 600 },
+                overflowY: 'auto',
+                margin: 0,
+                '&::-webkit-scrollbar': {
+                    width: '10px',
+                },
+                '&::-webkit-scrollbar-track': {
+                    borderRadius: '8px',
+                    backgroundColor: '#e7e7e7',
+                    border: '1px solid #cacaca',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                    borderRadius: '8px',
+                    backgroundColor: '#42a5f5',
+                },
+            }}
+        >
+            {shapes.map((item) => (
+                <ImageListItem
+                    key={item._id}
+                    onClick={() => {
+                        onSelect?.(item);       // Pass shape object
+                        onSelectId?.(item._id); // Save selected shape id
+                    }}
+                    sx={{
+                        cursor: 'pointer',
+                        bgcolor: selectedId === item._id ? '#e3f2fd' : 'transparent',
+                        borderRadius: 2,
+                        transition: '0.2s',
+                        position: 'relative',
+                    }}
+                >
+                    {selectedId === item._id && (
+                        <CheckCircleOutline
+                            sx={{
+                                position: 'absolute',
+                                top: 8,
+                                right: 8,
+                                color: '#42a5f5',
+                                background: '#fff',
+                                borderRadius: '50%',
+                            }}
+                        />
+                    )}
+
+                    <img
+                        srcSet={`${item.image.secure_url}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                        src={`${item.image.secure_url}?w=248&fit=crop&auto=format`}
+                        alt={item.name}
+                        loading="lazy"
+                    />
+                    <ImageListItemBar
+                        sx={{ textAlign: 'center' }}
+                        title={item.name}
+                        subtitle={
+                            <Box>
+                                <Typography variant="body2" fontWeight="bold">
+                                    {item.price} ₪
+                                </Typography>
+                                <Typography variant="caption" display="block">
+                                    Good for {item.capacity} people
+                                </Typography>
+                                <Typography variant="caption" display="block">
+                                    {item.weight} | {item.dimensions}
+                                </Typography>
+                                {item.mostPopular && (
+                                    <Chip
+                                        label="★ Most Popular"
+                                        size="small"
+                                        sx={{
+                                            mt: 0.5,
+                                            bgcolor: '#d63384',
+                                            color: '#fff',
+                                            fontSize: '0.65rem',
+                                        }}
+                                    />
+                                )}
+                            </Box>
+                        }
+                        position="below"
+                    />
+                </ImageListItem>
+            ))}
+        </ImageList>
+    );
+};
+
+export default ShapeTab;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import React, { useEffect, useState } from 'react';
+import {
+    ImageList,
+    ImageListItem,
+    ImageListItemBar,
+    Box,
+    Typography,
+    CircularProgress,
+    Alert,
+} from '@mui/material';
+import { CheckCircleOutline } from '@mui/icons-material';
+import axios from 'axios';
+
+const FlavorTab = ({ onSelect, shape, selectedId, onSelectId }) => {
+    const [flavors, setFlavors] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    //shape: the shape that was selected in the previous tab
+    //onSelectId: function to set selected flavor id to save the flavor that you clicked on
+    //selectedId: the id of the flavor that was selected we wan this because when you swap between tabs the flover that was selected will be saved
+    //onSelect: to save the appropriate flavor that was get from shape id and flavor id
+
+    const fetchFlavors = async () => {
+        try {
+            const res = await axios.get('/data/flavors.json');
+            setFlavors(res.data.items);
+        } catch (err) {
+            console.error('Failed to load flavors', err);
+            setError('Unable to load flavors. Please try again later.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const getFlavorForShape = async (flavor) => {
+        try {
+            // const res = await axios.get(`/api/flavor-by-shape?shapeId=${shape._id}&flavorId=${flavor._id}`);
+            const res = await axios.get('/data/selectedFlavor.json'); // mock
+            const matched = res.data.items[0];
+            onSelect?.(matched);
+        } catch (err) {
+            console.error('Failed to fetch flavor by shape', err);
+        }
+    };
+
+    useEffect(() => {
+        fetchFlavors();
+    }, []);
+
+    if (loading) {
+        return <Box sx={{ textAlign: 'center', py: 4 }}><CircularProgress /></Box>;
+    }
+
+    if (error) {
+        return <Alert severity="error">{error}</Alert>;
+    }
+
+    return (
+        <ImageList
+            sx={{
+                m: '1px',
+                height: { xs: 360, sm: 500, md: 600 },
+                overflowY: 'auto',
+                margin: 0,
+                '&::-webkit-scrollbar': {
+                    width: '10px',
+                },
+                '&::-webkit-scrollbar-track': {
+                    borderRadius: '8px',
+                    backgroundColor: '#e7e7e7',
+                    border: '1px solid #cacaca',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                    borderRadius: '8px',
+                    backgroundColor: '#42a5f5',
+                },
+            }}
+        >
+            {flavors.map((flavor) => (
+                <ImageListItem
+                    key={flavor._id}
+                    onClick={() => {
+                        onSelectId(flavor._id);
+                        getFlavorForShape(flavor);
+                    }}
+                    sx={{
+                        cursor: 'pointer',
+                        bgcolor: selectedId === flavor._id ? '#e3f2fd' : 'transparent',
+                        borderRadius: 2,
+                        transition: '0.2s',
+                        position: 'relative',
+                    }}
+                >
+                    {selectedId === flavor._id && (
+                        <CheckCircleOutline
+                            sx={{
+                                position: 'absolute',
+                                top: 8,
+                                right: 8,
+                                color: '#42a5f5',
+                                background: '#fff',
+                                borderRadius: '50%',
+                            }}
+                        />
+                    )}
+
+                    <img
+                        srcSet={`${flavor.image.secure_url}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                        src={`${flavor.image.secure_url}?w=248&fit=crop&auto=format`}
+                        alt={flavor.name}
+                        loading="lazy"
+                    />
+                    <ImageListItemBar
+                        sx={{ textAlign: 'center' }}
+                        title={flavor.name}
+                        subtitle={
+                            <Box>
+                                <Typography variant="body2" fontWeight="bold">
+                                    {flavor.price > 0 ? `+${flavor.price} ₪` : 'Free'}
+                                </Typography>
+                            </Box>
+                        }
+                        position="below"
+                    />
+                </ImageListItem>
+            ))}
+        </ImageList>
+    );
+};
+
+export default FlavorTab;
+
+
+
+
+
+
+
+
+
+
+
+
+import React, { useState } from 'react';
+import { Box, IconButton, Tooltip } from '@mui/material';
+import { Colorize } from '@mui/icons-material';
+
+const predefinedColors = [
+    '#ffeb3b', '#ff9800', '#f44336',
+    '#f8bbd0', '#e91e63', '#4caf50',
+    '#81c784', '#03a9f4', '#0d47a1',
+    '#fbe9e7', '#ffe0b2', '#5d4037'
+];
+
+const ColorTab = ({ onSelect, selectedColor }) => {
+    const [customColor, setCustomColor] = useState(null);
+
+    const handleCustomColorChange = (e) => {
+        setCustomColor(e.target.value);
+        onSelect?.(e.target.value);
+    };
+
+    return (
+        <Box sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, 60px)',
+            gap: 6,
+            justifyContent: 'center',
+            alignContent: 'start',
+            height: { xs: 360, sm: 500, md: 600 },
+            overflowY: 'auto',
+            p: 1,
+            '&::-webkit-scrollbar': {
+                width: '10px',
+            },
+            '&::-webkit-scrollbar-thumb': {
+                borderRadius: '8px',
+                backgroundColor: '#42a5f5',
+            },
+        }}>
+            {/* Color Picker Button */}
+            <Tooltip title="Pick custom color">
+                <IconButton
+                    component="label"
+                    sx={{
+                        width: 50,
+                        height: 50,
+                        borderRadius: '50%',
+                        bgcolor: customColor || '#ccc',
+                        border: '2px solid #8e24aa',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Colorize />
+                    <input
+                        type="color"
+                        hidden
+                        onChange={handleCustomColorChange}
+                    />
+                </IconButton>
+            </Tooltip>
+
+            {/* Predefined Colors */}
+            {predefinedColors.map((color, index) => (
+                <Box
+                    key={index}
+                    onClick={() => onSelect?.(color)}
+                    sx={{
+                        width: 50,
+                        height: 50,
+                        borderRadius: '50%',
+                        bgcolor: color,
+                        border: selectedColor === color ? '3px solid #8e24aa' : '1px solid #ccc',
+                        cursor: 'pointer',
+                    }}
+                />
+            ))}
+        </Box>
+    );
+};
+
+export default ColorTab;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import React from 'react';
+import { Box, TextField, Typography } from '@mui/material';
+import UploadFile from '../../../../pages/UploadFile';
+import InstructionAccordion from '../../../../pages/Accordion';
+
+function CollectionTab({ message, setMessage,file, setFile,instructions, setInstructions }) {
+  return (
+    <Box padding={2} display="flex" flexDirection="column" gap={2}>
+      <Box position="relative" sx={{ bgcolor: '#f5f5f5', mb: 2 }}>
+        <TextField
+          label="Write on your cake"
+          placeholder="Example: Happy Birthday"
+          multiline
+          fullWidth
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          inputProps={{ maxLength: 40 }}
+        />
+        <Typography variant="caption" sx={{ position: 'absolute', left: 0, bottom: -24 }}>
+          {message.length} / 40
+        </Typography>
+      </Box>
+
+      <UploadFile
+        file={file}
+        onFileSelect={(f) => setFile(f)}
+        onRemove={() => setFile(null)}
+      />
+
+      <InstructionAccordion
+        value={instructions}
+        onChange={(e) => setInstructions(e.target.value)}
+      />
+    </Box>
+  );
+}
+
+export default CollectionTab;
+
+
+
+
+
+
+
+import React, { useEffect, useState } from 'react';
+import {
+  ImageList,
+  ImageListItem,
+  ImageListItemBar,
+  Box,
+  Typography,
+  CircularProgress,
+  Alert,
+} from '@mui/material';
+import axios from 'axios';
+import { CheckCircleOutline } from '@mui/icons-material';
+
+const ToppingTab = ({ onSelect, shape, selectedId, onSelectId }) => {
+  const [toppings, setToppings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchToppings = async () => {
+    try {
+      const res = await axios.get('/data/toppings.json');
+      setToppings(res.data.items);
+    } catch (err) {
+      console.error('Failed to load toppings', err);
+      setError('Unable to load toppings. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getToppingForShape = async (topping) => {
+    try {
+      // const res = await axios.get(`/api/topping-by-shape?shapeId=${shape._id}&toppingId=${topping._id}`);
+      const res = await axios.get('/data/selectedTopping.json'); // simulated
+      const matched = res.data.items[0];
+      onSelect?.(matched);
+    } catch (err) {
+      console.error('Failed to fetch topping by shape', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchToppings();
+  }, []);
+
+  if (loading) {
+    return <Box sx={{ textAlign: 'center', py: 4 }}><CircularProgress /></Box>;
+  }
+
+  if (error) {
+    return <Alert severity="error">{error}</Alert>;
+  }
+
+  return (
+    <ImageList
+      sx={{
+        m: '1px',
+        height: { xs: 360, sm: 500, md: 600 },
+        overflowY: 'auto',
+        margin: 0,
+        '&::-webkit-scrollbar': {
+          width: '10px',
+        },
+        '&::-webkit-scrollbar-track': {
+          borderRadius: '8px',
+          backgroundColor: '#e7e7e7',
+          border: '1px solid #cacaca',
+        },
+        '&::-webkit-scrollbar-thumb': {
+          borderRadius: '8px',
+          backgroundColor: '#42a5f5',
+        },
+      }}
+    >
+      {toppings.map((topping) => (
+        <ImageListItem
+          key={topping._id}
+          onClick={() => {
+            onSelectId?.(topping._id);
+            getToppingForShape(topping);
+          }}
+          sx={{
+            cursor: 'pointer',
+            bgcolor: selectedId === topping._id ? '#e3f2fd' : 'transparent',
+            borderRadius: 2,
+            transition: '0.2s',
+            position: 'relative',
+          }}
+        >
+          {selectedId === topping._id && (
+            <CheckCircleOutline
+              sx={{
+                position: 'absolute',
+                top: 8,
+                right: 8,
+                color: '#42a5f5',
+                background: '#fff',
+                borderRadius: '50%',
+              }}
+            />
+          )}
+
+          <img
+            srcSet={`${topping.image.secure_url}?w=248&fit=crop&auto=format&dpr=2 2x`}
+            src={`${topping.image.secure_url}?w=248&fit=crop&auto=format`}
+            alt={topping.name}
+            loading="lazy"
+          />
+          <ImageListItemBar
+            sx={{ textAlign: 'center' }}
+            title={topping.name}
+            subtitle={
+              <Box>
+                <Typography variant="body2" fontWeight="bold">
+                  {topping.price > 0 ? `+${topping.price} ₪` : 'Free'}
+                </Typography>
+              </Box>
+            }
+            position="below"
+          />
+        </ImageListItem>
+      ))}
+    </ImageList>
+  );
+};
+
+export default ToppingTab;
+
+
+
+
+
+
+
+
+
+import React from 'react';
+import { Box, Button } from '@mui/material';
+
+const CakePreview = ({
+  baseType = 'small standard',
+  flavor = null,
+  topping = null,
+  color = null, // Frosting color
+}) => {
+  const basePath = '/image/shape';
+
+  return (
+    <Box
+      sx={{
+        position: 'relative',
+        width: { xs: 240, sm: 280, md: 450 },
+        height: { xs: 240, sm: 280, md: 450 },
+        margin: 'auto',
+      }}
+    >
+      {/* Base Cake */}
+      <img
+        src={`${basePath}/${baseType}.png`}
+        alt="Cake Base"
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+          position: 'absolute',
+          bottom: '50px',
+          left: 0,
+        }}
+      />
+
+      {/* Flavor Layer */}
+      {flavor?.image?.secure_url && (
+        <img
+          src={flavor.image.secure_url}
+          alt={`Flavor - ${flavor.name || 'Layer'}`}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            position: 'absolute',
+            bottom: '50px',
+            left: 0,
+            pointerEvents: 'none',
+          }}
+        />
+      )}
+
+      {/* Frosting Color Overlay */}
+      {color && (
+        <svg
+          viewBox="0 0 1030 1190"
+          style={{
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            bottom: '50px',
+            left: 0,
+            mixBlendMode: 'multiply',
+            pointerEvents: 'none',
+          }}
+        >
+          <path
+            d="M232 747.791C232 741.058 233.872 734.463 238.804 729.879C257.907 712.124 323.925 669.5 517.5 669.5C688.447 669.5 758.448 702.741 785.096 722.741C796.175 731.056 799.949 744.783 799.852 758.636L798.093 1009.68C798.032 1018.43 795.732 1027.1 789.098 1032.82C768.26 1050.75 703.014 1087 516 1087C333.199 1087 265.659 1052.37 242.724 1034.05C234.766 1027.7 232 1017.66 232 1007.47V747.791Z"
+            fill={color}
+            opacity="0.7"
+          />
+        </svg>
+      )}
+
+      {/* Topping Layer */}
+      {topping && (
+        <img
+          src={topping.image.secure_url}
+          alt="Topping Layer"
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            position: 'absolute',
+            bottom: '50px',
+            left: 0,
+            pointerEvents: 'none',
+          }}
+        />
+      )}
+    </Box>
+  );
+};
+
+export default CakePreview;
+
+color
