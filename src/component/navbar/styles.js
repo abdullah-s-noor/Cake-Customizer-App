@@ -1,9 +1,14 @@
 // style.js
 
+import { Box } from "@mui/material";
+import { border } from "@mui/system";
+
+// #42a5f5
 export const styles = {
     appBar: {
-      bgcolor: '#42a5f5',
+      bgcolor: 'inherit',
       width: '100%',
+      boxShadow: 'none',
     },
     toolbar: {
       justifyContent: 'space-between',
@@ -15,8 +20,7 @@ export const styles = {
     logoBox: {
       flexGrow: 1,
       display: 'flex',
-      justifyContent: 'center',
-      px: 2,
+      justifyContent: 'start',
     },
     logoLink: {
       "&:hover": { color: "#d50000" },

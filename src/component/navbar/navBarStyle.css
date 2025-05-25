@@ -1,0 +1,28 @@
+.navbar-links {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    font-size: medium;
+    font-weight: 400;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: linear 0.1s;
+}
+
+.nav-link:hover {
+    color: white;
+    text-shadow:
+        0 0 10px #f77f00,
+        0 0 10px #f77f00,
+        0 0 300px #f77f00,
+        0 0 300px #f77f00,
+        0 0 30px #f77f00;
+}
