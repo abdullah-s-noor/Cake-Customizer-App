@@ -1,0 +1,248 @@
+{
+    "shapes": [
+        {
+            "_id": "1",
+            "name": "small standard",
+            "capacity": 10,
+            "weight": "500 g",
+            "dimensions": "20x20 cm",
+            "price": 100,
+            "image": {
+                "secure_url": "/image/imageCakes/shapes/small standard/small standard.png",
+                "public_id": "small_standard"
+            },
+            "flavors": [
+                {
+                    "_id": "67c137d2aeb79d6539586a92",
+                    "name": "Choco Crunch",
+                    "price": 4,
+                    "image": {
+                        "secure_url": "/image/imageCakes/shapes/small standard/flavors/Choco Crunch.png",
+                        "public_id": "choco_crunch"
+                    },
+                    "__v": 0
+                },
+                {
+                    "_id": "67c8ba532fc07fcd5627dcb5",
+                    "name": "Cinnamon",
+                    "price": 7,
+                    "image": {
+                        "secure_url": "/image/imageCakes/shapes/small standard/flavors/Cinnamon.png",
+                        "public_id": "cinnamon"
+                    },
+                    "__v": 0
+                },
+                {
+                    "_id": "67c8ba992fc07fcd5627dcb8",
+                    "name": "Fruits",
+                    "price": 6,
+                    "image": {
+                        "secure_url": "/image/imageCakes/shapes/small standard/flavors/Fruits.png",
+                        "public_id": "fruits"
+                    },
+                    "__v": 0
+                },
+                {
+                    "_id": "67c8bd702fc07fcd5627dcc4",
+                    "name": "Nutella",
+                    "price": 10,
+                    "image": {
+                        "secure_url": "/image/imageCakes/shapes/small standard/flavors/Nutella.png",
+                        "public_id": "nutella"
+                    },
+                    "__v": 0
+                },
+                {
+                    "_id": "67c8bdb22fc07fcd5627dcc7",
+                    "name": "Pistachio",
+                    "price": 15,
+                    "image": {
+                        "secure_url": "/image/imageCakes/shapes/small standard/flavors/Pistachio.png",
+                        "public_id": "pistachio"
+                    },
+                    "__v": 0
+                },
+                {
+                    "_id": "67c8bd252fc07fcd5627dcc1",
+                    "name": "Red Velvet",
+                    "price": 0,
+                    "image": {
+                        "secure_url": "/image/imageCakes/shapes/small standard/flavors/Red Velvet.png",
+                        "public_id": "red_velvet"
+                    },
+                    "__v": 0
+                },
+                {
+                    "_id": "67c8b9be2fc07fcd5627dcaf",
+                    "name": "Vanilla",
+                    "price": 0,
+                    "image": {
+                        "secure_url": "/image/imageCakes/shapes/small standard/flavors/Vanilla.png",
+                        "public_id": "Vanilla"
+                    },
+                    "__v": 0
+                }
+            ],
+            "toppings": [
+                {
+                    "_id": "top001",
+                    "name": "Glitter Charm",
+                    "price": 4,
+                    "image": {
+                        "secure_url": "/image/imageCakes/shapes/small standard/toppings/Glitter Charm.png",
+                        "public_id": "glitter_charm"
+                    }
+                },
+                {
+                    "_id": "top002",
+                    "name": "Healing",
+                    "price": 6,
+                    "image": {
+                        "secure_url": "/image/imageCakes/shapes/small standard/toppings/Healing.png",
+                        "public_id": "healing"
+                    }
+                },
+                {
+                    "_id": "top003",
+                    "name": "Pastel Classy",
+                    "price": 6,
+                    "image": {
+                        "secure_url": "/image/imageCakes/shapes/small standard/toppings/Pastel Classy.png",
+                        "public_id": "pastel_classy"
+                    }
+                },
+                {
+                    "_id": "top004",
+                    "name": "Purple Retro",
+                    "price": 6,
+                    "image": {
+                        "secure_url": "/image/imageCakes/shapes/small standard/toppings/Purple Retro.png",
+                        "public_id": "purple_fetro"
+                    }
+                }
+            ]
+        },
+        {
+            "_id": "2",
+            "name": "standard",
+            "capacity": 10,
+            "weight": "500 g",
+            "dimensions": "20x20 cm",
+            "price": 100,
+            "image": {
+                "secure_url": "/image/imageCakes/shapes/standard/standard.png",
+                "public_id": "small_standard"
+            },
+            "flavors": [
+                {
+                    "_id": "67c137d2aeb79d6539586a92",
+                    "name": "Choco Crunch",
+                    "price": 4,
+                    "image": {
+                        "secure_url": "/image/imageCakes/shapes/standard/flavors/Choco Crunch.png",
+                        "public_id": "choco_crunch"
+                    },
+                    "__v": 0
+                },
+                {
+                    "_id": "67c8ba532fc07fcd5627dcb5",
+                    "name": "Cinnamon",
+                    "price": 7,
+                    "image": {
+                        "secure_url": "/image/imageCakes/shapes/standard/flavors/Cinnamon.png",
+                        "public_id": "cinnamon"
+                    },
+                    "__v": 0
+                },
+                {
+                    "_id": "67c8ba992fc07fcd5627dcb8",
+                    "name": "Fruits",
+                    "price": 6,
+                    "image": {
+                        "secure_url": "/image/imageCakes/shapes/standard/flavors/Fruits.png",
+                        "public_id": "fruits"
+                    },
+                    "__v": 0
+                },
+                {
+                    "_id": "67c8bd702fc07fcd5627dcc4",
+                    "name": "Nutella",
+                    "price": 10,
+                    "image": {
+                        "secure_url": "/image/imageCakes/shapes/standard/flavors/Nutella.png",
+                        "public_id": "nutella"
+                    },
+                    "__v": 0
+                },
+                {
+                    "_id": "67c8bdb22fc07fcd5627dcc7",
+                    "name": "Pistachio",
+                    "price": 15,
+                    "image": {
+                        "secure_url": "/image/imageCakes/shapes/standard/flavors/Pistachio.png",
+                        "public_id": "pistachio"
+                    },
+                    "__v": 0
+                },
+                {
+                    "_id": "67c8bd252fc07fcd5627dcc1",
+                    "name": "Red Velvet",
+                    "price": 0,
+                    "image": {
+                        "secure_url": "/image/imageCakes/shapes/standard/flavors/Red Velvet.png",
+                        "public_id": "red_velvet"
+                    },
+                    "__v": 0
+                },
+                {
+                    "_id": "67c8b9be2fc07fcd5627dcaf",
+                    "name": "Vanilla",
+                    "price": 0,
+                    "image": {
+                        "secure_url": "/image/imageCakes/shapes/standard/flavors/Vanilla.png",
+                        "public_id": "Vanilla"
+                    },
+                    "__v": 0
+                }
+            ],
+            "toppings": [
+                {
+                    "_id": "top001",
+                    "name": "Glitter Charm",
+                    "price": 4,
+                    "image": {
+                        "secure_url": "/image/imageCakes/shapes/standard/toppings/Glitter Charm.png",
+                        "public_id": "glitter_charm"
+                    }
+                },
+                {
+                    "_id": "top002",
+                    "name": "Healing",
+                    "price": 6,
+                    "image": {
+                        "secure_url": "/image/imageCakes/shapes/standard/toppings/Healing.png",
+                        "public_id": "healing"
+                    }
+                },
+                {
+                    "_id": "top003",
+                    "name": "Pastel Classy",
+                    "price": 6,
+                    "image": {
+                        "secure_url": "/image/imageCakes/shapes/standard/toppings/Pastel Classy.png",
+                        "public_id": "pastel_classy"
+                    }
+                },
+                {
+                    "_id": "top004",
+                    "name": "Purple Retro",
+                    "price": 6,
+                    "image": {
+                        "secure_url": "/image/imageCakes/shapes/standard/toppings/Purple Retro.png",
+                        "public_id": "purple_fetro"
+                    }
+                }
+            ]
+        }
+    ]
+}

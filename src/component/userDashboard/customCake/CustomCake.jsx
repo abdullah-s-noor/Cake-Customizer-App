@@ -16,6 +16,7 @@ import ToppingTab from './tabs/ToppingTab';
 import ColorTab from './tabs/ColorTab';
 import CollectionTab from './tabs/CollectionTab';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Test from './test';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -233,6 +234,7 @@ export default function VerticalTabs() {
             <Typography sx={{ position: 'absolute', right: 16, top: 16, color: '#42a5f5' }} variant="h6">
               {selectedShape?.price} ₪
             </Typography>
+            <Test/>
           </>
         ) : (
           <Typography color="text.secondary">Please select a cake shape</Typography>
