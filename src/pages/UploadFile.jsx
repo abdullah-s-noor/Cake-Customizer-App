@@ -61,6 +61,7 @@ function UploadFile({ file, onFileSelect, onRemove }) {
             onClick={(e) => {
               e.stopPropagation(); // Prevent triggering input click
               onRemove();
+              inputRef.current.value = "";
             }}
             sx={{
               position: 'absolute',
