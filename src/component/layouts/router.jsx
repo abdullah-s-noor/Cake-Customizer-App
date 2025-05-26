@@ -23,12 +23,13 @@ import AddNewCake from "../adminDashboard/addNewCake/AddNewCake.jsx";
 import ChangePassword from "../changePassword/changePassword.jsx";
 import CakeInformation from "../userDashboard/cakeInformation/CakeInformation.jsx";
 import AdminManageCollections from "../adminDashboard/Admin_Manage/AdminManageCollections.jsx";
+import NotFound from "../NotFound/NotFound.jsx";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
-    errorElement: <h1>404 page not found ---web</h1>,
+    errorElement: <NotFound />,
     children: [
       {
         path: "login",
@@ -95,14 +96,14 @@ export const router = createBrowserRouter([
 
       {
         path: "*",
-        element: <h1>404 page not found ---web</h1>,
+        element: <NotFound />,
       },
     ],
   },
   {
     path: "/dashboard",
     element: <DashboardLayout />,
-    errorElement: <h1>404 page not found ---dashboard</h1>,
+    errorElement:<NotFound />,
     children: [
       {
         path: "home",
@@ -114,7 +115,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "*",
-        element: <h1>404 page not found ---dashboard</h1>,
+        element: <NotFound />,
       },
     ],
   },

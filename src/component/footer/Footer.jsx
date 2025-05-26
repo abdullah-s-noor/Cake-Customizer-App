@@ -16,7 +16,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 
 const FooterContainer = styled(Box)(({ theme }) => ({
-  backgroundColor: "#0b090a",
+  backgroundColor: "#723d46",
   padding: theme.spacing(0,7, 0),
   borderTop: "1px solid #e0e0e0",
   marginTop: "auto",
