@@ -1,66 +1,42 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../../../public/image/1.jpg";
-
-// 🔹 Fake cake data
-const initialCakes = [
-  {
-    id: 1,
-    product: "Chocolate Dream",
-    image: Logo,
-    collection: "Birthday",
-    status: "Available",
-  },
-  {
-    id: 2,
-    product: "Vanilla Delight",
-    image: Logo,
-    collection: "Wedding",
-    status: "Available",
-  },
-  {
-    id: 3,
-    product: "Strawberry Swirl",
-    image: Logo,
-    collection: "Kids",
-    status: "Available",
-  },
-  {
-    id: 4,
-    product: "Strawberry Swirl",
-    image: Logo,
-    collection: "Kids",
-    status: "unAvailable",
-  },
-  {
-    id: 5,
-    product: "Strawberry Swirl",
-    image: Logo,
-    collection: "Kids",
-    status: "Available",
-  },
-  {
-    id: 6,
-    product: "Strawberry Swirl",
-    image: Logo,
-    collection: "Kids",
-    status: "unAvailable",
-  },
-];
+import Loader from "../../Loaders/Loader";
+import {toast} from "react-toastify";
+import {api} from "../../../api/api";
 
 export default function AdminManageCakes() {
-  const [rows, setRows] = React.useState(initialCakes);
-  const [selectionModel, setSelectionModel] = React.useState([]);
+  const [rows, setRows] = useState([]);
+  const [selectionModel, setSelectionModel] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const handleDelete = (id) => {
-    setRows((prev) => prev.filter((row) => row.id !== id));
+    setRows((prev) => prev.filter((row) => row._id !== id));
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const responseData = (await api.get("/collections?page=1&limit=5")).data;
+        const mappedRows = responseData.collections.map((item) => ({
+          _id: item._id,
+          name: item.name,
+          image: typeof item.image === "string" ? item.image : item.image?.url || "",
+        }));
+        setRows(mappedRows);
+      } catch {
+        toast.error("An error occured during fetching cakes");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   const columns = [
     {
-      field: "id",
+      field: "_id",
       headerName: "ID",
       flex: 0.5,
       editable: true,
@@ -70,9 +46,9 @@ export default function AdminManageCakes() {
     {
       field: "image",
       headerName: "Image",
-      flex:0.8,
-      align:"center",
-      headerAlign:"center",
+      flex: 0.8,
+      align: "center",
+      headerAlign: "center",
       renderCell: (params) => (
         <img
           src={params.row.image}
@@ -80,8 +56,8 @@ export default function AdminManageCakes() {
           style={{
             width: 100,
             height: 100,
-            marginTop:"2px",
-            marginBottom:"2px",
+            marginTop: "2px",
+            marginBottom: "2px",
             borderRadius: "5%",
             objectFit: "cover",
           }}
@@ -89,27 +65,10 @@ export default function AdminManageCakes() {
       ),
     },
     {
-      field: "product",
-      headerName: "Product",
+      field: "name",
+      headerName: "Name",
       editable: true,
       flex: 1,
-      align:"center",
-      headerAlign:"center",
-    },
-    
-    {
-      field: "collection",
-      headerName: "Collection",
-      flex: 0.7,
-      editable: true,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "status",
-      headerName: "Status",
-      flex: 0.7,
-      editable: true,
       align: "center",
       headerAlign: "center",
     },
@@ -136,7 +95,7 @@ export default function AdminManageCakes() {
           <Button
             variant="outlined"
             color="error"
-            onClick={() => handleDelete(params.row.id)}
+            onClick={() => handleDelete(params.row._id)}
           >
             Delete
           </Button>
@@ -146,52 +105,58 @@ export default function AdminManageCakes() {
   ];
 
   return (
-    <Box sx={{ height: 500, width: "65%", mx: "auto", mt: 7, mb: 7 }}>
-      <Box display="flex" justifyContent="space-between" mb={2}>
-        <Typography variant="h6" color="#42a5f5">
-          Admin - Manage Cakes
-        </Typography>
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: "#42a5f5",
-          }}
-          onClick={() => {
-            navigate("/addnewcake");
-          }}
-        >
-          Add New Cake
-        </Button>
-      </Box>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        checkboxSelection
-        selection
-        model={selectionModel}
-        onSelectionModelChange={(newSelection) =>
-          setSelectionModel(newSelection)
-        }
-        disableRowSelectionOnClick
-        autoHeight
-        pageSizeOptions={[3]}
-        rowHeight={100}
-        initialState={{
-          pagination: {
-            paginationModel: { pageSize: 3 },
-          },
-        }}
-        sx={{
-          "& .MuiDataGrid-cell, .MuiDataGrid-columnHeader": {
-            textAlign: "center",
-            justifyContent: "center",
-          },
-          "& .MuiDataGrid-columnHeader": {
-            backgroundColor: "#42a5f5",
-            color: "white",
-          },
-        }}
-      />
-    </Box>
+    <>
+      {loading ? <Loader/>:
+        <Box sx={{ height: 500, width: "65%", mx: "auto", mt: 7, mb: 7 }}>
+          <Box display="flex" justifyContent="space-between" mb={2}>
+            <Typography variant="h6" color="#42a5f5">
+              Admin - Manage Cakes
+            </Typography>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "#42a5f5",
+              }}
+              onClick={() => {
+                navigate("/addnewcake");
+              }}
+            >
+              Add New Cake
+            </Button>
+          </Box>
+          <DataGrid
+            rows={rows}
+            // @ts-ignore
+            columns={columns}
+            getRowId={(row) => row._id}   
+            checkboxSelection
+            selection
+            model={selectionModel}
+            onSelectionModelChange={(newSelection) =>
+              setSelectionModel(newSelection)
+            }
+            disableRowSelectionOnClick
+            autoHeight
+            pageSizeOptions={[3]}
+            rowHeight={100}
+            initialState={{
+              pagination: {
+                paginationModel: { pageSize: 3 },
+              },
+            }}
+            sx={{
+              "& .MuiDataGrid-cell, .MuiDataGrid-columnHeader": {
+                textAlign: "center",
+                justifyContent: "center",
+              },
+              "& .MuiDataGrid-columnHeader": {
+                backgroundColor: "#42a5f5",
+                color: "white",
+              },
+            }}
+          />
+        </Box>
+      }
+    </>
   );
 }
