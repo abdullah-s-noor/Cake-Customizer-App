@@ -4,17 +4,13 @@ import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import { api } from '../../../api/api'
-import axios from "axios";
 import Loader from "../../Loaders/Loader";
 import { toast } from "react-toastify";
 
 function formatDateToLong(dateString) {
   if (!dateString) return '—';
-
   const date = new Date(dateString);
   if (isNaN(date.getTime())) return '—';
-
-  const options = { day: 'numeric', month: 'long', year: 'numeric' };
   return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(date);
 }
 
@@ -101,7 +97,7 @@ export default function Admin_Manage() {
                 backgroundColor: "#d32f2f",
               },
             }}
-            onClick={() => handleDelete(params.row.id)}
+            onClick={() => handleDelete(params.row._id)}
           >
             Delete
           </Button>
@@ -121,7 +117,7 @@ export default function Admin_Manage() {
         const responseData = (await api.get('/user?page=1&limit=5')).data
         setRows(responseData.users)
 
-      } catch (error) {
+      } catch {
 
         toast.error("An error occured during fetching users")
 
@@ -133,7 +129,7 @@ export default function Admin_Manage() {
   }, [])
 
   const handleDelete = (id) => {
-    setRows((prevRows) => prevRows.filter((row) => row.id !== id));
+    setRows((prevRows) => prevRows.filter((row) => row._id !== id));
   }
 
   return (
@@ -142,7 +138,7 @@ export default function Admin_Manage() {
         <Box
           sx={{
             height: 500,
-            width: "100%",
+            width: "auto",
             mt: 7,
             justifyContent: "center",
             mx: "auto",
@@ -165,7 +161,6 @@ export default function Admin_Manage() {
             autoHeight
 
           />
-
         </Box>
       }
     </>

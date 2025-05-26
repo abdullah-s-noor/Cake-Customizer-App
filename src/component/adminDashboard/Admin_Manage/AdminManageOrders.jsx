@@ -2,105 +2,42 @@ import * as React from "react";
 import { Box, Button, Chip, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import { api } from "../../../api/api.js";
+import Loader from "../../Loaders/Loader.jsx";
 
-const orders = [
-  {
-    id: 1,
-    customer: "Mohammed Jarrad",
-    date: "2024-05-01",
-    amount: 120,
-    status: "Pending",
-  },
-  {
-    id: 2,
-    customer: "Sara Ahmed",
-    date: "2024-05-03",
-    amount: 200,
-    status: "Delivered",
-  },
-  {
-    id: 3,
-    customer: "Lina Khalid",
-    date: "2024-05-05",
-    amount: 80,
-    status: "Cancelled",
-  },
-  {
-    id: 4,
-    customer: "Lina Khalid",
-    date: "2024-05-05",
-    amount: 80,
-    status: "Cancelled",
-  },
-  {
-    id: 5,
-    customer: "Lina Khalid",
-    date: "2024-05-05",
-    amount: 80,
-    status: "Cancelled",
-  },
-  {
-    id: 6,
-    customer: "Mohammed Jarrad",
-    date: "2024-05-01",
-    amount: 120,
-    status: "Pending",
-  },
-  {
-    id: 7,
-    customer: "Sara Ahmed",
-    date: "2024-05-03",
-    amount: 200,
-    status: "Delivered",
-  },
-  {
-    id: 8,
-    customer: "Lina Khalid",
-    date: "2024-05-05",
-    amount: 80,
-    status: "Cancelled",
-  },
-  {
-    id: 9,
-    customer: "Lina Khalid",
-    date: "2024-05-05",
-    amount: 80,
-    status: "Cancelled",
-  },
-  {
-    id: 10,
-    customer: "Lina Khalid",
-    date: "2024-05-05",
-    amount: 80,
-    status: "Cancelled",
-  },
-  {
-    id: 11,
-    customer: "Lina Khalid",
-    date: "2024-05-05",
-    amount: 80,
-    status: "Cancelled",
-  },
-  {
-    id: 12,
-    customer: "Lina Khalid",
-    date: "2024-05-05",
-    amount: 80,
-    status: "Cancelled",
-  },
-  {
-    id: 13,
-    customer: "Lina Khalid",
-    date: "2024-05-05",
-    amount: 80,
-    status: "Cancelled",
-  },
-];
+function formatDateToLong(dateString) {
+  if (!dateString) return "—";
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return "—";
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(date);
+}
 export default function ManageOrders() {
   document.title = "Manage Orders";
   const navigate = useNavigate();
-  const [orderRows, setOrderRows] = React.useState(orders);
-  const [selectionModel, setSelectionModel] = React.useState([]);
+  const [orderRows, setOrderRows] = useState([]);
+  const [selectionModel, setSelectionModel] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const responseData = (await api.get("/order/all")).data;
+        setOrderRows(responseData.orders);
+      } catch {
+        toast.error("An error occured during fetching orders");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
   const getStatusChip = (status) => {
     let color, label;
 
@@ -122,22 +59,23 @@ export default function ManageOrders() {
         label = status;
     }
 
+    // @ts-ignore
     return <Chip label={label} color={color} size="small" />;
   };
   const handleDelete = (id) => {
-    const updatedRows = orderRows.filter((row) => row.id !== id);
+    const updatedRows = orderRows.filter((row) => row._id !== id);
     setOrderRows(updatedRows);
   };
   const columns = [
     {
-      field: "id",
+      field: "_id",
       headerName: "ID",
       width: 90,
       align: "center",
       headerAlign: "center",
     },
     {
-      field: "customer",
+      field: "user",
       headerName: "Customer",
       editable: true,
       flex: 1,
@@ -145,16 +83,28 @@ export default function ManageOrders() {
       headerAlign: "center",
     },
     {
-      field: "date",
-      headerName: "Date",
+      field: "items",
+      headerName: "items",
       editable: true,
       width: 130,
       align: "center",
       headerAlign: "center",
+      renderCell: (params) => {
+        const items = params.value;
+        if (Array.isArray(items) && items.length > 0) {
+          // Show a summary: e.g. "summer cake x3, chocolate cake x2"
+          return items
+            .map(
+              (item) => `${item.cake?.name || "Cake"} x${item.quantity || 1}`
+            )
+            .join(", ");
+        }
+        return "—";
+      },
     },
     {
-      field: "amount",
-      headerName: "Amount",
+      field: "totalPrice",
+      headerName: "Price",
       editable: true,
       width: 120,
       align: "center",
@@ -175,12 +125,22 @@ export default function ManageOrders() {
       ),
     },
     {
+      field: "createdAt",
+      headerName: "BirthDay",
+      editable: true,
+      width: 130,
+      align: "center",
+      headerAlign: "center",
+      renderCell: (params) => {
+        return formatDateToLong(params.value);
+      },
+    },
+    {
       field: "actions",
       headerName: "Actions",
       width: 160,
       align: "center",
       headerAlign: "center",
-      editable: true,
       sortable: false,
       filterable: false,
       renderCell: (params) => (
@@ -200,7 +160,7 @@ export default function ManageOrders() {
             size="small"
             sx={{ color: "#d32f2f", borderColor: "#d32f2f" }}
             onClick={() => {
-              handleDelete(params.row.id);
+              handleDelete(params.row._id);
             }}
           >
             DELETE
@@ -211,37 +171,45 @@ export default function ManageOrders() {
   ];
 
   return (
-    <Box sx={{ width: "60%", mx: "auto", mt: 9, mb: 9 }}>
-      <Typography variant="h5" fontWeight="bold" mb={2}>
-        Manage Orders
-      </Typography>
-      <DataGrid
-        rows={orderRows}
-        columns={columns}
-        checkboxSelection
-        selectionModel={selectionModel}
-        onSelectionModelChange={(newSelection) =>
-          setSelectionModel(newSelection)
-        }
-        initialState={{
-          pagination: {
-            paginationModel: { pageSize: 5 },
-          },
-        }}
-        rowsPerPageOptions={[5]}
-        disableRowSelectionOnClick
-        autoHeight
-        sx={{
-          "& .MuiDataGrid-cell": {
-            justifyContent: "center",
-            alignItems: "center",
-            display: "flex",
-          },
-          "& .MuiDataGrid-columnHeader": {
-            justifyContent: "center",
-          },
-        }}
-      />
-    </Box>
+    <>
+      {loading ? (
+        <Loader />
+      ) : (
+        <Box sx={{ width: "70%", mx: "auto", mt: 9, mb: 9 }}>
+          <Typography variant="h5" fontWeight="bold" mb={2}>
+            Manage Orders
+          </Typography>
+          <DataGrid
+            rows={orderRows}
+            // @ts-ignore
+            columns={columns}
+            getRowId={(row) => row._id}
+            checkboxSelection
+            selectionModel={selectionModel}
+            onSelectionModelChange={(newSelection) =>
+              setSelectionModel(newSelection)
+            }
+            initialState={{
+              pagination: {
+                paginationModel: { pageSize: 5 },
+              },
+            }}
+            rowsPerPageOptions={[5]}
+            disableRowSelectionOnClick
+            autoHeight
+            sx={{
+              "& .MuiDataGrid-cell": {
+                justifyContent: "center",
+                alignItems: "center",
+                display: "flex",
+              },
+              "& .MuiDataGrid-columnHeader": {
+                justifyContent: "center",
+              },
+            }}
+          />
+        </Box>
+      )}
+    </>
   );
 }
