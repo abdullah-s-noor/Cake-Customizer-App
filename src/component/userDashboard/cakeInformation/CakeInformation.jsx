@@ -16,8 +16,8 @@ const StyledRating = styled(Rating)({
 });
 
 export default function CakeDetails() {
-
   const location = useLocation();
+  console.log(location);
   const navigate = useNavigate();
 
   const [orderDetails, setOrderDetails] = useState({
@@ -25,6 +25,10 @@ export default function CakeDetails() {
     flavor: null,
     topping: null,
     color: null,
+    file:null,
+    cakeMessage:null,
+    instructions:null,
+    price:0,
   });
 
   /** Authorization: if no state, you are not allowd to preview this component */
@@ -33,7 +37,7 @@ export default function CakeDetails() {
     if (!location.state || !location.state.orderDetails) {
       navigate('/custom-cake');
     }
-    setOrderDetails(location.state.orderDetails)
+    setOrderDetails(location?.state?.orderDetails)
 
   }, [])
 
@@ -69,6 +73,7 @@ export default function CakeDetails() {
               selectedFlavor={orderDetails.flavor}
               selectedTopping={orderDetails.topping}
               selectedColor={orderDetails.color}
+              value={2}
             />
 
           </Grid>
@@ -114,7 +119,7 @@ export default function CakeDetails() {
             <Box mt={4} display="flex" justifyContent="space-between">
               <Typography variant="subtitle2" fontWeight="bold">Price:</Typography>
               <Typography color="#42a5f5" fontWeight="bold">
-                {orderDetails?.shape?.price} ₪
+                {orderDetails?.price} ₪
               </Typography>
             </Box>
 

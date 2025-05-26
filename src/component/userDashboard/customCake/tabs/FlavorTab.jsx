@@ -2,9 +2,12 @@ import { CheckCircleOutline } from '@mui/icons-material'
 import { Box, ImageList, ImageListItem, ImageListItemBar, Typography } from '@mui/material'
 import React, { useEffect } from 'react'
 
-function FlavorTab({ flavors, selectedFlavor, setSelectedFlavor }) {
+function FlavorTab({ flavors, selectedFlavor, setSelectedFlavor,handlePriceChange }) {
 
     const handleSelectedFlavor = (flavor) => {
+      const newPrice = flavor?.price||0;
+      const oldPrice = selectedFlavor?.price||0;
+      handlePriceChange(oldPrice,newPrice);
       setSelectedFlavor(flavor);
     }
     return (

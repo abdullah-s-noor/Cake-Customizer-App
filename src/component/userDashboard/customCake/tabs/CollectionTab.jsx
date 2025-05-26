@@ -3,7 +3,7 @@ import { Box, TextField, Typography } from '@mui/material';
 import UploadFile from '../../../../pages/UploadFile';
 import InstructionAccordion from '../../../../pages/Accordion';
 
-function CollectionTab({ message, setMessage,file, setFile,instructions, setInstructions }) {
+function CollectionTab({ message, setMessage,file, setFile,instructions, setInstructions,handlePriceChange }) {
   return (
     <Box padding={2} display="flex" flexDirection="column" gap={2}>
       <Box position="relative" sx={{ bgcolor: '#f5f5f5', mb: 2 }}>
@@ -23,8 +23,15 @@ function CollectionTab({ message, setMessage,file, setFile,instructions, setInst
 
       <UploadFile
         file={file}
-        onFileSelect={(f) => setFile(f)}
-        onRemove={() => setFile(null)}
+        onFileSelect={(f) => {
+          setFile(f)
+          handlePriceChange(0,4)
+        }}
+        onRemove={() => {
+          setFile(null)
+          handlePriceChange(0,-4)
+
+        }}
       />
 
       <InstructionAccordion

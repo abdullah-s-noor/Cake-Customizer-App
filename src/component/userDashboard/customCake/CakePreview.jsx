@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Button } from '@mui/material';
 
-const CakePreview = ({ selectedShape: shape, selectedFlavor: flavor, selectedTopping: topping, selectedColor: color, }) => {
-
+const CakePreview = ({ selectedShape: shape, selectedFlavor: flavor, selectedTopping: topping, selectedColor: color,value }) => {
+useEffect(() => {
+  console.log(color);
+},[]);
   return (
     <Box
       sx={{
@@ -28,7 +30,7 @@ const CakePreview = ({ selectedShape: shape, selectedFlavor: flavor, selectedTop
 
       {/* Flavor Layer */}
       
-      {!(flavor&&color)&&flavor?.image?.secure_url && (
+      {((!color)||(color&&value==1))&&flavor?.image?.secure_url && (
         <img
           src={flavor.image.secure_url}
           alt={`Flavor - ${flavor.name || 'Layer'}`}
@@ -44,7 +46,7 @@ const CakePreview = ({ selectedShape: shape, selectedFlavor: flavor, selectedTop
         />
       )}
       {/* Color Layer */}
-      {color && (
+      {((!flavor)||(color&&value!=1)) && (
         <svg
           viewBox={shape?.viewBox}
           style={{
@@ -53,19 +55,19 @@ const CakePreview = ({ selectedShape: shape, selectedFlavor: flavor, selectedTop
             position: 'absolute',
             bottom: '50px',
             left: 0,
-            mixBlendMode: 'multiply',
-            pointerEvents: 'none',
+             mixBlendMode: color === '#ffffff' ? 'soft-light' : 'multiply',
+            
           }}
         >
           <path
             d={shape?.d}
-            fill={color}
+            fill={color || 'transparent'}
             
           />
         </svg>
       )}
       {/* Topping Layer */}
-      {topping && (
+      {(topping&&value!=1) && (
         <img
           src={topping.image.secure_url}
           alt="Topping Layer"

@@ -10,11 +10,11 @@ import {
 } from '@mui/icons-material';
 import ShapeTab from './tabs/ShapeTab';
 import FlavorTab from './tabs/FlavorTab';
+import CollectionTab from './tabs/CollectionTab';
 import { Button } from '@mui/material';
 import CakePreview from './CakePreview';
 import ToppingTab from './tabs/ToppingTab';
 import ColorTab from './tabs/ColorTab';
-import CollectionTab from './tabs/CollectionTab';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Test from './Test';
 import axios from 'axios';
@@ -35,7 +35,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 0 }}>
-          {children} {/* ✅ Removed <Typography> to fix hydration error */}
+          {children}
         </Box>
       )}
     </div>
@@ -62,7 +62,6 @@ export default function VerticalTabs() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  console.log(location);
 
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -71,15 +70,22 @@ export default function VerticalTabs() {
   const [selectedShape, setSelectedShape] = useState(location?.state?.orderDetails?.shape || null);
 
   const [flavors, setFlavors] = useState([]);
-  const [selectedFlavor, setSelectedFlavor] = useState(location?.state?.orderDetails?.flavor ||null);
+  const [selectedFlavor, setSelectedFlavor] = useState(location?.state?.orderDetails?.flavor || null);
 
   const [toppings, setToppings] = useState([]);
-  const [selectedTopping, setSelectedTopping] = useState(location?.state?.orderDetails?.topping ||null);
+  const [selectedTopping, setSelectedTopping] = useState(location?.state?.orderDetails?.topping || null);
 
   const [selectedColor, setSelectedColor] = useState(location?.state?.orderDetails?.color || null);
 
+  const [price, setPrice] = useState(0);
+
+  const [uploadedFile, setUploadedFile] = useState(location?.state?.orderDetails?.file || null);
+  const [cakeMessage, setCakeMessage] = useState(location?.state?.orderDetails?.cakeMessage || '');
+  const [instructions, setInstructions] = useState(location?.state?.orderDetails?.instructions || '');
+
+
   useEffect(() => {
-  
+
 
     const fetchData = async () => {
       try {
@@ -87,8 +93,10 @@ export default function VerticalTabs() {
         setShapes(data.shapes);
         const initialShape = await data.shapes[0];
         setSelectedShape(location?.state?.orderDetails?.shape || initialShape);
+        setPrice(location?.state?.orderDetails?.price || initialShape.price);
         setFlavors(initialShape.flavors);
         setToppings(initialShape.toppings);
+
       } catch (err) {
 
       } finally {
@@ -118,6 +126,11 @@ export default function VerticalTabs() {
       (topping) => topping.name === selectedTopping?.name
     );
     setSelectedTopping(matchedtopping);
+    const filePrice=uploadedFile ? 4 : 0;
+    setPrice(shape.price + (matchedFlavor?.price || 0) + (matchedtopping?.price || 0)+filePrice);
+  }
+  const handlePriceChange = (oldPrice, newPrice) => {
+    setPrice((prev) => prev - oldPrice + newPrice);
   }
 
   const handleSubmit = () => {
@@ -128,11 +141,32 @@ export default function VerticalTabs() {
       flavor: selectedFlavor,
       topping: selectedTopping,
       color: selectedColor,
+      cakeMessage: cakeMessage,
+      file: uploadedFile,
+      instructions: instructions,
+      price: price,
     }
 
     navigate('/cakeinformation', { state: { orderDetails } });
 
   }
+  const totalTabs = 5;
+  const isAllSelected = selectedShape && selectedFlavor  && selectedTopping;
+  const handleNext = () => {
+    if (value < totalTabs - 1) {
+      setValue((prev) => prev + 1);
+      return;
+    }
+
+    if (isAllSelected) {
+      handleSubmit();
+    } else {
+      if (!selectedShape) setValue(0);
+      else if (!selectedFlavor) setValue(1);
+      else if (!selectedColor) setValue(2);
+      else if (!selectedTopping) setValue(3);
+    }
+  };
   return (
     <>
       {
@@ -185,7 +219,7 @@ export default function VerticalTabs() {
                     flavors={flavors}
                     selectedFlavor={selectedFlavor}
                     setSelectedFlavor={setSelectedFlavor}
-
+                    handlePriceChange={handlePriceChange}
                   />
                 </TabPanel>
 
@@ -202,9 +236,43 @@ export default function VerticalTabs() {
                     toppings={toppings}
                     selectedTopping={selectedTopping}
                     setSelectedTopping={setSelectedTopping}
+                    handlePriceChange={handlePriceChange}
+                  />
+                </TabPanel>
+                <TabPanel value={value} index={4}>
+                  <CollectionTab
+                    message={cakeMessage}
+                    setMessage={setCakeMessage}
+                    file={uploadedFile}
+                    setFile={setUploadedFile}
+                    instructions={instructions}
+                    setInstructions={setInstructions}
+                    handlePriceChange={handlePriceChange}
                   />
                 </TabPanel>
 
+                <Box sx={{ position: 'absolute', bottom: 33, left: 0, right: 0, display: 'flex', justifyContent: 'center' }}>
+                  <Button onClick={handleNext} variant='contained' sx={{
+
+                    backgroundColor: '#42a5f5',
+                    '&:hover': {
+                      backgroundColor: '#1e88e5',
+                      color: 'white',
+                    },
+                    width: { xs: '100%' },
+                    height: '40px',
+                    fontSize: { xs: '14px', sm: '17px' },
+                    padding: '0 16px',
+                    textTransform: 'none',
+                    boxShadow: 'none',
+                    borderRadius: '8px',
+                    mt: 2,
+                    mr: 2,
+                    ml: 2,
+                  }}>
+                    {(value===4&&isAllSelected) ? 'Display Cake Info' : 'Next Tab'}
+                  </Button>
+                </Box>
               </Box>
             </Box>
 
@@ -224,17 +292,18 @@ export default function VerticalTabs() {
                 selectedFlavor={selectedFlavor}
                 selectedTopping={selectedTopping}
                 selectedColor={selectedColor}
-
+                value={value}
               />
+              <Typography sx={{ position: 'absolute', right: 16, top: 16, color: '#42a5f5' }} variant="h6">
+                {price} ₪
+              </Typography>
             </Box>
 
 
           </Box>
 
       }
-      <Button onClick={handleSubmit} variant='outlined'>
-        Order now
-      </Button>
+
     </>
   );
 }

@@ -2,10 +2,13 @@ import { CheckCircleOutline } from '@mui/icons-material'
 import { Box, ImageList, ImageListItem, ImageListItemBar, Typography } from '@mui/material'
 import React from 'react'
 
-function ToppingTab({ toppings, selectedTopping, setSelectedTopping }) {
+function ToppingTab({ toppings, selectedTopping, setSelectedTopping,handlePriceChange }) {
 
   const handleSelectedTopping = (topping) => {
+    const oldPrice =selectedTopping?.price||0;
     setSelectedTopping(topping);
+    const newPrice =topping?.price||0;
+    handlePriceChange(oldPrice,newPrice);
   }
   
   return (
