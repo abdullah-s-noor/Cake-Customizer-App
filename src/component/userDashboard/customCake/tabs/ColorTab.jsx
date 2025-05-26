@@ -6,7 +6,8 @@ const predefinedColors = [
     '#ffeb3b', '#ff9800', '#f44336',
     '#f8bbd0', '#e91e63', '#4caf50',
     '#81c784', '#03a9f4', '#0d47a1',
-    '#fbe9e7', '#ffe0b2', '#5d4037'
+    '#fbe9e7', '#ffe0b2', '#5d4037',
+    'ffffff'
 ];
 
 const ColorTab = ({ setSelectedColor, selectedColor}) => {
@@ -34,6 +35,7 @@ const ColorTab = ({ setSelectedColor, selectedColor}) => {
                 borderRadius: '8px',
                 backgroundColor: '#42a5f5',
             },
+            
         }}>
             {/* Color Picker Button */}
             <Tooltip title="Pick custom color">
@@ -73,6 +75,7 @@ const ColorTab = ({ setSelectedColor, selectedColor}) => {
                         cursor: 'pointer',
                     }}
                 />
+                
             ))}
         </Box>
     );
