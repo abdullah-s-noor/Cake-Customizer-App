@@ -16,6 +16,18 @@
     text-transform: uppercase;
     transition: linear 0.1s;
 }
+.nav-link-notHome {
+    color: white;
+    text-decoration: none;
+    font-size: medium;
+    font-weight: 400;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: linear 0.1s;
+}
 
 .nav-link:hover {
     color: white;
