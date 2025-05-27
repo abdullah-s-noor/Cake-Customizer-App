@@ -65,13 +65,13 @@ export default function ManageOrders() {
     setOrderRows(updatedRows);
   };
   const columns = [
-    {
-      field: "_id",
-      headerName: "ID",
-      width: 90,
-      align: "center",
-      headerAlign: "center",
-    },
+    // {
+    //   field: "_id",
+    //   headerName: "ID",
+    //   width: 90,
+    //   align: "center",
+    //   headerAlign: "center",
+    // },
     {
       field: "user",
       headerName: "Customer",
