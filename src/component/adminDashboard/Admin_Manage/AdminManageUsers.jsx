@@ -17,13 +17,7 @@ function formatDateToLong(dateString) {
 
 export default function Admin_Manage() {
   const columns = [
-    {
-      field: "_id",
-      headerName: "ID",
-      width: 90,
-      align: "center",
-      headerAlign: "center",
-    },
+    
     {
       field: "username",
       headerName: "Full Name",
@@ -78,7 +72,7 @@ export default function Admin_Manage() {
     {
       field: "action",
       headerName: "Action",
-      width: 200,
+      width: 120,
       align: "center",
       headerAlign: "center",
       sortable: false,
@@ -138,7 +132,7 @@ export default function Admin_Manage() {
         <Box
           sx={{
             height: 500,
-            width: "auto",
+            width: "86%",
             mt: 7,
             justifyContent: "center",
             mx: "auto",
