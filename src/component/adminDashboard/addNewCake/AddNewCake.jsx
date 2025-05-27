@@ -64,9 +64,10 @@ export default function AddNewCake() {
         formData.append(key, value);
       });
 
-      await api.post("/cake", formData, {
+      const resp = await api.post("/cake", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      setCakeData(resp.data);
 
       toast.success("Cake added successfully!");
       setCakeData({
@@ -104,14 +105,14 @@ export default function AddNewCake() {
         textAlign="center"
         sx={{ fontFamily: "Arial, sans-serif" }}
       >
-        <Typography variant="h6" fontWeight="bold" mb={1} color="#E0BFBF">
+        <Typography variant="h6" fontWeight="bold" mb={1} color="#723d46">
           Add New Cake <CakeIcon fontSize="small" sx={{ mb: 0.5 }} />
         </Typography>
 
         <Typography
           variant="subtitle2"
           fontWeight="bold"
-          color="#E0BFBF"
+          color="#723d46"
           mb={1}
         >
           Add Image
@@ -120,7 +121,7 @@ export default function AddNewCake() {
         <Box
           component="label"
           htmlFor="upload-button"
-          border="1px dashed #E0BFBF"
+          border="1px dashed #723d46"
           borderRadius={2}
           mb={3}
           sx={{
@@ -147,7 +148,7 @@ export default function AddNewCake() {
             />
           ) : (
             <AddPhotoAlternateOutlinedIcon
-              sx={{ fontSize: 32, color: "#E0BFBF" }}
+              sx={{ fontSize: 32, color: "#723d46" }}
             />
           )}
           <input
@@ -276,7 +277,7 @@ export default function AddNewCake() {
             type="submit"
             disabled={loading}
             sx={{
-              background: "linear-gradient(to right, #f7e4e4, #e0bfbf)",
+              background: "linear-gradient(to right, #723d46, #723d46)",
               color: "white",
               fontWeight: "bold",
               fontSize: 22,

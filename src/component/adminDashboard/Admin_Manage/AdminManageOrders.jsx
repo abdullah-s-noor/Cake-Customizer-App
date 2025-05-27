@@ -40,17 +40,16 @@ export default function ManageOrders() {
 
   const getStatusChip = (status) => {
     let color, label;
-
     switch (status) {
-      case "Pending":
+      case "pending":
         color = "warning";
         label = "Pending";
         break;
-      case "Delivered":
+      case "accepted":
         color = "success";
-        label = "Delivered";
+        label = "Accepted";
         break;
-      case "Cancelled":
+      case "cancelled":
         color = "error";
         label = "Cancelled";
         break;
@@ -58,7 +57,6 @@ export default function ManageOrders() {
         color = "default";
         label = status;
     }
-
     // @ts-ignore
     return <Chip label={label} color={color} size="small" />;
   };

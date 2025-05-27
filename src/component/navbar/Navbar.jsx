@@ -34,7 +34,7 @@ function Navbar({ setSidebarDisplay, setSidebarType }) {
     else {
       setNavBarProps({
         sx: {
-          bgcolor: '#42a5f5',
+          bgcolor: '#723d46',
           position: 'static',
           boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)'
         },
@@ -82,9 +82,9 @@ function Navbar({ setSidebarDisplay, setSidebarType }) {
           !isSmallScreen &&
 
           <div className='navbar-links'>
-            <a className='nav-link'>Home</a>
-            <a className='nav-link'>About us</a>
-            <a className='nav-link'>contact us</a>
+            <a className={location.pathname =='/'?'nav-link':'nav-link-notHome'}>Home</a>
+            <a className={location.pathname =='/'?'nav-link':'nav-link-notHome'}>About us</a>
+            <a className={location.pathname =='/'?'nav-link':'nav-link-notHome'}>contact us</a>
           </div>
         }
         {/* Right - Icons */}
