@@ -22,7 +22,6 @@ export default function Admin_Manage() {
       field: "username",
       headerName: "Full Name",
       width: 200,
-      editable: true,
       align: "center",
       headerAlign: "center",
     },
@@ -30,7 +29,6 @@ export default function Admin_Manage() {
       field: "email",
       headerName: "Email",
       width: 250,
-      editable: true,
       align: "center",
       headerAlign: "center",
     },
@@ -38,7 +36,6 @@ export default function Admin_Manage() {
       field: "phone",
       headerName: "Phone Number",
       width: 160,
-      editable: true,
       align: "center",
       headerAlign: "center",
     },
@@ -46,7 +43,6 @@ export default function Admin_Manage() {
       field: "role",
       headerName: "Role",
       width: 120,
-      editable: true,
       align: "center",
       headerAlign: "center",
     },
@@ -54,7 +50,6 @@ export default function Admin_Manage() {
       field: "status",
       headerName: "Status",
       width: 120,
-      editable: true,
       align: "center",
       headerAlign: "center",
     },
@@ -62,7 +57,6 @@ export default function Admin_Manage() {
       field: "birthdate",
       headerName: "Birth Date",
       width: 130,
-      editable: true,
       align: "center",
       headerAlign: "center",
       renderCell: (params) => {
@@ -72,7 +66,7 @@ export default function Admin_Manage() {
     {
       field: "action",
       headerName: "Action",
-      width: 120,
+      width: 150,
       align: "center",
       headerAlign: "center",
       sortable: false,
@@ -81,19 +75,19 @@ export default function Admin_Manage() {
         <Box sx={{ display: "flex", gap: 1, mt: 1, justifyContent: "center" }}>
           <Button
             sx={{
-              backgroundColor: "#f44336",
+              backgroundColor: "#723d46",
               color: "white",
               borderRadius: "5px",
               padding: "5px 10px",
               border: "none",
               cursor: "pointer",
               "&:hover": {
-                backgroundColor: "#d32f2f",
+                backgroundColor: "#8e4c57",
               },
             }}
-            onClick={() => handleDelete(params.row._id)}
+            onClick={() => handleStatus(params.row._id)}
           >
-            Delete
+            change status
           </Button>
         </Box>
       ),
@@ -103,18 +97,12 @@ export default function Admin_Manage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-
     const fetchData = async () => {
-
       try {
-
         const responseData = (await api.get('/user?page=1&limit=5')).data
         setRows(responseData.users)
-
       } catch {
-
         toast.error("An error occured during fetching users")
-
       } finally {
         setLoading(false)
       }
@@ -122,9 +110,32 @@ export default function Admin_Manage() {
     fetchData()
   }, [])
 
-  const handleDelete = (id) => {
-    setRows((prevRows) => prevRows.filter((row) => row._id !== id));
+  const handleStatus = async (id) => {
+  try {
+    // Find the user to check their status
+    const user = rows.find((row) => row._id === id);
+    if ( user.status === "active") {
+      // Update user status to "inactive"
+      await api.patch(`/user/${id}`);
+      setRows((prev) =>
+        prev.map((row) =>
+          row._id === id ? { ...row, status: "inactive" } : row
+        )
+      );
+      toast.success("User inactivated successfully");
+    } else {
+       await api.patch(`/user/${id}`);
+      setRows((prev) =>
+        prev.map((row) =>
+          row._id === id ? { ...row, status: "active" } : row
+        )
+      );
+      toast.success("User activated successfully");
+    }
+  } catch {
+    toast.error("Failed to update user status");
   }
+};
 
   return (
     <>
@@ -132,7 +143,7 @@ export default function Admin_Manage() {
         <Box
           sx={{
             height: 500,
-            width: "86%",
+            width: "83.8%",
             mt: 7,
             justifyContent: "center",
             mx: "auto",
@@ -143,17 +154,25 @@ export default function Admin_Manage() {
             // @ts-ignore
             columns={columns}
             getRowId={(row) => row._id}
+             autoHeight
             initialState={{
               pagination: {
                 paginationModel: { pageSize: 5 },
               },
             }}
             pageSizeOptions={[5]}
-            checkboxSelection
-            disableRowSelectionOnClick
-            disableSelectionOnClick
-            autoHeight
-
+             sx={{
+              "& .MuiDataGrid-cell": {
+                justifyContent: "center",
+                alignItems: "center",
+                display: "flex",
+              },
+              "& .MuiDataGrid-columnHeader": {
+                justifyContent: "center",
+                bgcolor: "#723d46",
+                color: "white",
+              },
+            }}
           />
         </Box>
       }
