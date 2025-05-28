@@ -26,7 +26,7 @@ function Login() {
             setServerError('') // Clear any previous error
             localStorage.setItem("userToken", data.token);
 
-            navigate('/home')
+            navigate('/')
         } catch (error) {
             if (error.response && error.response.data && error.response.data.message) {
                 setServerError(error.response.data.message)
@@ -92,7 +92,7 @@ function Login() {
                                 Sign In
                             </Button>
                             <Button variant="contained" fullWidth type="submit" sx={{ ...styles.exploreButton, display: { xs: 'flex', md: 'none' } }}
-                                onClick={() => navigate('/home')}
+                                onClick={() => navigate('/')}
                             >
                                 Explore As Guest
                             </Button>

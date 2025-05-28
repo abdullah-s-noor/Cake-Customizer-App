@@ -85,6 +85,7 @@ export default function ChangePassword() {
         <FormControl
           variant="outlined"
           sx={style.FieldStyleChangePassword}
+          // @ts-ignore
           error={!!errors.oldPassword}
         >
           <InputLabel>Old Password</InputLabel>
@@ -95,7 +96,7 @@ export default function ChangePassword() {
               <InputAdornment position="end">
                 <IconButton
                   onClick={() => setShowOldPassword(!showOldPassword)}
-                  sx={{ color: "#1F4B43" }}
+                  sx={{ color: "#723d46" }}
                 >
                   {showOldPassword ? <Visibility /> : <VisibilityOff />}
                 </IconButton>
@@ -105,14 +106,19 @@ export default function ChangePassword() {
             value={userData.oldPassword}
             onChange={handleInputChange}
           />
-          {errors.oldPassword && (
-            <FormHelperText>{errors.oldPassword}</FormHelperText>
+          {errors.
+// @ts-ignore
+          oldPassword && (
+            <FormHelperText>{errors.
+// @ts-ignore
+            oldPassword}</FormHelperText>
           )}
         </FormControl>
 
         <FormControl
           variant="outlined"
           sx={style.FieldStyleChangePassword}
+          // @ts-ignore
           error={!!errors.newPassword}
         >
           <InputLabel>New Password</InputLabel>
@@ -123,7 +129,7 @@ export default function ChangePassword() {
               <InputAdornment position="end">
                 <IconButton
                   onClick={() => setShowNewPassword(!showNewPassword)}
-                  sx={{ color: "#1F4B43" }}
+                  sx={{ color: "#723d46" }}
                 >
                   {showNewPassword ? <Visibility /> : <VisibilityOff />}
                 </IconButton>
@@ -133,14 +139,19 @@ export default function ChangePassword() {
             value={userData.newPassword}
             onChange={handleInputChange}
           />
-          {errors.newPassword && (
-            <FormHelperText>{errors.newPassword}</FormHelperText>
+          {errors.
+// @ts-ignore
+          newPassword && (
+            <FormHelperText>{errors.
+// @ts-ignore
+            newPassword}</FormHelperText>
           )}
         </FormControl>
 
         <FormControl
           variant="outlined"
           sx={style.FieldStyleChangePassword}
+          // @ts-ignore
           error={!!errors.confirmPassword}
         >
           <InputLabel>Confirm Password</InputLabel>
@@ -151,7 +162,7 @@ export default function ChangePassword() {
               <InputAdornment position="end">
                 <IconButton
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  sx={{ color: "#1F4B43" }}
+                  sx={{ color: "#723d46" }}
                 >
                   {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
                 </IconButton>
@@ -161,8 +172,12 @@ export default function ChangePassword() {
             value={userData.confirmPassword}
             onChange={handleInputChange}
           />
-          {errors.confirmPassword && (
-            <FormHelperText>{errors.confirmPassword}</FormHelperText>
+          {errors.
+// @ts-ignore
+          confirmPassword && (
+            <FormHelperText>{errors.
+// @ts-ignore
+            confirmPassword}</FormHelperText>
           )}
         </FormControl>
 
