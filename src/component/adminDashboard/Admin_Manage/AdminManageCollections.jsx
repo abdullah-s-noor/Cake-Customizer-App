@@ -9,7 +9,6 @@ import {api} from "../../../api/api";
 
 export default function AdminManageCakes() {
   const [rows, setRows] = useState([]);
-  const [selectionModel, setSelectionModel] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   document.title = "Manage collections";
@@ -41,24 +40,6 @@ export default function AdminManageCakes() {
     };
     fetchData();
   }, []);
-
-  
-  // useEffect(() => {
-  //   const handleKeyDown = async (event) => {
-  //     const responseData =(await api.get("/collections/67c8d85904d8b3a3d68a2349")).data;
-  //     if (event.key === "Delete") {
-  //       // const idsToDelete = responseData.map((id) => id);
-  //       setRows((prev) => prev.filter((row) => !selectionModel.includes(row._id)));
-  //       toast.success("Selected cakes deleted successfully");
-  //       setSelectionModel([]);
-  //     }
-  //   };
-  //   document.addEventListener("keydown", handleKeyDown);
-  //   return () => {
-  //     document.removeEventListener("keydown", handleKeyDown);
-  //   };
-  // }, [selectionModel]);
-
   const columns = [
   
     {
@@ -116,11 +97,11 @@ export default function AdminManageCakes() {
           </Button>
           <Button
             variant="outlined"
-            color="error"
             onClick={() => handleDelete(params.row._id)}
             sx={{
               width: "70%",
               textTransform: "none",
+               color:"#723d46"
             }}
           >
 
@@ -136,13 +117,13 @@ export default function AdminManageCakes() {
       {loading ? <Loader/>:
         <Box sx={{maxWidth:{xs:"700px",md:"600px"}, mx: "auto", mt: 7, mb: 7 }}>
           <Box display="flex" justifyContent="space-between" mb={2}>
-            <Typography variant="h6" color="#42a5f5">
+            <Typography variant="h6" color="#723d46">
               Admin - Manage Cakes
             </Typography>
             <Button
               variant="contained"
               sx={{
-                backgroundColor: "#42a5f5",
+                backgroundColor: "#723d46",
               }}
               onClick={() => {
                 navigate("/addnewcake");
@@ -153,16 +134,9 @@ export default function AdminManageCakes() {
           </Box>
           <DataGrid
             rows={rows}
-            getRowId={row => row._id} // Only show rows you want
             // @ts-ignore
             columns={columns}
-            checkboxSelection
-            selection
-            model={selectionModel}
-            onSelectionModelChange={(newSelection) =>
-              setSelectionModel(newSelection)
-            }
-            disableRowSelectionOnClick
+            getRowId={row => row._id}
             autoHeight
             pageSizeOptions={[3]}
             rowHeight={100}
@@ -177,7 +151,7 @@ export default function AdminManageCakes() {
                 justifyContent: "center",
               },
               "& .MuiDataGrid-columnHeader": {
-                backgroundColor: "#42a5f5",
+                backgroundColor: "#723d46",
                 color: "white",
               },
             }}
