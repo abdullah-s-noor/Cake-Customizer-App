@@ -5,7 +5,7 @@ export const style = {
     textAlign: "center",
     marginTop: 15,
     marginBottom: 3,
-    color: "#1F4B43",
+    color: "#723d46",
   },
 
   FieldStyle: {
@@ -13,7 +13,7 @@ export const style = {
 
     marginBottom: "5px",
     "& .MuiInputLabel-root": {
-      color: "#1F4B43",
+      color: "#723d46",
     },
     "& .MuiInputLabel-root.Mui-focused": {
       color: "#1F4B43",
@@ -42,7 +42,7 @@ export const style = {
     },
   },
   ButtonStyle: {
-    backgroundColor: "#1F4B43",
+    backgroundColor: "#723d46",
     color: "white",
     padding: "10px",
     borderRadius: "8px",
@@ -53,7 +53,7 @@ export const style = {
   AlreadyStyle: {
     textAlign: "center",
     fontSize: "16px",
-    color: "#1F4B43",
+    color: "#723d46",
     Width: "100%",
     marginTop: "10px",
   },
@@ -85,7 +85,7 @@ export const style = {
     left: "50%",
     transform: "translate(-50%, -50%)",
     backgroundColor: "#E6F4EA",
-    color: "#1F4B43",
+    color: "#723d46",
     padding: "20px 30px",
     borderRadius: "8px",
     boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
@@ -97,10 +97,10 @@ export const style = {
     width: "100%",
     marginBottom: "15px",
     "& .MuiInputLabel-root": {
-      color: "#1F4B43",
+      color: "#723d46",
     },
     "& .MuiInputLabel-root.Mui-focused": {
-      color: "#1F4B43",
+      color: "#723d46",
     },
     "& .MuiOutlinedInput-root": {
       "& fieldset": {
@@ -110,14 +110,14 @@ export const style = {
         borderColor: "#B0B0B0",
       },
       "&.Mui-focused fieldset": {
-        borderColor: "#1F4B43",
+        borderColor: "#723d46",
       },
       "&.Mui-error fieldset": {
         borderColor: "#D32F2F",
       },
     },
     "& .MuiOutlinedInput-input": {
-      color: "#1F4B43",
+      color: "#723d46",
     },
     "& .MuiFormHelperText-root": {
       color: "#D32F2F",
