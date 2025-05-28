@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box, Button, Chip, Typography } from "@mui/material";
+import { Box, Button, Chip, Typography, Menu, MenuItem } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -17,17 +17,19 @@ function formatDateToLong(dateString) {
     year: "numeric",
   }).format(date);
 }
+
 export default function ManageOrders() {
   document.title = "Manage Orders";
   const navigate = useNavigate();
   const [orderRows, setOrderRows] = useState([]);
-  const [selectionModel, setSelectionModel] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [menuAnchorEl, setMenuAnchorEl] = useState(null);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseData = (await api.get("/order/all")).data;
+        const responseData = (await api.get("/order/all?limit=20")).data;
         setOrderRows(responseData.orders);
       } catch {
         toast.error("An error occured during fetching orders");
@@ -60,22 +62,49 @@ export default function ManageOrders() {
     // @ts-ignore
     return <Chip label={label} color={color} size="small" />;
   };
-  const handleDelete = (id) => {
-    const updatedRows = orderRows.filter((row) => row._id !== id);
-    setOrderRows(updatedRows);
+
+  const handleCancel = async (id) => {
+    try {
+      const user = orderRows.find((row) => row._id === id);
+      if (user.status !== "cancelled") {
+        await api.post("/order/cancel", { orderId: id });
+        setOrderRows((prev) =>
+          prev.map((row) =>
+            row._id === id ? { ...row, status: "cancelled" } : row
+          )
+        );
+        toast.success("Order cancelled successfully");
+      } else {
+        toast.info("Order is already cancelled");
+      }
+    } catch {
+      toast.error("Failed to update order status");
+    }
   };
+
+  const updateStatus = async (id, newStatus) => {
+    try {
+      const order = orderRows.find((row) => row._id === id);
+      if (order && order.status === newStatus) {
+        toast.info(`Order status already ${newStatus}`);
+        return;
+      }
+      await api.put("/order/update/status", { orderId: id, status: newStatus });
+      setOrderRows((prev) =>
+        prev.map((row) =>
+          row._id === id ? { ...row, status: newStatus } : row
+        )
+      );
+      toast.success(`Order status updated to ${newStatus}`);
+    } catch {
+      toast.error("Failed to update order status");
+    }
+  };
+
   const columns = [
-    // {
-    //   field: "_id",
-    //   headerName: "ID",
-    //   width: 90,
-    //   align: "center",
-    //   headerAlign: "center",
-    // },
     {
       field: "user",
       headerName: "Customer",
-      editable: true,
       flex: 1,
       align: "center",
       headerAlign: "center",
@@ -83,14 +112,12 @@ export default function ManageOrders() {
     {
       field: "items",
       headerName: "items",
-      editable: true,
       width: 130,
       align: "center",
       headerAlign: "center",
       renderCell: (params) => {
         const items = params.value;
         if (Array.isArray(items) && items.length > 0) {
-          // Show a summary: e.g. "summer cake x3, chocolate cake x2"
           return items
             .map(
               (item) => `${item.cake?.name || "Cake"} x${item.quantity || 1}`
@@ -103,7 +130,6 @@ export default function ManageOrders() {
     {
       field: "totalPrice",
       headerName: "Price",
-      editable: true,
       width: 120,
       align: "center",
       headerAlign: "center",
@@ -112,7 +138,6 @@ export default function ManageOrders() {
     {
       field: "status",
       headerName: "Status",
-      editable: true,
       width: 130,
       align: "center",
       headerAlign: "center",
@@ -124,8 +149,7 @@ export default function ManageOrders() {
     },
     {
       field: "createdAt",
-      headerName: "BirthDay",
-      editable: true,
+      headerName: "Order Date",
       width: 130,
       align: "center",
       headerAlign: "center",
@@ -136,7 +160,7 @@ export default function ManageOrders() {
     {
       field: "actions",
       headerName: "Actions",
-      width: 160,
+      width: 250,
       align: "center",
       headerAlign: "center",
       sortable: false,
@@ -156,12 +180,23 @@ export default function ManageOrders() {
           <Button
             variant="outlined"
             size="small"
-            sx={{ color: "#d32f2f", borderColor: "#d32f2f" }}
-            onClick={() => {
-              handleDelete(params.row._id);
+            sx={{ color: "#388e3c", borderColor: "#388e3c" }}
+            onClick={(e) => {
+              setSelectedOrderId(params.row._id);
+              setMenuAnchorEl(e.currentTarget);
             }}
           >
-            DELETE
+            Update
+          </Button>
+          <Button
+            variant="outlined"
+            size="small"
+            sx={{ color: "#d32f2f", borderColor: "#d32f2f" }}
+            onClick={() => {
+              handleCancel(params.row._id);
+            }}
+          >
+            Cancel
           </Button>
         </Box>
       ),
@@ -173,7 +208,7 @@ export default function ManageOrders() {
       {loading ? (
         <Loader />
       ) : (
-        <Box sx={{ width: "70%", mx: "auto", mt: 9, mb: 9 }}>
+        <Box sx={{ width: "76%", mx: "auto", mt: 9, mb: 9 }}>
           <Typography variant="h5" fontWeight="bold" mb={2}>
             Manage Orders
           </Typography>
@@ -182,18 +217,12 @@ export default function ManageOrders() {
             // @ts-ignore
             columns={columns}
             getRowId={(row) => row._id}
-            checkboxSelection
-            selectionModel={selectionModel}
-            onSelectionModelChange={(newSelection) =>
-              setSelectionModel(newSelection)
-            }
             initialState={{
               pagination: {
                 paginationModel: { pageSize: 5 },
               },
             }}
             rowsPerPageOptions={[5]}
-            disableRowSelectionOnClick
             autoHeight
             sx={{
               "& .MuiDataGrid-cell": {
@@ -203,9 +232,42 @@ export default function ManageOrders() {
               },
               "& .MuiDataGrid-columnHeader": {
                 justifyContent: "center",
+                bgcolor: "#723d46",
+                color: "white",
               },
             }}
           />
+          {/* Status Update Menu */}
+          <Menu
+            anchorEl={menuAnchorEl}
+            open={Boolean(menuAnchorEl)}
+            onClose={() => setMenuAnchorEl(null)}
+          >
+            <MenuItem
+              onClick={() => {
+                updateStatus(selectedOrderId, "accepted");
+                setMenuAnchorEl(null);
+              }}
+            >
+              Accepted
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                updateStatus(selectedOrderId, "pending");
+                setMenuAnchorEl(null);
+              }}
+            >
+              Pending
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                updateStatus(selectedOrderId, "cancelled");
+                setMenuAnchorEl(null);
+              }}
+            >
+              Cancelled
+            </MenuItem>
+          </Menu>
         </Box>
       )}
     </>
