@@ -27,16 +27,23 @@ export default function AddNewCake() {
   const [open, setOpen] = useState(false);
   const [cakeData, setCakeData] = useState({
     name: "",
-    collection: "",
+    cakeCollection: "",
     shape: "",
-    flavour: "",
+    flavors: [], 
     topping: "",
     color: "",
+    // price:"",
     image: null,
   });
 
   const handleChange = (e) => {
-    setCakeData({ ...cakeData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    // For flavors, split by comma or handle as array
+    if (name === "flavors") {
+      setCakeData({ ...cakeData, flavors: value.split(",").map((v) => v.trim()) });
+    } else {
+      setCakeData({ ...cakeData, [name]: value });
+    }
   };
 
   const handleImageChange = (event) => {
@@ -46,9 +53,14 @@ export default function AddNewCake() {
       setSelectedImage(URL.createObjectURL(file));
     }
   };
+
   const handleConfirm = () => {
-    for(const key in cakeData){
-      if(!cakeData[key]){
+    for (const key in cakeData) {
+      if (key === "flavors" && (!cakeData.flavors || cakeData.flavors.length === 0)) {
+        toast.error(`Please fill in all fields`);
+        return;
+      }
+      if (key !== "flavors" && !cakeData[key]) {
         toast.error(`Please fill in all fields`);
         return;
       }
@@ -57,26 +69,38 @@ export default function AddNewCake() {
   };
 
   const handleButton = async () => {
+    setLoading(true);
     try {
       const formData = new FormData();
-      Object.entries(cakeData).forEach(([key, value]) => {
-        if (key === "image" && !value) return;
-        formData.append(key, value);
+      formData.append("name", cakeData.name);
+      formData.append("shape", cakeData.shape);
+      formData.append("color", cakeData.color);
+      formData.append("topping", cakeData.topping);
+      formData.append("cakeCollection", cakeData.cakeCollection);
+      // formData.append("price", cakeData.price);
+      if (cakeData.image) {
+        formData.append("image", cakeData.image);
+      }
+      // Append each flavor as flavors[]
+      cakeData.flavors.forEach((flavor) => {
+        formData.append("flavors[]", flavor);
       });
 
-      const resp = await api.post("/cake", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      await api.post("/cake", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
-      setCakeData(resp.data);
 
       toast.success("Cake added successfully!");
       setCakeData({
         name: "",
-        collection: "",
+        cakeCollection: "",
         shape: "",
-        flavour: "",
+        flavors: [],
         topping: "",
         color: "",
+        // price:"",
         image: null,
       });
       setSelectedImage(null);
@@ -84,7 +108,7 @@ export default function AddNewCake() {
       toast.error(err.message);
     } finally {
       setLoading(false);
-      setOpen(false); // Close confirmation dialog
+      setOpen(false); 
     }
   };
 
@@ -181,9 +205,9 @@ export default function AddNewCake() {
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
-              name="collection"
-              placeholder="Collections"
-              value={cakeData.collection}
+              name="cakeCollection"
+              placeholder="Collection "
+              value={cakeData.cakeCollection}
               onChange={handleChange}
               required
               InputProps={{
@@ -200,7 +224,7 @@ export default function AddNewCake() {
             <TextField
               fullWidth
               name="shape"
-              placeholder="Shape"
+              placeholder="Shape "
               value={cakeData.shape}
               onChange={handleChange}
               required
@@ -217,9 +241,9 @@ export default function AddNewCake() {
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
-              name="flavour"
-              placeholder="Flavour"
-              value={cakeData.flavour}
+              name="flavors"
+              placeholder='Flavor'
+              value={cakeData.flavors.join(",")}
               onChange={handleChange}
               required
               InputProps={{
@@ -236,7 +260,7 @@ export default function AddNewCake() {
             <TextField
               fullWidth
               name="topping"
-              placeholder="Topping"
+              placeholder="Topping "
               value={cakeData.topping}
               onChange={handleChange}
               required
@@ -267,6 +291,24 @@ export default function AddNewCake() {
               }}
             />
           </Grid>
+           {/* <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              type="number"
+              name="price"
+              placeholder="Price"
+              value={cakeData.price}
+              onChange={handleChange}
+              required
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <ColorLensIcon fontSize="small" />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Grid> */}
         </Grid>
 
         <Box mt={4}>
