@@ -83,10 +83,10 @@ export default function ReviewModal({ open, onClose, cakeId  }) {
         </Box>
       </DialogContent>
       <DialogActions sx={{ px: 3, pb: 2 }}>
-        <Button onClick={onClose} variant="outlined">
+        <Button onClick={onClose} variant="outlined" sx={{color:'#723d46',border:'#723d46 1px solid'}}>
           Cancel
         </Button>
-        <Button onClick={submitReview} variant="contained" sx={{ fontWeight: "bold" }}>
+        <Button onClick={submitReview} variant="contained" sx={{ fontWeight: "bold",bgcolor:'#723d46' }}>
           Post
         </Button>
       </DialogActions>

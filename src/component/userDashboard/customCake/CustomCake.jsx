@@ -92,8 +92,8 @@ export default function VerticalTabs() {
         const { data } = await axios.get('/data/data.json');
         setShapes(data.shapes);
         let initialShape = await data.shapes[0];
-        if(location?.state?.orderDetails?.shape){
-          initialShape=data.shapes.find((shape)=>(shape._id==selectedShape._id));
+        if (location?.state?.orderDetails?.shape) {
+          initialShape = data.shapes.find((shape) => (shape._id == selectedShape._id));
         }
         handleSelectedShape(initialShape);
       } catch (err) {
@@ -124,8 +124,8 @@ export default function VerticalTabs() {
       (topping) => topping.name === selectedTopping?.name
     );
     setSelectedTopping(matchedtopping);
-    const filePrice=uploadedFile ? 4 : 0;
-    setPrice(shape.price + (matchedFlavor?.price || 0) + (matchedtopping?.price || 0)+filePrice);
+    const filePrice = uploadedFile ? 4 : 0;
+    setPrice(shape.price + (matchedFlavor?.price || 0) + (matchedtopping?.price || 0) + filePrice);
   }
   const handlePriceChange = (oldPrice, newPrice) => {
     setPrice((prev) => prev - oldPrice + newPrice);
@@ -149,7 +149,7 @@ export default function VerticalTabs() {
 
   }
   const totalTabs = 5;
-  const isAllSelected = selectedShape && selectedFlavor  && selectedTopping;
+  const isAllSelected = selectedShape && selectedFlavor && selectedTopping;
   const handleNext = () => {
     if (value < totalTabs - 1) {
       setValue((prev) => prev + 1);
@@ -186,10 +186,20 @@ export default function VerticalTabs() {
                 value={value}
                 onChange={handleChange}
                 aria-label="Vertical tabs example"
+                
+                // @ts-ignore
+                textColor="#723d46"
+                indicatorColorindicatorColorindicatorColor
                 sx={{
                   borderRight: 1,
                   borderColor: 'divider',
                   width: { xs: '25%', sm: 'none' },
+                  '& .Mui-selected': {
+                    color: '#723d46',
+                  },
+                  '& .MuiTabs-indicator': {
+                    backgroundColor: '#723d46',
+                  },
                 }}
               >
                 <Tab icon={<Cake />} label="shape" {...a11yProps(0)} sx={{ p: 0, minWidth: '0px', fontSize: { xs: '10px', md: '14px' } }} />
@@ -252,9 +262,9 @@ export default function VerticalTabs() {
                 <Box sx={{ position: 'absolute', bottom: 33, left: 0, right: 0, display: 'flex', justifyContent: 'center' }}>
                   <Button onClick={handleNext} variant='contained' sx={{
 
-                    backgroundColor: '#42a5f5',
+                    backgroundColor: '#723d46',
                     '&:hover': {
-                      backgroundColor: '#1e88e5',
+                      backgroundColor: '#5a2f38',
                       color: 'white',
                     },
                     width: { xs: '100%' },
@@ -268,7 +278,7 @@ export default function VerticalTabs() {
                     mr: 2,
                     ml: 2,
                   }}>
-                    {(value===4&&isAllSelected) ? 'Display Cake Info' : 'Next Tab'}
+                    {(value === 4 && isAllSelected) ? 'Display Cake Info' : 'Next Tab'}
                   </Button>
                 </Box>
               </Box>
@@ -292,7 +302,7 @@ export default function VerticalTabs() {
                 selectedColor={selectedColor}
                 value={value}
               />
-              <Typography sx={{ position: 'absolute', right: 16, top: 16, color: '#42a5f5' }} variant="h6">
+              <Typography sx={{ position: 'absolute', right: 16, top: 16, color: '#723d46' }} variant="h6">
                 {price} ₪
               </Typography>
             </Box>
