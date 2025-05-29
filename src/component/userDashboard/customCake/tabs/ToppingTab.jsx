@@ -28,7 +28,7 @@ function ToppingTab({ toppings, selectedTopping, setSelectedTopping,handlePriceC
         },
         '&::-webkit-scrollbar-thumb': {
           borderRadius: '8px',
-          backgroundColor: '#42a5f5',
+          backgroundColor: '#723d46',
         },
       }}
     >
@@ -43,7 +43,7 @@ function ToppingTab({ toppings, selectedTopping, setSelectedTopping,handlePriceC
             borderRadius: 2,
             transition: '0.2s',
             position: 'relative',
-            bgcolor: selectedTopping?._id === item?._id ? '#e3f2fd' : 'transparent',
+            bgcolor: selectedTopping?._id === item?._id ? '#f6e6ec' : 'transparent',
           }}
         >
           {
@@ -53,7 +53,7 @@ function ToppingTab({ toppings, selectedTopping, setSelectedTopping,handlePriceC
                 position: 'absolute',
                 top: 8,
                 right: 8,
-                color: '#42a5f5',
+                color: '#723d46',
                 background: '#fff',
                 borderRadius: '50%',
               }}

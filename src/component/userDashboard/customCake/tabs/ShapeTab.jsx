@@ -21,7 +21,7 @@ return (
             },
             '&::-webkit-scrollbar-thumb': {
                 borderRadius: '8px',
-                backgroundColor: '#42a5f5',
+                backgroundColor: '#723d46',
             },
         }}
     >
@@ -36,7 +36,7 @@ return (
                     borderRadius: 2,
                     transition: '0.2s',
                     position: 'relative',
-                    bgcolor: selectedShape._id === item._id ? '#e3f2fd' : 'transparent',
+                    bgcolor: selectedShape._id === item._id ? '#f6e6ec' : 'transparent',
                 }}
             >
                 {
@@ -46,7 +46,7 @@ return (
                             position: 'absolute',
                             top: 8,
                             right: 8,
-                            color: '#42a5f5',
+                            color: '#723d46',
                             background: '#fff',
                             borderRadius: '50%',
                         }}

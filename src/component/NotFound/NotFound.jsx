@@ -36,7 +36,7 @@ export default function NotFound() {
         onClick={() => navigate("/")}
         sx={{
           bgcolor: "#723d46",
-          "&:hover": { bgcolor: "#0f3e3a" },
+          "&:hover": { bgcolor: "#5a2f38" },
           textTransform: "none",
         }}
       >
