@@ -33,7 +33,7 @@ const ColorTab = ({ setSelectedColor, selectedColor}) => {
             },
             '&::-webkit-scrollbar-thumb': {
                 borderRadius: '8px',
-                backgroundColor: '#42a5f5',
+                backgroundColor: '#723d46',
             },
             
         }}>
@@ -64,6 +64,7 @@ const ColorTab = ({ setSelectedColor, selectedColor}) => {
             {/* Predefined Colors */}
             {predefinedColors.map((color, index) => (
                 <Box
+                
                     key={index}
                     onClick={() => setSelectedColor?.(color)}
                     sx={{
@@ -71,7 +72,7 @@ const ColorTab = ({ setSelectedColor, selectedColor}) => {
                         height: 50,
                         borderRadius: '50%',
                         bgcolor: color,
-                        border: selectedColor === color ? '3px solid #8e24aa' : '1px solid #ccc',
+                        border: selectedColor === color ? '3px solid #723d46' : '1px solid #ccc',
                         cursor: 'pointer',
                     }}
                 />

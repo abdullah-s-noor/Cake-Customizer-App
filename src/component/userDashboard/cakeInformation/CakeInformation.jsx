@@ -64,6 +64,7 @@ export default function CakeDetails() {
 
   return (
     <>
+    
       <RateandReview open={open} onClose={handleClose} cakeId={orderDetails?.shape?._id || 'unknown'} />
 
       <Box py={4} sx={{ px: { xs: 6, md: 2 }, maxWidth: 1200, mx: 'auto' }}>
@@ -119,7 +120,7 @@ export default function CakeDetails() {
             </Box>
             <Box mt={4} display="flex" justifyContent="space-between">
               <Typography variant="subtitle2" fontWeight="bold">Price:</Typography>
-              <Typography color="#42a5f5" fontWeight="bold">
+              <Typography color="#723d46" fontWeight="bold">
                 {orderDetails?.price} ₪
               </Typography>
             </Box>
@@ -130,7 +131,7 @@ export default function CakeDetails() {
                 variant="outlined"
                 size="small"
                 onClick={() => setOpen(true)}
-                sx={{ color: '#42a5f5', borderColor: '#42a5f5', fontWeight: 'bold' }}
+                sx={{ color: '#723d46', borderColor: '#723d46', fontWeight: 'bold' }}
               >
                 Write Review
               </Button>
@@ -140,14 +141,14 @@ export default function CakeDetails() {
               <Button
                 variant="contained"
                 fullWidth
-                sx={{ py: 1.5, fontWeight: 'bold', backgroundColor: '#42a5f5', color: 'white', borderRadius: 2 }}
+                sx={{ py: 1.5, fontWeight: 'bold', backgroundColor: '#723d46', color: 'white', borderRadius: 2 }}
               >
                 Add to Cart
               </Button>
               <Button
                 variant="contained"
                 fullWidth
-                sx={{ py: 1.5, fontWeight: 'bold', backgroundColor: '#42a5f5', color: 'white', borderRadius: 2 }}
+                sx={{ py: 1.5, fontWeight: 'bold', backgroundColor: '#723d46', color: 'white', borderRadius: 2 }}
                 onClick={() => navigate('/custom-cake', { state: {orderDetails} })} // Navigate back to custom cake creation
               >
                 Edit Cake

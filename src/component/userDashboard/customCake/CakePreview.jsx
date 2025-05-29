@@ -67,6 +67,7 @@ useEffect(() => {
         </svg>
       )}
       {/* Topping Layer */}
+      
       {(topping&&value!=1) && (
         <img
           src={topping.image.secure_url}
