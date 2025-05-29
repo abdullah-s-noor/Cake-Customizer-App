@@ -25,6 +25,7 @@ function Register() {
         console.log('Response from server:', data)
         setServerError('') // Clear any previous error
         } catch (error) {
+            console.log('Error during registration:', error);
         if (error.response && error.response.data && error.response.data.message) {
             setServerError(error.response.data.message)
         } else {
