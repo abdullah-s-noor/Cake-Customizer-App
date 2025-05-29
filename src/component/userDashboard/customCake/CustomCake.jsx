@@ -91,12 +91,11 @@ export default function VerticalTabs() {
       try {
         const { data } = await axios.get('/data/data.json');
         setShapes(data.shapes);
-        const initialShape = await data.shapes[0];
-        setSelectedShape(location?.state?.orderDetails?.shape || initialShape);
-        setPrice(location?.state?.orderDetails?.price || initialShape.price);
-        setFlavors(initialShape.flavors);
-        setToppings(initialShape.toppings);
-
+        let initialShape = await data.shapes[0];
+        if(location?.state?.orderDetails?.shape){
+          initialShape=data.shapes.find((shape)=>(shape._id==selectedShape._id));
+        }
+        handleSelectedShape(initialShape);
       } catch (err) {
 
       } finally {
@@ -112,7 +111,6 @@ export default function VerticalTabs() {
   };
 
   const handleSelectedShape = (shape) => {
-
     const { flavors, toppings, ...thisShape } = shape
     setSelectedShape(thisShape);
     setFlavors(shape.flavors);

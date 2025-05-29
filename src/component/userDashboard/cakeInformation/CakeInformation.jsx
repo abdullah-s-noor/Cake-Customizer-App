@@ -37,6 +37,7 @@ export default function CakeDetails() {
     if (!location.state || !location.state.orderDetails) {
       navigate('/custom-cake');
     }
+    console.log(orderDetails);
     setOrderDetails(location?.state?.orderDetails)
 
   }, [])

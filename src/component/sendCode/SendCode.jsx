@@ -31,6 +31,7 @@ function SendCode() {
     } catch (error) {
       if (error.response && error.response.data && error.response.data.message) {
         if (error.response.data.message === "validation error") {
+          console.log('Error during sending code:', error)
           setServerError(error.response.data.errormessages[0].email)
 
         } else {
