@@ -64,6 +64,7 @@ const ColorTab = ({ setSelectedColor, selectedColor}) => {
             {/* Predefined Colors */}
             {predefinedColors.map((color, index) => (
                 <Box
+                
                     key={index}
                     onClick={() => setSelectedColor?.(color)}
                     sx={{

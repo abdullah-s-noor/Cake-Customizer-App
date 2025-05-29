@@ -8,6 +8,7 @@ function CollectionTab({ message, setMessage,file, setFile,instructions, setInst
     <Box padding={2} display="flex" flexDirection="column" gap={2}>
       <Box position="relative" sx={{ bgcolor: '#f5f5f5', mb: 2 }}>
         <TextField
+        
           label="Write on your cake"
           placeholder="Example: Happy Birthday"
           multiline

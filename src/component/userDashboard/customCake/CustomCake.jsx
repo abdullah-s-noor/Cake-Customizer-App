@@ -186,6 +186,7 @@ export default function VerticalTabs() {
                 value={value}
                 onChange={handleChange}
                 aria-label="Vertical tabs example"
+                
                 // @ts-ignore
                 textColor="#723d46"
                 indicatorColorindicatorColorindicatorColor

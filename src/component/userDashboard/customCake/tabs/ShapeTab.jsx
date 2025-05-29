@@ -38,6 +38,7 @@ return (
                     position: 'relative',
                     bgcolor: selectedShape._id === item._id ? '#f6e6ec' : 'transparent',
                 }}
+                
             >
                 {
                     selectedShape._id === item._id &&

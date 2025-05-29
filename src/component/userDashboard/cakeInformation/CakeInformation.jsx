@@ -64,6 +64,7 @@ export default function CakeDetails() {
 
   return (
     <>
+    
       <RateandReview open={open} onClose={handleClose} cakeId={orderDetails?.shape?._id || 'unknown'} />
 
       <Box py={4} sx={{ px: { xs: 6, md: 2 }, maxWidth: 1200, mx: 'auto' }}>

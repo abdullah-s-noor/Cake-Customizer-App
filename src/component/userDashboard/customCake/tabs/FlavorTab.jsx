@@ -48,6 +48,7 @@ function FlavorTab({ flavors, selectedFlavor, setSelectedFlavor,handlePriceChang
             {
               selectedFlavor?._id === item?._id &&
               <CheckCircleOutline
+              
                 sx={{
                   position: 'absolute',
                   top: 8,

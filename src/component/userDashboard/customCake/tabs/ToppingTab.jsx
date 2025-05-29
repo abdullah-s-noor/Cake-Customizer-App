@@ -49,6 +49,7 @@ function ToppingTab({ toppings, selectedTopping, setSelectedTopping,handlePriceC
           {
             selectedTopping?._id === item?._id &&
             <CheckCircleOutline
+            
               sx={{
                 position: 'absolute',
                 top: 8,
