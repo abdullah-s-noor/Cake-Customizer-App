@@ -24,6 +24,7 @@ import ChangePassword from "../changePassword/changePassword.jsx";
 import CakeInformation from "../userDashboard/cakeInformation/CakeInformation.jsx";
 import AdminManageCollections from "../adminDashboard/Admin_Manage/AdminManageCollections.jsx";
 import NotFound from "../NotFound/NotFound.jsx";
+import Profile from "../Profile/Profile.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ export const router = createBrowserRouter([
       {
         path: "adminmanageusers",
         element: <AdminManageUsers />,
+      },
+      {
+        path: "profile",
+        element: <Profile />,
       },
 
       {
