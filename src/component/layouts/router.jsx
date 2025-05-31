@@ -3,14 +3,11 @@ import { createBrowserRouter } from "react-router-dom";
 
 import Layout from "./UserLayout.jsx";
 import DashboardLayout from "./DashboardLayout.jsx";
-
 import Home from "../userDashboard/home/Home.jsx";
 import Categories from "../userDashboard/categories/Categories.jsx";
-
 import HomeDashboard from "../adminDashboard/home/Home.jsx";
 import CategoriesDashboard from "../adminDashboard/categories/Categories.jsx";
 import CustomCake from "../userDashboard/customCake/CustomCake.jsx";
-
 import Register from "../register/Register.jsx";
 import Login from "../login/Login.jsx";
 import Cart from "../userDashboard/cart/Cart.jsx";
@@ -25,6 +22,7 @@ import CakeInformation from "../userDashboard/cakeInformation/CakeInformation.js
 import AdminManageCollections from "../adminDashboard/Admin_Manage/AdminManageCollections.jsx";
 import NotFound from "../NotFound/NotFound.jsx";
 import Profile from "../Profile/Profile.jsx";
+import Favourite from "../Favourite/Favourite.jsx"
 
 export const router = createBrowserRouter([
   {
@@ -43,6 +41,10 @@ export const router = createBrowserRouter([
       {
         path: "profile",
         element: <Profile />,
+      },
+      {
+        path: "favourite",
+        element: <Favourite />
       },
 
       {
