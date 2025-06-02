@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Input from '../../pages/Input'
 import { useFormik } from 'formik'
 import { Box, Card, Typography, Button, Link as MuiLink, Alert } from '@mui/material';
@@ -8,9 +8,16 @@ import inputs from './inputs';
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import styles from './styles';
 import LeftSideAth from '../../pages/LeftSideAth';
+import { UserContext } from '../context/User';
 function Register() {
     const navigate = useNavigate();
     const [serverError, setServerError] = useState('')
+    const {userToken}=useContext(UserContext);
+    useEffect(()=>{
+        if(userToken){
+            navigate('/',{replace:true})
+        }
+    },[])
     const initialValues = {
         email: '',
         phone: '',

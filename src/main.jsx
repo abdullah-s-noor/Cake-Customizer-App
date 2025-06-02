@@ -5,17 +5,20 @@ import App from './App.jsx'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import theme from './theme.js'
+import UserContextProvider from "./component/context/User.jsx";
 
 const queryClient = new QueryClient()
 
 createRoot(document.getElementById('root')).render(
 
     <>
-        <QueryClientProvider client={queryClient}>
-            <ThemeProvider theme={theme}>
-                <CssBaseline />
-                <App />
-            </ThemeProvider>
-        </QueryClientProvider>
+        <UserContextProvider>
+            <QueryClientProvider client={queryClient}>
+                <ThemeProvider theme={theme}>
+                    <CssBaseline />
+                    <App />
+                </ThemeProvider>
+            </QueryClientProvider>
+        </UserContextProvider>
     </>
 )
