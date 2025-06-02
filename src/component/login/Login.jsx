@@ -1,23 +1,33 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Input from '../../pages/Input'
 import { useFormik } from 'formik'
 import { Box, Card, Typography, Button, Alert, Link as MuiLink } from '@mui/material'
 import axios from 'axios'
 import validationSchema from './validationSchema'
 import inputs from './inputs'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink, useLocation } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import styles from '../register/styles';
 import LeftSideAth from '../../pages/LeftSideAth'
-import { Password } from '@mui/icons-material'
+import { Password, Token } from '@mui/icons-material'
+import { UserContext } from '../context/User'
 
 function Login() {
     const navigate = useNavigate()
+    const { userToken, setUserToken } = useContext(UserContext);
+    const location = useLocation();
+    const from = location.state?.from?.pathname || '/';
+    useEffect(() => {
+        if (userToken) {
+            navigate(from, { replace: true });
+        }
+    }, [userToken, from, navigate]);
     const [serverError, setServerError] = useState('')
     const initialValues = {
         phone: '',
         password: '',
     }
+
     const onSubmit = async (values) => {
         console.log('Sending Data:', values)
         try {
@@ -25,8 +35,7 @@ function Login() {
             console.log('Response from server:', data)
             setServerError('') // Clear any previous error
             localStorage.setItem("userToken", data.token);
-
-            navigate('/')
+            setUserToken(data.token);
         } catch (error) {
             if (error.response && error.response.data && error.response.data.message) {
                 setServerError(error.response.data.message)

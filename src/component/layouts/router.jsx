@@ -23,6 +23,7 @@ import AdminManageCollections from "../adminDashboard/Admin_Manage/AdminManageCo
 import NotFound from "../NotFound/NotFound.jsx";
 import Profile from "../Profile/Profile.jsx";
 import Favourite from "../Favourite/Favourite.jsx"
+import ProtectedRoute from "../protectedRoute/ProtectedRoute.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -32,7 +33,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "login",
-        element: <Login />,
+        element:<Login /> ,
       },
       {
         path: "adminmanageusers",
@@ -78,7 +79,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "custom-cake",
-        element: <CustomCake />,
+        element: <ProtectedRoute>  <CustomCake /></ProtectedRoute>,
       },
       {
         path: "cart",
