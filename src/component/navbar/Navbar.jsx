@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { AppBar, Toolbar, Box, IconButton, Link } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import { AccountCircle, Favorite, ShoppingCart, SmartButton } from '@mui/icons-material'
@@ -6,10 +6,12 @@ import { styles } from './styles'
 import Search from '../../pages/Search'
 import { useMediaQuery } from '@mui/material'
 import './navBarStyle.css'
+import {Link as MuiLink, useNavigate} from 'react-router-dom'
+import { UserContext } from '../context/User'
 function Navbar({ setSidebarDisplay, setSidebarType }) {
-
+  const navigate=useNavigate();
+  const {userToken,logout} =useContext(UserContext);
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down('md'))
-
   const [navBarProps, setNavBarProps] = useState({
     sx: {
       boxShadow: 'none',
@@ -82,9 +84,9 @@ function Navbar({ setSidebarDisplay, setSidebarType }) {
           !isSmallScreen &&
 
           <div className='navbar-links'>
-            <a className={location.pathname =='/'?'nav-link':'nav-link-notHome'}>Home</a>
-            <a className={location.pathname =='/'?'nav-link':'nav-link-notHome'}>About us</a>
-            <a className={location.pathname =='/'?'nav-link':'nav-link-notHome'}>contact us</a>
+            <a className={location.pathname == '/' ? 'nav-link' : 'nav-link-notHome'}>Home</a>
+            <a className={location.pathname == '/' ? 'nav-link' : 'nav-link-notHome'}>About us</a>
+            <a className={location.pathname == '/' ? 'nav-link' : 'nav-link-notHome'}>contact us</a>
           </div>
         }
         {/* Right - Icons */}
@@ -96,8 +98,8 @@ function Navbar({ setSidebarDisplay, setSidebarType }) {
           <IconButton color="inherit" sx={styles.iconBtn}>
             <ShoppingCart fontSize="medium" />
           </IconButton>
-          <IconButton color="inherit" sx={styles.iconBtn}>
-            <AccountCircle fontSize="medium" />
+          <IconButton color="inherit" sx={styles.iconBtn} onClick={()=>{userToken?logout():navigate('/login')}}>
+              {userToken?'logout':<AccountCircle fontSize="medium" />}
           </IconButton>
         </Box>
 

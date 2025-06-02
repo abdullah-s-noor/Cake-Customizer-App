@@ -1,19 +1,27 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Input from '../../pages/Input'
 import { useFormik } from 'formik'
 import { Box, Card, Typography, Button, Alert, Link as MuiLink } from '@mui/material'
 import axios from 'axios'
 import validationSchema from './validationSchema'
 import inputs from './inputs'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink, useLocation } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import styles from '../register/styles';
 import LeftSideAth from '../../pages/LeftSideAth'
 import { ArrowBackIos, Password } from '@mui/icons-material'
+import { UserContext } from '../context/User'
 
 function SendCode() {
   const navigate = useNavigate()
   const [serverError, setServerError] = useState('')
+  const {userToken}=useContext(UserContext);
+      const location = useLocation();
+      useEffect(() => {
+          if (userToken) {
+              navigate('/');
+          }
+      }, [userToken, navigate]);
   const initialValues = {
     email: ''
 
@@ -27,7 +35,7 @@ function SendCode() {
       localStorage.setItem("userToken", data.token);
       alert(data.code);
 
-      navigate('/forget-password', { state: { email: values.email } });
+      navigate('/forget-password', { state: { email: values.email,from:location } });
     } catch (error) {
       if (error.response && error.response.data && error.response.data.message) {
         if (error.response.data.message === "validation error") {

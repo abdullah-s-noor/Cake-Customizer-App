@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import {
   Box,
@@ -26,6 +26,14 @@ function SendCode() {
   const [otp, setOtp] = useState('');
   const location = useLocation();
   const emailFromRoute = location.state?.email || '';
+  const from = location.state?.from.pathname;
+  const cameFromSendCode = (from === '/send-code');
+  useEffect(() => {
+    console.log(12)
+    if (!cameFromSendCode) {
+      navigate('/send-code')
+    }
+  }, [])
   const handleOtpChange = (newValue) => {
     setOtp(newValue);
     setShowPasswords(newValue.length === 4);
