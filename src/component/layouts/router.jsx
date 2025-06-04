@@ -41,7 +41,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "profile",
-        element: <Profile />,
+        element: <ProtectedRoute> <Profile /> </ProtectedRoute>,
       },
       {
         path: "favourite",
@@ -95,7 +95,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "edituserinformation",
-        element: <EditUserInformation />,
+        element: <ProtectedRoute><EditUserInformation /> </ProtectedRoute>,
       },
       {
         path: "forget-password",

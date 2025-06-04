@@ -1,11 +1,12 @@
 import { Card, Typography, Button, Box, Divider } from "@mui/material";
 import PhoneIcon from "@mui/icons-material/Phone";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router";
 import Style from "./Styles";
 import { api } from "../../api/api";
 import { toast } from "react-toastify";
+import { UserContext } from "../context/User";
 
 function formatDateToLong(dateString) {
   if (!dateString) return "—";
@@ -21,22 +22,13 @@ function formatDateToLong(dateString) {
 export default function Profile() {
   const navigate = useNavigate();
   document.title = "User Profile";
-  const [userInfo, setUserInfo] = useState(null);
+  const { userInfo, getUserData, userToken } = useContext(UserContext);
   useEffect(() => {
-    const GetUserData = async () => {
-      try {
-        const response = await api.get(`/auth/profile`);
-        if (response && response.data && response.data.user) {
-          setUserInfo(response.data.user);
-        } else {
-          toast.error("Failed to fetch user data");
-        }
-      } catch {
-        toast.error("An error occurred while fetching user data");
-      }
-    };
+    if (userToken && !userInfo) {
+      getUserData();
+    }
 
-    GetUserData();
+
   }, []);
 
   return (
