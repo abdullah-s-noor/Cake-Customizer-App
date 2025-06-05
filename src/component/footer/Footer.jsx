@@ -19,7 +19,7 @@ const FooterContainer = styled(Box)(({ theme }) => ({
   backgroundColor: "#723d46",
   padding: theme.spacing(0,7, 0),
   borderTop: "1px solid #e0e0e0",
-  marginTop: "auto",
+  marginTop: "100px",
   color: 'white'
 }));
 
