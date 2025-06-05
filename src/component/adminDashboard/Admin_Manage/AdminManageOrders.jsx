@@ -63,24 +63,24 @@ export default function ManageOrders() {
     return <Chip label={label} color={color} size="small" />;
   };
 
-  const handleCancel = async (id) => {
-    try {
-      const user = orderRows.find((row) => row._id === id);
-      if (user.status !== "cancelled") {
-        await api.post("/order/cancel", { orderId: id });
-        setOrderRows((prev) =>
-          prev.map((row) =>
-            row._id === id ? { ...row, status: "cancelled" } : row
-          )
-        );
-        toast.success("Order cancelled successfully");
-      } else {
-        toast.info("Order is already cancelled");
-      }
-    } catch {
-      toast.error("Failed to update order status");
-    }
-  };
+  // const handleCancel = async (id) => {
+  //   try {
+  //     const user = orderRows.find((row) => row._id === id);
+  //     if (user.status !== "cancelled") {
+  //       await api.post("/order/cancel", { orderId: id });
+  //       setOrderRows((prev) =>
+  //         prev.map((row) =>
+  //           row._id === id ? { ...row, status: "cancelled" } : row
+  //         )
+  //       );
+  //       toast.success("Order cancelled successfully");
+  //     } else {
+  //       toast.info("Order is already cancelled");
+  //     }
+  //   } catch {
+  //     toast.error("Failed to update order status");
+  //   }
+  // };
 
   const updateStatus = async (id, newStatus) => {
     try {
@@ -188,7 +188,7 @@ export default function ManageOrders() {
           >
             Update
           </Button>
-          <Button
+          {/* <Button
             variant="outlined"
             size="small"
             sx={{ color: "#d32f2f", borderColor: "#d32f2f" }}
@@ -197,7 +197,7 @@ export default function ManageOrders() {
             }}
           >
             Cancel
-          </Button>
+          </Button> */}
         </Box>
       ),
     },

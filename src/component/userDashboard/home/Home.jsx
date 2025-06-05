@@ -45,7 +45,7 @@ const girlCakes = [
   // Repeating for scroll testing
   { title: "Pini Ribbons", flavor: "Bastashio", weight: "40 ml", img: Logo },
   { title: "Queen", flavor: "Vanilla", weight: "50 ml", img: Logo },
-  { title: "Butterflies", flavor: "Chocolate", weight: "60 ml", img: Logo },
+  { title: "Butterflies", flavor: "Chocolateae0d5e", weight: "60 ml", img: Logo },
   { title: "Pink Hearts", flavor: "Fruits", weight: "50 ml", img: Logo },
   { title: "Ballerina", flavor: "Red Velvet", weight: "50 ml", img: Logo },
 ];
@@ -54,19 +54,22 @@ const girlCakes = [
 const CakeCard = ({ cake }) => (
   <Card
     sx={{
-      width: { xs: 120, sm: 150, md: 170, lg: 190 },
-      flexShrink: 0,
+      
+      width: { xs: 120, sm: 150, md: 170, lg: 290 },
+      flexShrink: 0,  
+      background: "white",
+      //border: "solid 1px #723d46",
       mx: 1,
-      boxShadow: 3,
+     // boxShadow: 3,
       borderRadius: 2,
     }}
   >
-    <CardMedia component="img" height="170" image={cake.img} alt={cake.title} />
+    <CardMedia component="img" sx={{ height: { xs: 170, md: 230, lg: 270 } }} image={cake.img} alt={cake.title} />
     <CardContent>
-      <Typography fontWeight="bold" fontSize="14px">
+      <Typography fontWeight="bold" fontSize="14px" >
         {cake.title}
       </Typography>
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="body2">
         {cake.flavor} • {cake.weight}
       </Typography>
     </CardContent>
@@ -98,23 +101,30 @@ const CakeCarousel = ({ title, cakes }) => {
   };
 
   return (
-    <Box mt={6}>
+    <Box mt={6} className="middle" >
       <Typography
         variant="h6"
-        ml={6}
-        mb={2}
-        sx={{ fontSize: { xs: "13px", md: "20px" } }}
+       // ml={6}
+        //mb={2}
+        sx={{ 
+          fontSize: { xs: "13px", md: "25px" }, 
+          textAlign: "center",
+          width: '100%',
+          color: 'black'
+         }}
       >
         {title}
       </Typography>
-      <Box position="relative" display="flex" alignItems="center">
+      <Box position="relative" display="flex" alignItems="center" width="100%">
         {/* Left Arrow */}
         <IconButton
           onClick={() => scroll("left")}
           sx={{
             bgcolor: "white",
             boxShadow: 2,
-            "&:hover": { bgcolor: "#f5f5f5" },
+            "&:hover": { 
+              bgcolor: "#f5f5f5", 
+            },
           }}
         >
           <ArrowBackIosIcon fontSize="small" />
@@ -122,6 +132,7 @@ const CakeCarousel = ({ title, cakes }) => {
 
         {/* Scrollable Container */}
         <Box
+        className="cake-carousel-container"
           paddingBottom="3px"
           ref={scrollRef}
           display="flex"
@@ -189,13 +200,13 @@ export default function Home() {
             size="large"
             sx={{
               textTransform: 'none',
-              bgcolor: '#f77f00',
+              bgcolor: '#723d46',
               color: 'white',
               mt: 3,
               fontSize: { xs: '14px', md: '16px' },
               borderRadius: 0,
               '&:hover': {
-                bgcolor: '#fb5607',
+                bgcolor: '#8e4c57',
               }
             }}
           >

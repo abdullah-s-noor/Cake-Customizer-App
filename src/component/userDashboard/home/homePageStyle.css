@@ -1,7 +1,7 @@
 .home-page-wallpaper{
     width: 100%;
     height: 110vh;
-    background-image: linear-gradient(rgba(12, 10, 10, 0.4), rgba(5, 4, 4, 0.4)), 
+    background-image: 
                       url('../../../../public/image/wallpaper.jpg');
     background-blend-mode: multiply;
     background-position: center;
@@ -27,6 +27,95 @@
     font-family: "42dot Sans", sans-serif !important;
     font-weight: 400;
 }
+
+.middle {
+  
+  width: 100%;
+  /*border: solid;*/
+ /* max-width: 1300px;*/
+  margin: 48px auto 32px auto;
+  padding: 32px 24px 40px 24px;
+  /*background-color: #edede9;*/
+  /*border-radius: 28px;*/
+  /* box-shadow: 0 4px 32px #f3dada; */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 18px;
+  transition: box-shadow 0.2s;
+}
+
+.middle h6, .middle .MuiTypography-h6 {
+  font-family: "42dot Sans", sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+.middle .MuiIconButton-root {
+  background: #fff;
+  border: 1px solid #f3dada;
+  box-shadow: 0 2px 8px #f3dada;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.middle .MuiIconButton-root:hover {
+  background: #f7e4e4;
+  box-shadow: 0 4px 16px #f3dada;
+}
+
+.middle .MuiCard-root {
+  border: 1px solid #f3dada;
+  border-radius: 16px;
+}
+ .middle .MuiCard-root *{
+  transition:  all 0.3s ease;
+ }
+.middle .MuiCard-root img:hover{
+   transform: scale(1.03);
+}
+.middle .MuiCard-root:hover {
+  box-shadow: 0 6px 24px #f3dada;
+  border-color: #723d46;
+ 
+  
+}
+
+.middle .MuiCardMedia-root {
+  border-radius: 12px 12px 0 0;
+}
+.cake-carousel-container {
+  width: 100%;
+  overflow-x: auto;
+  display: flex;
+  align-items: center;
+  scroll-behavior: smooth;
+  gap: 18px;
+  padding-bottom: 8px;
+  /* Hide scrollbar for a cleaner look */
+  scrollbar-width: none;
+}
+.cake-carousel-container::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .middle {
+    padding: 20px 8px 24px 8px;
+    border-radius: 16px;
+    margin: 24px 0 16px 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .middle {
+    padding: 10px 2px 16px 2px;
+    border-radius: 8px;
+    margin: 12px 0 8px 0;
+    gap: 10px;
+  }
+}
+
 @media screen and (max-width: 768px) {
     .home-page-wallpaper {
         align-items: center;
