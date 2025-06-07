@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Box, Button } from '@mui/material';
 
-const CakePreview = ({ selectedShape: shape, selectedFlavor: flavor, selectedTopping: topping, selectedColor: color,value }) => {
+const CakePreview = ({ selectedShape: shape, selectedFlavor: flavor, selectedTopping: topping, selectedColor: color,value ,xs= 240, sm= 280, md= 450,b=50}) => {
 useEffect(() => {
   console.log(color);
 },[]);
@@ -9,8 +9,8 @@ useEffect(() => {
     <Box
       sx={{
         position: 'relative',
-        width: { xs: 240, sm: 280, md: 450 },
-        height: { xs: 240, sm: 280, md: 450 },
+        width: { xs, sm, md },
+        height: { xs, sm, md },
         margin: 'auto',
       }}
     >
@@ -23,7 +23,7 @@ useEffect(() => {
           height: '100%',
           objectFit: 'contain',
           position: 'absolute',
-          bottom: '50px',
+          bottom: b,
           left: 0,
         }}
       />
@@ -39,7 +39,7 @@ useEffect(() => {
             height: '100%',
             objectFit: 'contain',
             position: 'absolute',
-            bottom: '50px',
+            bottom: b,
             left: 0,
             pointerEvents: 'none',
           }}
@@ -53,7 +53,7 @@ useEffect(() => {
             width: '100%',
             height: '100%',
             position: 'absolute',
-            bottom: '50px',
+            bottom: b,
             left: 0,
              mixBlendMode: color === '#ffffff' ? 'soft-light' : 'multiply',
             
@@ -77,7 +77,7 @@ useEffect(() => {
             height: '100%',
             objectFit: 'contain',
             position: 'absolute',
-            bottom: '50px',
+            bottom: b,
             left: 0,
             pointerEvents: 'none',
           }}
