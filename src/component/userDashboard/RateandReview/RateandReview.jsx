@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import {toast} from "react-toastify";
 import { api } from "../../../api/api.js";
+import Theme from "../../../../src/theme.js";
 
 export default function ReviewModal({ open, onClose, cakeId  }) {
   const [reviewData, setReviewData] = useState({
@@ -83,10 +84,10 @@ export default function ReviewModal({ open, onClose, cakeId  }) {
         </Box>
       </DialogContent>
       <DialogActions sx={{ px: 3, pb: 2 }}>
-        <Button onClick={onClose} variant="outlined" sx={{color:'#723d46',border:'#723d46 1px solid'}}>
+        <Button onClick={onClose} variant="outlined" sx={{color:Theme.palette.primary.main,border:'#723d46 1px solid'}}>
           Cancel
         </Button>
-        <Button onClick={submitReview} variant="contained" sx={{ fontWeight: "bold",bgcolor:'#723d46' }}>
+        <Button onClick={submitReview} variant="contained" sx={{ fontWeight: "bold",bgcolor:Theme.palette.primary.main }}>
           Post
         </Button>
       </DialogActions>

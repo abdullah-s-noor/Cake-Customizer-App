@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Loader from "../../Loaders/Loader";
 import {toast} from "react-toastify";
 import {api} from "../../../api/api";
+import Theme from "../../../../src/theme.js";
 
 export default function AdminManageCakes() {
   const [rows, setRows] = useState([]);
@@ -101,7 +102,7 @@ export default function AdminManageCakes() {
             sx={{
               width: "70%",
               textTransform: "none",
-               color:"#723d46"
+              color: Theme.palette.error.main,
             }}
           >
 
@@ -117,13 +118,13 @@ export default function AdminManageCakes() {
       {loading ? <Loader/>:
         <Box sx={{maxWidth:{xs:"700px",md:"600px"}, mx: "auto", mt: 7, mb: 7 }}>
           <Box display="flex" justifyContent="space-between" mb={2}>
-            <Typography variant="h6" color="#723d46">
+            <Typography variant="h6" sx={{color:Theme.palette.primary.main}}>
               Admin - Manage Cakes
             </Typography>
             <Button
               variant="contained"
               sx={{
-                backgroundColor: "#723d46",
+                backgroundColor: Theme.palette.primary.main,
               }}
               onClick={() => {
                 navigate("/addnewcake");
@@ -151,7 +152,7 @@ export default function AdminManageCakes() {
                 justifyContent: "center",
               },
               "& .MuiDataGrid-columnHeader": {
-                backgroundColor: "#723d46",
+                backgroundColor: Theme.palette.primary.main,
                 color: "white",
               },
             }}

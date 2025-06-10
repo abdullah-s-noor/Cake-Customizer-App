@@ -16,6 +16,7 @@ import "./homePageStyle.css"; // Assuming you have a CSS file for styles
 const Logo = "/image/da.png";
 const Make = "/image/makecake.png";
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
+import Theme from "../../../../src/theme.js";
 
 // Mock data
 const mockCakes = [
@@ -57,7 +58,7 @@ const CakeCard = ({ cake }) => (
       
       width: { xs: 120, sm: 150, md: 170, lg: 290 },
       flexShrink: 0,  
-      background: "white",
+      background: Theme.palette.background.default,
       //border: "solid 1px #723d46",
       mx: 1,
      // boxShadow: 3,

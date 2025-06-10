@@ -11,6 +11,7 @@ import {
 import { api } from "../../api/api";
 import { toast } from "react-toastify";
 import Loader from "../Loaders/Loader";
+import Theme from "../../../src/theme";
 
 export default function FavouritesPage() {
   const [favourites, setFavourites] = useState([]);
@@ -60,7 +61,7 @@ export default function FavouritesPage() {
         <Loader />
       ) : (
         <Box sx={{ padding: 4 }}>
-          <Typography variant="h4" gutterBottom color="#723d46">
+          <Typography variant="h4" gutterBottom sx={{ color: Theme.palette.primary.main }}>
             Your Favourites
           </Typography>
 
@@ -88,7 +89,7 @@ export default function FavouritesPage() {
                       </Typography>
                       <Button
                         variant="outlined"
-                        sx={{ mt: 2, color: "#723d46", borderColor: "#723d46" }}
+                        sx={{ mt: 2, color: Theme.palette.primary.main, borderColor: Theme.palette.primary.main }}
                         onClick={() => removeFavourite(item.id)}
                       >
                         Remove

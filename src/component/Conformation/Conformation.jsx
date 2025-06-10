@@ -8,6 +8,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { useState } from "react";
+import Theme from "../../../src/theme";
 
 const ConfirmDialog = ({
   open,
@@ -54,7 +55,7 @@ const ConfirmDialog = ({
           onClick={onClose}
           variant="outlined"
           sx={{ padding: 1,
-            background:"#723d46",
+            background:Theme.palette.primary.main,
             color:"white",
            }}
           disabled={loading}
@@ -67,11 +68,11 @@ const ConfirmDialog = ({
           variant="contained"
           sx={{
             padding:1,
-            background:"#723d46",
+            background:Theme.palette.primary.main,
             color:"white",
           }}
         >
-          {loading ? <CircularProgress size={20} color={"#723d46"} /> : "Confirm"}
+          {loading ? <CircularProgress size={20} sx={{ color: Theme.palette.primary.main }} /> : "Confirm"}
         </Button>
       </DialogActions>
     </Dialog>
