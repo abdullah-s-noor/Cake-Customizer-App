@@ -18,6 +18,7 @@ import axios from "axios";
 import ConfDelete from "../../Conformation/ConfDelete";
 import CakePreview from "../customCake/CakePreview";
 import Loader from "../../Loaders/Loader";
+import Theme from "../../../../src/theme";
 
 export default function Cart() {
   document.title = "Cart";

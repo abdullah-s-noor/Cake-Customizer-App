@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import { api } from '../../../api/api'
 import Loader from "../../Loaders/Loader";
 import { toast } from "react-toastify";
+import Theme from "../../../../src/theme.js";
 
 function formatDateToLong(dateString) {
   if (!dateString) return '—';
@@ -75,14 +76,14 @@ export default function Admin_Manage() {
         <Box sx={{ display: "flex", gap: 1, mt: 1, justifyContent: "center" }}>
           <Button
             sx={{
-              backgroundColor: "#723d46",
+              backgroundColor: Theme.palette.primary.main,
               color: "white",
               borderRadius: "5px",
               padding: "5px 10px",
               border: "none",
               cursor: "pointer",
               "&:hover": {
-                backgroundColor: "#8e4c57",
+                backgroundColor: Theme.palette.secondary.main,
               },
             }}
             onClick={() => handleStatus(params.row._id)}
@@ -169,7 +170,7 @@ export default function Admin_Manage() {
               },
               "& .MuiDataGrid-columnHeader": {
                 justifyContent: "center",
-                bgcolor: "#723d46",
+                bgcolor: Theme.palette.primary.main,
                 color: "white",
               },
             }}

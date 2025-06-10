@@ -18,6 +18,7 @@ import Validation from "./Validation";
 import { api } from "../../api/api.js";
 import { style } from "./Style";
 import { toast } from "react-toastify";
+import Theme from "../../../src/theme.js";
 
 export default function ChangePassword() {
   document.title = "Change Password";
@@ -96,7 +97,7 @@ export default function ChangePassword() {
               <InputAdornment position="end">
                 <IconButton
                   onClick={() => setShowOldPassword(!showOldPassword)}
-                  sx={{ color: "#723d46" }}
+                  sx={{ color:Theme.palette.primary.main }}
                 >
                   {showOldPassword ? <Visibility /> : <VisibilityOff />}
                 </IconButton>
@@ -129,7 +130,7 @@ export default function ChangePassword() {
               <InputAdornment position="end">
                 <IconButton
                   onClick={() => setShowNewPassword(!showNewPassword)}
-                  sx={{ color: "#723d46" }}
+                  sx={{ color: Theme.palette.primary.main }}
                 >
                   {showNewPassword ? <Visibility /> : <VisibilityOff />}
                 </IconButton>
@@ -162,7 +163,7 @@ export default function ChangePassword() {
               <InputAdornment position="end">
                 <IconButton
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  sx={{ color: "#723d46" }}
+                  sx={{ color: Theme.palette.primary.main}}
                 >
                   {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
                 </IconButton>
