@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import Theme from "../../../src/theme";
 
 export default function NotFound() {
   const navigate = useNavigate();
@@ -18,26 +19,26 @@ export default function NotFound() {
       
       <Typography
         variant="h1"
-        sx={{ fontSize: "6rem", fontWeight: "bold", color: "#723d46" }}
+        sx={{ fontSize: "6rem", fontWeight: "bold", color: Theme.palette.primary.main }}
       >
         404
       </Typography>
       <Typography
         variant="h5"
-        sx={{ fontWeight: "bold", mb: 1, color: "#723d46" }}
+        sx={{ fontWeight: "bold", mb: 1, color: Theme.palette.primary.main }}
       >
         Page not found
       </Typography>
-      <Typography sx={{ color: "#723d46", mb: 3 }}>
+      <Typography sx={{ color: Theme.palette.primary.main, mb: 3 }}>
         Oops! The page you are looking for does not exist.
       </Typography>
       <Button
         variant="contained"
         onClick={() => navigate("/")}
         sx={{
-          bgcolor: "#723d46",
+          bgcolor: Theme.palette.primary.main,
 
-          "&:hover": { bgcolor: "#8e4c57" },
+          "&:hover": { bgcolor: Theme.palette.secondary.main },
           textTransform: "none",
         }}
       >

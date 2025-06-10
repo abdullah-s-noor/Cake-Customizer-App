@@ -14,9 +14,10 @@ import PinterestIcon from "@mui/icons-material/Pinterest";
 import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import Theme from "../../../src/theme.js";
 
 const FooterContainer = styled(Box)(({ theme }) => ({
-  backgroundColor: "#723d46",
+  backgroundColor: Theme.palette.primary.main,
   padding: theme.spacing(0,7, 0),
   borderTop: "1px solid #e0e0e0",
   marginTop: "100px",
@@ -74,10 +75,10 @@ const Footer = () => {
               <FooterLink href="/custom-cake">Make Cake</FooterLink>
             </Typography>
             <Typography variant="body2"  mb={1}>
-              <FooterLink href="/home">About Us</FooterLink>
+              <FooterLink href="/">About Us</FooterLink>
             </Typography>
             <Typography variant="body2"  mb={1}>
-              <FooterLink href="/home">Contact Us</FooterLink>
+              <FooterLink href="/">Contact Us</FooterLink>
             </Typography>
             
             
@@ -124,7 +125,9 @@ const Footer = () => {
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                color="primary"
+                sx={{
+                  color:"#4267B2"
+                }}
               >
                 <FacebookIcon />
               </SocialIcon>

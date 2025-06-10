@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import RateandReview from '../RateandReview/RateandReview';
 import CakePreview from '../customCake/CakePreview';
 import { Cake } from '@mui/icons-material';
+import Theme from "../../../../src/theme.js";
 
 const StyledRating = styled(Rating)({
   '& .MuiRating-iconFilled': {
@@ -120,7 +121,7 @@ export default function CakeDetails() {
             </Box>
             <Box mt={4} display="flex" justifyContent="space-between">
               <Typography variant="subtitle2" fontWeight="bold">Price:</Typography>
-              <Typography color="#723d46" fontWeight="bold">
+              <Typography sx={{ color: Theme.palette.primary.main }} variant="subtitle2" fontWeight="bold">
                 {orderDetails?.price} ₪
               </Typography>
             </Box>
@@ -131,7 +132,7 @@ export default function CakeDetails() {
                 variant="outlined"
                 size="small"
                 onClick={() => setOpen(true)}
-                sx={{ color: '#723d46', borderColor: '#723d46', fontWeight: 'bold' }}
+                sx={{ color: Theme.palette.primary.main, borderColor: Theme.palette.primary.main, fontWeight: 'bold' }}
               >
                 Write Review
               </Button>
@@ -141,14 +142,14 @@ export default function CakeDetails() {
               <Button
                 variant="contained"
                 fullWidth
-                sx={{ py: 1.5, fontWeight: 'bold', backgroundColor: '#723d46', color: 'white', borderRadius: 2 }}
+                sx={{ py: 1.5, fontWeight: 'bold', backgroundColor:Theme.palette.primary.main, color: 'white', borderRadius: 2 }}
               >
                 Add to Cart
               </Button>
               <Button
                 variant="contained"
                 fullWidth
-                sx={{ py: 1.5, fontWeight: 'bold', backgroundColor: '#723d46', color: 'white', borderRadius: 2 }}
+                sx={{ py: 1.5, fontWeight: 'bold', backgroundColor: Theme.palette.primary.main, color: 'white', borderRadius: 2 }}
                 onClick={() => navigate('/custom-cake', { state: {orderDetails} })} // Navigate back to custom cake creation
               >
                 Edit Cake

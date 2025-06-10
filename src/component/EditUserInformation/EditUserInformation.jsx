@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { EditValidationSchema } from "./validation";
 import { UserContext } from "../context/User";
 import Loader from "../Loaders/Loader";
+import Theme from "../../../src/theme.js";
 
 function formatDateToLong(dateString) {
   if (!dateString) return "—";
@@ -106,10 +107,10 @@ export default function EditUserInformation() {
               px: { xs: 4, md: 0 },
             }}
           >
-            <Typography variant="h5" align="center" gutterBottom color="#723d46">
+            <Typography variant="h5" align="center" gutterBottom sx={{ color: Theme.palette.primary.main }}>
               Edit User Information
             </Typography>
-            <Typography variant="body2" align="center" color="#723d46">
+            <Typography variant="body2" align="center" sx={{ color: Theme.palette.primary.main }}>
               Updating user details.
             </Typography>
 
@@ -170,14 +171,14 @@ export default function EditUserInformation() {
                 <Button
                   variant="contained"
                   onClick={handleSave}
-                  sx={{ background: "#723d46" }}
+                  sx={{ background: Theme.palette.primary.main }}
                 >
                   {loading ? "Saving..." : "Save"}
                 </Button>
                 <Button
                   variant="contained"
                   onClick={handleCancel}
-                  sx={{ background: "#723d46" }}
+                  sx={{ background:Theme.palette.primary.main }}
                 >
                   Cancel
                 </Button>

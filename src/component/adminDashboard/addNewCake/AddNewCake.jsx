@@ -19,6 +19,7 @@ import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternate
 import { toast } from "react-toastify";
 import Conformation from "../../Conformation/Conformation";
 import { api } from "../../../api/api";
+import Theme from "../../../../src/theme.js";
 
 export default function AddNewCake() {
   document.title = "Add New Cake";
@@ -129,14 +130,14 @@ export default function AddNewCake() {
         textAlign="center"
         sx={{ fontFamily: "Arial, sans-serif" }}
       >
-        <Typography variant="h6" fontWeight="bold" mb={1} color="#723d46">
+        <Typography variant="h6" fontWeight="bold" mb={1} sx={{color:Theme.palette.primary.main}}>
           Add New Cake <CakeIcon fontSize="small" sx={{ mb: 0.5 }} />
         </Typography>
 
         <Typography
           variant="subtitle2"
           fontWeight="bold"
-          color="#723d46"
+         sx={{color:Theme.palette.primary.main}}
           mb={1}
         >
           Add Image
@@ -172,7 +173,7 @@ export default function AddNewCake() {
             />
           ) : (
             <AddPhotoAlternateOutlinedIcon
-              sx={{ fontSize: 32, color: "#723d46" }}
+              sx={{ fontSize: 32, color: Theme.palette.primary.main }}
             />
           )}
           <input
@@ -319,7 +320,7 @@ export default function AddNewCake() {
             type="submit"
             disabled={loading}
             sx={{
-              background: "linear-gradient(to right, #723d46, #723d46)",
+              background: Theme.palette.primary.main,
               color: "white",
               fontWeight: "bold",
               fontSize: 22,

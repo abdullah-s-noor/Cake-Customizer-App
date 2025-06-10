@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { api } from "../../../api/api.js";
 import Loader from "../../Loaders/Loader.jsx";
+import Theme from "../../../../src/theme.js";
 
 function formatDateToLong(dateString) {
   if (!dateString) return "—";
@@ -232,7 +233,7 @@ export default function ManageOrders() {
               },
               "& .MuiDataGrid-columnHeader": {
                 justifyContent: "center",
-                bgcolor: "#723d46",
+                bgcolor: Theme.palette.primary.main,
                 color: "white",
               },
             }}

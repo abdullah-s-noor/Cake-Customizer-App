@@ -7,6 +7,8 @@ import Style from "./Styles";
 import { api } from "../../api/api";
 import { toast } from "react-toastify";
 import { UserContext } from "../context/User";
+import Loader from "../Loaders/Loader";
+import Theme from "../../../src/theme";
 
 function formatDateToLong(dateString) {
   if (!dateString) return "—";
@@ -35,7 +37,7 @@ export default function Profile() {
     <>
       <Box sx={Style.mainStyle}>
         <Card sx={Style.cardStyle}>
-          <Typography variant="h5" fontWeight="bold" sx={{ color: "#723d46" }}>
+          <Typography variant="h5" fontWeight="bold" sx={{ color: Theme.palette.primary.main }}>
             User Information
           </Typography>
           <Box
@@ -63,9 +65,10 @@ export default function Profile() {
               >
                 <Typography
                   variant="h6"
-                  color="#723d46"
+                  
                   fontWeight="bold"
                   gutterBottom
+                  sx={{ color: Theme.palette.primary.main }}
                 >
                   {userInfo.username}
                 </Typography>
@@ -75,28 +78,28 @@ export default function Profile() {
                 <Box
                   sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}
                 >
-                  <PhoneIcon fontSize="small" sx={{ color: "#723d46" }} />
-                  <Typography fontSize={16} color="#723d46">
+                  <PhoneIcon fontSize="small" sx={{ color:Theme.palette.primary.main }} />
+                  <Typography fontSize={16} sx={{ color: Theme.palette.primary.main }}>
                     {userInfo.phone}
                   </Typography>
                 </Box>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <CalendarTodayIcon
                     fontSize="small"
-                    sx={{ color: "#723d46" }}
+                    sx={{ color: Theme.palette.primary.main }}
                   />
-                  <Typography fontSize={16} color="#723d46">
+                  <Typography fontSize={16} sx={{ color: Theme.palette.primary.main }}>
                     {formatDateToLong(userInfo.birthdate)}
                   </Typography>
                 </Box>
               </Box>
             ) : (
-              <Typography variant="h6" margin={3} color="#723d46">
+              <Typography variant="h6" margin={3} sx={{ color: Theme.palette.primary.main }}>
                 Loading...
               </Typography>
             )}
           </Box>
-          <Divider sx={{ mt: 4, backgroundColor: "#723d46" }}></Divider>
+          <Divider sx={{ mt: 4, backgroundColor: Theme.palette.primary.main}}></Divider>
 
           <Box sx={Style.BoxStyle}>
             <Button
