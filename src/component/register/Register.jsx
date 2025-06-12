@@ -25,12 +25,13 @@ function Register() {
         password: '',
         birthdate: ''
     }
-    const onSubmit = async (values) => {
+    const onSubmit = async (values,{setSubmitting}) => {
         console.log('Sending Data:', values);
         try {
         const {data} = await axios.post('https://bimicake.onrender.com/auth/register', values)
         console.log('Response from server:', data)
         setServerError('') // Clear any previous error
+        navigate('/login')
         } catch (error) {
             console.log('Error during registration:', error);
         if (error.response && error.response.data && error.response.data.message) {
@@ -38,6 +39,8 @@ function Register() {
         } else {
             setServerError('Something went wrong. Please try again.')
         }
+        }finally{
+            setSubmitting(false); 
         }
     };
     const formik = useFormik({
@@ -85,8 +88,8 @@ function Register() {
 
                     <Box component="form" onSubmit={formik.handleSubmit} sx={styles.form}>
                         {renderInput}
-                        <Button variant="contained" fullWidth type="submit" sx={styles.submitButton}>
-                            Create Account
+                        <Button variant="contained" fullWidth type="submit" sx={styles.submitButton} disabled={formik.isSubmitting}>
+                            {formik.isSubmitting ? 'Creating account...' : 'Create Account'}
                         </Button>
                         <Button variant="contained" fullWidth type="submit" sx={{...styles.exploreButton ,display:{xs:'flex',md:'none'}}}
                             onClick={() => navigate('/home')}

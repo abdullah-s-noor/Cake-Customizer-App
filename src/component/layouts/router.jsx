@@ -32,42 +32,50 @@ export const router = createBrowserRouter([
     errorElement: <NotFound />,
     children: [
       {
-        path: "login",
-        element:<Login /> ,
+        path: "/",
+        element: <Home />,
       },
-      {
-        path: "adminmanageusers",
-        element: <AdminManageUsers />,
-      },
-      {
-        path: "profile",
-        element: <ProtectedRoute> <Profile /> </ProtectedRoute>,
-      },
-      {
-        path: "favourite",
-        element: <Favourite />
-      },
-
-      {
-        path: "adminmanageorders",
-        element: <AdminManageOrders />,
-      },
-      { 
-        path: "adminmanagecollections",
-        element: <AdminManageCollections />,
-      },
-      {
-        path: "cakeinformation",
-        element: <CakeInformation />,
-      },
-
       {
         path: "register",
         element: <Register />,
       },
       {
-        path: "/",
-        element: <Home />,
+        path: "login",
+        element:<Login /> ,
+      },
+      {
+        path: "send-code",
+        element: <SendCode />,
+      },
+      {
+        path: "forget-password",
+        element: <ForgetPassword />,
+      },
+      {
+        path: "profile",
+        element: <Profile /> ,
+      },
+      {
+        path: "edituserinformation",
+        element: <EditUserInformation />,
+      },
+      {
+        path: "changepassword",
+        element: <ChangePassword />,
+      },
+      
+      {
+        path: "custom-cake",
+        element:   <CustomCake />,
+      },
+      {
+        path: "cakeinformation",
+        element: <CakeInformation />,
+      },
+      
+      {
+        path: "favourite",
+        element: <Favourite />
       },
       {
         path: "categories",
@@ -78,30 +86,22 @@ export const router = createBrowserRouter([
         element: <AddNewCake />,
       },
       {
-        path: "custom-cake",
-        element: <ProtectedRoute>  <CustomCake /></ProtectedRoute>,
-      },
-      {
         path: "cart",
         element: <Cart />,
       },
+      
       {
-        path: "changepassword",
-        element: <ChangePassword />,
+        path: "adminmanageorders",
+        element: <AdminManageOrders />,
+      },
+      { 
+        path: "adminmanagecollections",
+        element: <AdminManageCollections />,
       },
       {
-        path: "send-code",
-        element: <SendCode />,
+        path: "adminmanageusers",
+        element: <AdminManageUsers />,
       },
-      {
-        path: "edituserinformation",
-        element: <ProtectedRoute><EditUserInformation /> </ProtectedRoute>,
-      },
-      {
-        path: "forget-password",
-        element: <ForgetPassword />,
-      },
-
       {
         path: "*",
         element: <NotFound />,
