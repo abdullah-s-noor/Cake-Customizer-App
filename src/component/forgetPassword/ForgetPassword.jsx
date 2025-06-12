@@ -10,14 +10,16 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { useLocation, useNavigate, Link as RouterLink } from 'react-router-dom';
+import { MuiOtpInput } from 'mui-one-time-password-input';
+import { ArrowBackIos } from '@mui/icons-material';
+import { toast } from 'react-toastify';
 
 import validationSchema from './validationSchema';
 import inputs from './inputs.js';
 import Input from '../../pages/Input';
 import LeftSideAth from '../../pages/LeftSideAth';
 import styles from '../register/styles';
-import { MuiOtpInput } from 'mui-one-time-password-input';
-import { ArrowBackIos } from '@mui/icons-material';
+import theme from '../../theme';
 
 function SendCode() {
   const navigate = useNavigate();
@@ -26,38 +28,42 @@ function SendCode() {
   const [otp, setOtp] = useState('');
   const location = useLocation();
   const emailFromRoute = location.state?.email || '';
-  const from = location.state?.from.pathname;
-  const cameFromSendCode = (from === '/send-code');
+  const from = location.state?.from?.pathname;
+  const cameFromSendCode = from === '/send-code';
+
   useEffect(() => {
-    console.log(12)
     if (!cameFromSendCode) {
-      navigate('/send-code')
+      navigate('/send-code');
     }
-  }, [])
+  }, [cameFromSendCode, navigate]);
+
   const handleOtpChange = (newValue) => {
     setOtp(newValue);
-    setShowPasswords(newValue.length === 4);
+    const complete = newValue.length === 4;
+    setShowPasswords(complete);
 
-    if (newValue.length < 4) {
-      // Clear password fields when code is incomplete
+    if (!complete) {
       formik.setFieldValue('password', '');
       formik.setFieldValue('confirmPassword', '');
+      formik.setTouched({}, false);
+      formik.setErrors({});
     }
   };
+
   const handleResendCode = async () => {
     try {
-      if (!emailFromRoute) return alert("Email is missing");
-
+      if (!emailFromRoute) return alert('Email is missing');
       const { data } = await axios.post('https://bimicake.onrender.com/auth/send-code', {
-        email: emailFromRoute
+        email: emailFromRoute,
       });
-      alert('Code resent successfully ✅' + data.code);
+      handleOtpChange('');
+      setServerError('');
+      toast.success('Code resent successfully');
     } catch (err) {
       console.error(err);
-      alert('Failed to resend code ❌');
+      toast.error('Failed to resend code');
     }
   };
-
 
   const formik = useFormik({
     initialValues: {
@@ -72,32 +78,33 @@ function SendCode() {
           password: values.password,
         });
 
-        if (res.data?.success || res.status === 200) {
-          alert('Password reset successfully');
+        if (res?.data?.success || res?.status === 200) {
+          toast.success('Password reset successfully');
           navigate('/login');
         } else {
-          setServerError(res.data.message || 'Reset failed');
+          toast.error('Something went wrong');
         }
       } catch (err) {
-        setServerError(err.response?.data?.message || 'Something went wrong');
+        console.error('Password reset error:', err);
+
+        // Fallback error message
+        const message = err?.response?.data?.message || 'Server error, please try again.';
+        setServerError(message);
       }
     }
+
   });
 
   const renderInput = inputs(formik)
     .filter((input) => input.name === 'email' || showPasswords)
     .map((input, index) => (
       <Input
+        key={index}
         type={input.type}
         title={input.title}
         id={input.id}
         name={input.name}
-        key={index}
-        value={
-          input.name === 'email'
-            ? emailFromRoute
-            : formik.values[input.name]
-        }
+        value={input.name === 'email' ? emailFromRoute : formik.values[input.name]}
         onChange={formik.handleChange}
         errors={formik.errors}
         onBlur={formik.handleBlur}
@@ -106,6 +113,14 @@ function SendCode() {
       />
     ));
 
+  const isSubmitDisabled =
+    formik.isSubmitting ||
+    otp.length < 4 ||
+    !formik.values.password ||
+    !formik.values.confirmPassword ||
+    formik.values.password !== formik.values.confirmPassword ||
+    !!formik.errors.password ||
+    !!formik.errors.confirmPassword;
 
   return (
     <Box sx={styles.container}>
@@ -122,9 +137,15 @@ function SendCode() {
               Please enter it to continue.
             </Typography>
 
-            <MuiOtpInput value={otp} onChange={handleOtpChange} length={4} sx={{ mb: 2, }} TextFieldsProps={{
-              placeholder: '-',
-            }} />
+            <MuiOtpInput
+              value={otp}
+              onChange={handleOtpChange}
+              length={4}
+              sx={{ mb: 2 }}
+              TextFieldsProps={{
+                placeholder: '-',
+              }}
+            />
 
             {serverError && (
               <Alert severity="error" sx={styles.errorAlert}>
@@ -140,26 +161,19 @@ function SendCode() {
               fullWidth
               type="submit"
               sx={styles.submitButton}
-              disabled={!!(
-                otp.length < 4 ||
-                !formik.values.password ||
-                !formik.values.confirmPassword ||
-                (formik.values.confirmPassword !== formik.values.password) ||
-                formik.errors.password ||
-                formik.errors.confirmPassword ||
-                !emailFromRoute
-              )}
+              disabled={isSubmitDisabled}
             >
-              Reset Password
+              {formik.isSubmitting ? 'Submitting...' : 'Reset Password'}
             </Button>
           </Box>
+
           <Typography variant="body2" sx={{ mb: 1, color: '#637381', textAlign: 'center', mt: 2 }}>
             Don’t have a code?{' '}
             <Box
               component="span"
               onClick={handleResendCode}
               sx={{
-                color: '#42a5f5',
+                color: theme.palette.primary.main,
                 cursor: 'pointer',
                 fontWeight: 'bold',
                 '&:hover': {
@@ -170,6 +184,7 @@ function SendCode() {
               Resend
             </Box>
           </Typography>
+
           <MuiLink
             variant="body2"
             component={RouterLink}

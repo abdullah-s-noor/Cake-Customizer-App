@@ -32,9 +32,6 @@ function SendCode() {
       const { data } = await axios.post('https://bimicake.onrender.com/auth/send-code', values)
       console.log('Response from server:', data)
       setServerError('') // Clear any previous error
-      localStorage.setItem("userToken", data.token);
-      alert(data.code);
-
       navigate('/forget-password', { state: { email: values.email,from:location } });
     } catch (error) {
       if (error.response && error.response.data && error.response.data.message) {
@@ -97,8 +94,8 @@ function SendCode() {
             </Box>
             <Box component="form" onSubmit={formik.handleSubmit} sx={styles.form}>
               {renderInput}
-              <Button variant="contained" fullWidth type="submit" sx={styles.submitButton}>
-                Send request
+              <Button variant="contained" fullWidth type="submit" sx={styles.submitButton} disabled={formik.isSubmitting}>
+                {formik.isSubmitting?'Sending...':'Send request'}
               </Button>
               <MuiLink
                 variant="body2"

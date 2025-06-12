@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { AppBar, Toolbar, Box, IconButton, Link } from '@mui/material'
+import { AppBar, Toolbar, Box, IconButton, Link, Badge } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import { AccountCircle, Favorite, ShoppingCart, SmartButton } from '@mui/icons-material'
 import { styles } from './styles'
@@ -93,10 +93,13 @@ function Navbar({ setSidebarDisplay, setSidebarType }) {
         <Box sx={styles.rightSection}>
           {/*<Search xs="none" md="block" />*/}
           <IconButton color="inherit" sx={styles.iconBtn}>
+
             <Favorite fontSize="medium" />
           </IconButton>
           <IconButton color="inherit" sx={styles.iconBtn}>
-            <ShoppingCart fontSize="medium" />
+            <Badge badgeContent={4} color="primary">
+              <ShoppingCart fontSize="medium" />
+            </Badge>
           </IconButton>
           <IconButton color="inherit" sx={styles.iconBtn} onClick={()=>{userToken?logout():navigate('/login')}}>
               {userToken?'logout':<AccountCircle fontSize="medium" />}
