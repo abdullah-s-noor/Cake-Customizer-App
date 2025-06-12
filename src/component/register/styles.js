@@ -1,12 +1,12 @@
 import { width } from "@mui/system";
-
+import theme from '../../theme';
 // style.js
 const styles = {
   container: {
     display: 'flex',
     width: '100%',
     minHeight: '100vh',
-    backgroundColor: '#F7F7F7',
+    backgroundColor: 'theme.palette.background.default',
   },
   containerLeft: {
     alignItems: 'center',
@@ -26,7 +26,7 @@ const styles = {
     height: '100%',
     objectFit: 'cover',
     zIndex: 0,
-    borderRadius: '10px'
+    borderRadius: '0px'
   },
   videoOverlay: {
     position: 'absolute',
@@ -36,7 +36,7 @@ const styles = {
     height: '100%',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     zIndex: 1,
-    borderRadius: '10px'
+    borderRadius: '0px'
   },
 
   textBox: {
@@ -63,8 +63,8 @@ const styles = {
     fontFamily: '"Dancing Script", cursive',
     fontStyle: 'normal',
     fontOpticalSizing: 'auto',
-}
-,
+  }
+  ,
 
 
   description: {
@@ -92,7 +92,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     padding: '10px',
-    backgroundColor: 'inherit',
+    backgroundColor: 'inherit',//inherit background color from container
     width: { xs: '100%', sm: '100%', md: '60%' },
   },
   card: {
@@ -101,8 +101,7 @@ const styles = {
     maxWidth: '500px',
     borderRadius: '10px',
     border: 'none',
-    backgroundColor: 'inherit',
-    boxShadow: 'none', // remove MUI default shadow
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)' // remove MUI default shadow
   },
   form: {
     display: 'flex',
@@ -110,13 +109,17 @@ const styles = {
     gap: '5px',
   },
   submitButton: {
-    backgroundColor: '#42a5f5',
+    backgroundColor:theme.palette.primary.main,
     color: 'white',
-    '&:hover': { backgroundColor: '#1e88e5' },
+    '&:hover': { backgroundColor: theme.palette.secondary.main },
     textTransform: 'none',
+    '&.Mui-disabled': {
+      backgroundColor: '#9e9e9e', 
+      color: '#ffffff',
+    },
   },
   loginLink: {
-    color: 'primary.main',
+    color: theme.palette.primary.main,
     textDecoration: 'none',
     '&:hover': { textDecoration: 'underline' },
   },
@@ -130,7 +133,7 @@ const styles = {
     textAlign: 'center',
     justifyContent: 'center',
     textDecoration: 'none',
-    color: 'black', // your preferred link color
+    color: theme.palette.primary.main, 
     display: 'flex',
     alignItems: 'center',
     gap: 0.5,

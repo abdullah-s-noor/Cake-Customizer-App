@@ -28,7 +28,7 @@ function Login() {
         password: '',
     }
 
-    const onSubmit = async (values) => {
+    const onSubmit = async (values,{setSubmitting}) => {
         console.log('Sending Data:', values)
         try {
             const { data } = await axios.post('https://bimicake.onrender.com/auth/login', values)
@@ -42,6 +42,8 @@ function Login() {
             } else {
                 setServerError('Something went wrong. Please try again.')
             }
+        }finally{
+            setSubmitting(false);
         }
     }
 
@@ -97,8 +99,8 @@ function Login() {
 
                         <Box component="form" onSubmit={formik.handleSubmit} sx={styles.form}>
                             {renderInput}
-                            <Button variant="contained" fullWidth type="submit" sx={styles.submitButton}>
-                                Sign In
+                            <Button variant="contained" fullWidth type="submit" sx={styles.submitButton} disabled={formik.isSubmitting}>
+                                {formik.isSubmitting?'Signing in...':'Sign In'}
                             </Button>
                             <Button variant="contained" fullWidth type="submit" sx={{ ...styles.exploreButton, display: { xs: 'flex', md: 'none' } }}
                                 onClick={() => navigate('/')}
