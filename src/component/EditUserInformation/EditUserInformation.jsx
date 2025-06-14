@@ -174,6 +174,7 @@ export default function EditUserInformation() {
                   sx={{ background: Theme.palette.primary.main }}
                 >
                   {loading ? "Saving..." : "Save"}
+                  
                 </Button>
                 <Button
                   variant="contained"
