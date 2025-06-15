@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import {useEffect, useState} from "react";
 import {
   Box,
   Typography,
@@ -11,51 +12,51 @@ import {
 import { useNavigate } from "react-router-dom";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import "./homePageStyle.css"; // Assuming you have a CSS file for styles
-// Use direct paths since these are in public/
+import "./homePageStyle.css";
 const Logo = "/image/da.png";
 const Make = "/image/makecake.png";
+import {api} from "../../../api/api.js";
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import Theme from "../../../../src/theme.js";
+import Loader from "../../Loaders/Loader.jsx";
 
 // Mock data
-const mockCakes = [
-  { title: "Forever Bliss", flavor: "Bastashio", weight: "400 ml", img: Logo },
-  { title: "Pure Romance", flavor: "Vanilla", weight: "140 ml", img: Logo },
-  { title: "Elegant Charm", flavor: "Chocolate", weight: "120 ml", img: Logo },
-  { title: "Dreamy Delight", flavor: "Fruits", weight: "180 ml", img: Logo },
-  { title: "Sweet Harmony", flavor: "Red Velvet", weight: "200 ml", img: Logo },
-  { title: "Golden Love", flavor: "Lemon", weight: "300 ml", img: Logo },
-  { title: "Snow Kiss", flavor: "White Chocolate", weight: "250 ml", img: Logo },
-  // Repeating for scroll testing
-  { title: "Forever Bliss", flavor: "Bastashio", weight: "400 ml", img: Logo },
-  { title: "Pure Romance", flavor: "Vanilla", weight: "140 ml", img: Logo },
-  { title: "Elegant Charm", flavor: "Chocolate", weight: "120 ml", img: Logo },
-  { title: "Dreamy Delight", flavor: "Fruits", weight: "180 ml", img: Logo },
-  { title: "Sweet Harmony", flavor: "Red Velvet", weight: "200 ml", img: Logo },
-  { title: "Golden Love", flavor: "Lemon", weight: "300 ml", img: Logo },
-  { title: "Snow Kiss", flavor: "White Chocolate", weight: "250 ml", img: Logo },
-];
+// const mockCakes = [
+//   { title: "Forever Bliss", flavor: "Bastashio", weight: "400 ml", img: Logo },
+//   { title: "Pure Romance", flavor: "Vanilla", weight: "140 ml", img: Logo },
+//   { title: "Elegant Charm", flavor: "Chocolate", weight: "120 ml", img: Logo },
+//   { title: "Dreamy Delight", flavor: "Fruits", weight: "180 ml", img: Logo },
+//   { title: "Sweet Harmony", flavor: "Red Velvet", weight: "200 ml", img: Logo },
+//   { title: "Golden Love", flavor: "Lemon", weight: "300 ml", img: Logo },
+//   { title: "Snow Kiss", flavor: "White Chocolate", weight: "250 ml", img: Logo },
+//   // Repeating for scroll testing
+//   { title: "Forever Bliss", flavor: "Bastashio", weight: "400 ml", img: Logo },
+//   { title: "Pure Romance", flavor: "Vanilla", weight: "140 ml", img: Logo },
+//   { title: "Elegant Charm", flavor: "Chocolate", weight: "120 ml", img: Logo },
+//   { title: "Dreamy Delight", flavor: "Fruits", weight: "180 ml", img: Logo },
+//   { title: "Sweet Harmony", flavor: "Red Velvet", weight: "200 ml", img: Logo },
+//   { title: "Golden Love", flavor: "Lemon", weight: "300 ml", img: Logo },
+//   { title: "Snow Kiss", flavor: "White Chocolate", weight: "250 ml", img: Logo },
+// ];
 
-const girlCakes = [
-  { title: "Pini Ribbons", flavor: "Bastashio", weight: "40 ml", img: Logo },
-  { title: "Queen", flavor: "Vanilla", weight: "50 ml", img: Logo },
-  { title: "Butterflies", flavor: "Chocolate", weight: "60 ml", img: Logo },
-  { title: "Pink Hearts", flavor: "Fruits", weight: "50 ml", img: Logo },
-  { title: "Ballerina", flavor: "Red Velvet", weight: "50 ml", img: Logo },
-  // Repeating for scroll testing
-  { title: "Pini Ribbons", flavor: "Bastashio", weight: "40 ml", img: Logo },
-  { title: "Queen", flavor: "Vanilla", weight: "50 ml", img: Logo },
-  { title: "Butterflies", flavor: "Chocolateae0d5e", weight: "60 ml", img: Logo },
-  { title: "Pink Hearts", flavor: "Fruits", weight: "50 ml", img: Logo },
-  { title: "Ballerina", flavor: "Red Velvet", weight: "50 ml", img: Logo },
-];
+// const girlCakes = [
+//   { title: "Pini Ribbons", flavor: "Bastashio", weight: "40 ml", img: Logo },
+//   { title: "Queen", flavor: "Vanilla", weight: "50 ml", img: Logo },
+//   { title: "Butterflies", flavor: "Chocolate", weight: "60 ml", img: Logo },
+//   { title: "Pink Hearts", flavor: "Fruits", weight: "50 ml", img: Logo },
+//   { title: "Ballerina", flavor: "Red Velvet", weight: "50 ml", img: Logo },
+//   // Repeating for scroll testing
+//   { title: "Pini Ribbons", flavor: "Bastashio", weight: "40 ml", img: Logo },
+//   { title: "Queen", flavor: "Vanilla", weight: "50 ml", img: Logo },
+//   { title: "Butterflies", flavor: "Chocolateae0d5e", weight: "60 ml", img: Logo },
+//   { title: "Pink Hearts", flavor: "Fruits", weight: "50 ml", img: Logo },
+//   { title: "Ballerina", flavor: "Red Velvet", weight: "50 ml", img: Logo },
+// ];
 
 // Cake Card
 const CakeCard = ({ cake }) => (
   <Card
     sx={{
-      
       width: { xs: 120, sm: 150, md: 170, lg: 290 },
       flexShrink: 0,  
       background: Theme.palette.background.default,
@@ -65,26 +66,19 @@ const CakeCard = ({ cake }) => (
       borderRadius: 2,
     }}
   >
-    <CardMedia component="img" sx={{ height: { xs: 170, md: 230, lg: 270 } }} image={cake.img} alt={cake.title} />
-    <CardContent>
-      <Typography fontWeight="bold" fontSize="14px" >
-        {cake.title}
-      </Typography>
-      <Typography variant="body2">
-        {cake.flavor} • {cake.weight}
-      </Typography>
-    </CardContent>
+    <CardMedia component="img" sx={{ height: { xs: 170, md: 230, lg: 270 } }} image={cake.image} />
+     {cake.cake && (
+      <CardContent sx={{ p: 3 }}>
+        <Typography variant="body2" fontWeight="medium" textAlign="center">
+          {cake.cake}
+        </Typography>
+      </CardContent>
+    )}
   </Card>
 );
-// Carousel Component
-import { useOutletContext } from "react-router-dom";
 
-const CakeCarousel = ({ title, cakes }) => {
-
-  // @ts-ignore
-  // @ts-ignore
+const CakeCarousel = ({ cakes }) => {
   const scrollRef = useRef();
-
   const scroll = (direction) => {
     const container = scrollRef.current;
     if (!container) return;
@@ -103,19 +97,7 @@ const CakeCarousel = ({ title, cakes }) => {
 
   return (
     <Box mt={6} className="middle" >
-      <Typography
-        variant="h6"
-       // ml={6}
-        //mb={2}
-        sx={{ 
-          fontSize: { xs: "13px", md: "25px" }, 
-          textAlign: "center",
-          width: '100%',
-          color: 'black'
-         }}
-      >
-        {title}
-      </Typography>
+      
       <Box position="relative" display="flex" alignItems="center" width="100%">
         {/* Left Arrow */}
         <IconButton
@@ -140,9 +122,15 @@ const CakeCarousel = ({ title, cakes }) => {
           overflow="hidden"
           justifyContent="space-between"
         >
-          {cakes.map((cake, index) => (
+          
+          {cakes.map((cake, index) => {
+            return(
+              <>
             <CakeCard key={index} cake={cake} />
-          ))}
+            </>
+          )
+        }
+        )}
         </Box>
 
         {/* Right Arrow */}
@@ -157,18 +145,35 @@ const CakeCarousel = ({ title, cakes }) => {
           <ArrowForwardIosIcon fontSize="small" />
         </IconButton>
       </Box>
-    </Box>
+     </Box>
   );
 };
 
 
 // Home Page
 export default function Home() {
+   const [topCakes, setTopCakes] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const getTopCakes = async () => {
+    setLoading(true);
+    const response = await api.get("/collections/collections-with-cakes");
+    if (response.success) {
+      console.log(response.data.cakes);
+      setTopCakes(response.data.cakes);
+    }
+    if (response.problem) {
+      console.log(response.problem.kind)
+    }
+    setLoading(false);
+  }
+  useEffect(() => {
+    getTopCakes();
+  }, []);
   const navigate = useNavigate();
 
   return (
     <Box>
-      {/* Banner */}
       <Box
         sx={{
           // width: { xs: "100%", sm: "80%", md: "70%", lg: "60%" },
@@ -214,12 +219,12 @@ export default function Home() {
             Customize your cake
           </Button>
         </div>
-
       </Box>
-
-      {/* Carousels */}
-      <CakeCarousel title="Wedding Vibes Collection" cakes={mockCakes} />
-      <CakeCarousel title="Girl Vibes Collection" cakes={girlCakes} />
+      {loading ? (
+        <Loader />
+      ):(
+      <CakeCarousel cakes={topCakes}  />
+      )}
     </Box>
   );
 }

@@ -10,7 +10,7 @@ const theme = createTheme({
       main: '#432199', // hover color
     },
     background: {
-      default: '#008080', // page background
+      default: '#fffff', // page background
     },
   },
   typography: {

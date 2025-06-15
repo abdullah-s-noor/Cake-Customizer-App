@@ -87,11 +87,11 @@ const fetchFakeMedia = async () => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(fakeMediaData);
-    }, 1500); // 1.5 seconds delay to simulate loading
+    }); 
   });
 };
 
-const MediaGrid = () => {
+export default function SeeAll() {
   const [mediaItems, setMediaItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -117,7 +117,7 @@ const MediaGrid = () => {
       ) : (
         <Box
           sx={{
-            px: { xs: 2, sm: 7, md: 10, lg: 20 },
+            px: { xs: 2, sm: 7, md: 10, lg: 15 },
             flexGrow: 1,
             minHeight: "100vh",
           }}
@@ -137,7 +137,7 @@ const MediaGrid = () => {
           </Typography>
           <Grid container spacing={2}>
             {mediaItems.map((item, index) => (
-              <Grid item xs={6} md={4} lg={4} key={index}>
+              <Grid item xs={6} md={4} key={index}>
                 <Card
                   sx={{
                     position: "relative",
@@ -157,10 +157,10 @@ const MediaGrid = () => {
                     component="img"
                     image={item.image}
                     alt={item.title}
-                    sx={{ height: { xs: 250, sm: 280, md: 320, lg: 350 } }}
+                    sx={{ height: { xs: 250, sm: 280, md: 320, lg: 390 } }}
                   />
                   <CardContent
-                    sx={{ backgroundColor: "#1c1c1c", color: "#fff" }}
+                    sx={{ backgroundColor:"primary.main", color: "#fff" }}
                   >
                     <Typography variant="body1" fontWeight="bold">
                       {item.title}
@@ -181,4 +181,4 @@ const MediaGrid = () => {
   );
 };
 
-export default MediaGrid;
+
