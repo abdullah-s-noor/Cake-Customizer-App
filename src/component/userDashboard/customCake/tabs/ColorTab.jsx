@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { Box, IconButton, Tooltip } from '@mui/material';
-import { Colorize } from '@mui/icons-material';
+import { Clear, Colorize } from '@mui/icons-material';
 
 const predefinedColors = [
     '#ffeb3b', '#ff9800', '#f44336',
     '#f8bbd0', '#e91e63', '#4caf50',
     '#81c784', '#03a9f4', '#0d47a1',
     '#fbe9e7', '#ffe0b2', '#5d4037',
-    'ffffff'
+    , ''
 ];
 
-const ColorTab = ({ setSelectedColor, selectedColor}) => {
+const ColorTab = ({ setSelectedColor, selectedColor }) => {
     const [customColor, setCustomColor] = useState(null);
-    
+
     const handleCustomColorChange = (e) => {
         setCustomColor(e.target.value);
         setSelectedColor?.(e.target.value);
@@ -35,7 +35,7 @@ const ColorTab = ({ setSelectedColor, selectedColor}) => {
                 borderRadius: '8px',
                 backgroundColor: '#723d46',
             },
-            
+
         }}>
             {/* Color Picker Button */}
             <Tooltip title="Pick custom color">
@@ -63,20 +63,23 @@ const ColorTab = ({ setSelectedColor, selectedColor}) => {
 
             {/* Predefined Colors */}
             {predefinedColors.map((color, index) => (
-                <Box
-                
+                color === '' ? <Clear sx={{ width: 50, height: 50, }}
                     key={index}
-                    onClick={() => setSelectedColor?.(color)}
-                    sx={{
-                        width: 50,
-                        height: 50,
-                        borderRadius: '50%',
-                        bgcolor: color,
-                        border: selectedColor === color ? '3px solid #723d46' : '1px solid #ccc',
-                        cursor: 'pointer',
-                    }}
-                />
-                
+                    onClick={() => setSelectedColor?.(color)} /> : ( // Skip empty color
+                    <Box
+
+                        key={index}
+                        onClick={() => setSelectedColor?.(color)}
+                        sx={{
+                            width: 50,
+                            height: 50,
+                            borderRadius: '50%',
+                            bgcolor: color,
+                            border: selectedColor === color ? '3px solid #723d46' : '1px solid #ccc',
+                            cursor: 'pointer',
+                        }}
+                    />
+                )
             ))}
         </Box>
     );

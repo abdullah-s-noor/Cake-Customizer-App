@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { Box, Typography, IconButton } from '@mui/material';
 import { Delete, AddCircleOutline } from '@mui/icons-material';
 
-function UploadFile({ file, onFileSelect, onRemove }) {
+function UploadFile({ file, onFileSelect, onRemove,text='📷 Attach a photo for printing' }) {
   // @ts-ignore
   const inputRef = useRef();
 
@@ -46,7 +46,7 @@ function UploadFile({ file, onFileSelect, onRemove }) {
             <AddCircleOutline sx={{ fontSize: 40, color: '#999' }} />
           </IconButton>
           <Typography variant="body1" color="text.secondary">
-            📷 Attach a photo for printing
+            {text}
           </Typography>
         </>
       ) : (
