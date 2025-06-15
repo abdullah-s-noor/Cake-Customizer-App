@@ -26,6 +26,7 @@ import Favourite from "../Favourite/Favourite.jsx"
 import ProtectedRoute from "../protectedRoute/ProtectedRoute.jsx";
 import AddNewShape from "../userDashboard/addNewShape/AddNewShape.jsx";
 import SeeAll from "../userDashboard/home/SeeAll.jsx";
+import AddNewFlavor from "../userDashboard/addNewFlavor/AddNewFlavor.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ export const router = createBrowserRouter([
       {
         path:'addnewshape',
         element: <AddNewShape />,
+      },
+      {
+        path: "addnewflavor",
+        element: <AddNewFlavor />,
       },
       {
         path: "/",
