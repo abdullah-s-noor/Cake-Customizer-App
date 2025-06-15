@@ -99,7 +99,7 @@ export default function EditUserInformation() {
         {loader ? <Loader /> :
           <Box
             sx={{
-              minWidth: 400,
+              maxWidth: 400,
               mx: "auto",
               mt: 10,
               mb: 10,
@@ -113,7 +113,6 @@ export default function EditUserInformation() {
             <Typography variant="body2" align="center" sx={{ color: Theme.palette.primary.main }}>
               Updating user details.
             </Typography>
-
             <Grid container spacing={2} sx={{ mt:2,display: "flex", flexDirection : "column" }}>
               <Grid item xs={12}>
                 <TextField
@@ -126,8 +125,8 @@ export default function EditUserInformation() {
                   helperText={errors.username}
                 />
               </Grid>
-
               <Grid item xs={12} >
+              <Grid item xs={12}>
                 <TextField
                   fullWidth
                   label="Email"
