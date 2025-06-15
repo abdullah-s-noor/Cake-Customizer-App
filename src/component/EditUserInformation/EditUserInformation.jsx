@@ -113,8 +113,7 @@ export default function EditUserInformation() {
             <Typography variant="body2" align="center" sx={{ color: Theme.palette.primary.main }}>
               Updating user details.
             </Typography>
-
-            <Grid container spacing={2} sx={{ mt: 2 }}>
+            <Grid container spacing={2} sx={{ mt:2,display: "flex", flexDirection : "column" }}>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
@@ -126,7 +125,7 @@ export default function EditUserInformation() {
                   helperText={errors.username}
                 />
               </Grid>
-
+              <Grid item xs={12} >
               <Grid item xs={12}>
                 <TextField
                   fullWidth
@@ -171,6 +170,7 @@ export default function EditUserInformation() {
                 <Button
                   variant="contained"
                   onClick={handleSave}
+                  disabled={loading}
                   sx={{ background: Theme.palette.primary.main }}
                 >
                   {loading ? "Saving..." : "Save"}
