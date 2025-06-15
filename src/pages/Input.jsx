@@ -32,7 +32,7 @@ function Input({ type, title, id, name, value, onChange, errors,onBlur,touched,d
                 {showPassword ? <Visibility /> : <VisibilityOff />}
               </IconButton>
             </InputAdornment>
-          ) : type === 'email'?<Email/>:type === 'tel'?<Phone/>:type === 'text'?<Person/>:null,
+          ) : type === 'email'?<Email/>:type === 'tel'?<Phone/>:(type === 'text')&&(name==='name' )?<Person/>:null,
         }}
         sx={{
           "& .MuiOutlinedInput-root": {

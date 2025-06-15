@@ -24,6 +24,7 @@ import NotFound from "../NotFound/NotFound.jsx";
 import Profile from "../Profile/Profile.jsx";
 import Favourite from "../Favourite/Favourite.jsx"
 import ProtectedRoute from "../protectedRoute/ProtectedRoute.jsx";
+import AddNewShape from "../userDashboard/addNewShape/AddNewShape.jsx";
 import SeeAll from "../userDashboard/home/SeeAll.jsx";
 
 export const router = createBrowserRouter([
@@ -32,6 +33,10 @@ export const router = createBrowserRouter([
     element: <Layout />,
     errorElement: <NotFound />,
     children: [
+      {
+        path:'addnewshape',
+        element: <AddNewShape />,
+      },
       {
         path: "/",
         element: <Home />,
