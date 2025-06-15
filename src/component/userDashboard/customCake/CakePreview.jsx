@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Box, Button } from '@mui/material';
 
-const CakePreview = ({ selectedShape: shape, selectedFlavor: flavor, selectedTopping: topping, selectedColor: color,value ,xs= 240, sm= 280, md= 450,b=50}) => {
+const CakePreview = ({ selectedShape: shape, selectedFlavor: flavor, selectedTopping: topping, selectedColor: color=null,value ,xs= 240, sm= 280, md= 450,b=50}) => {
 useEffect(() => {
   console.log(color);
 },[]);

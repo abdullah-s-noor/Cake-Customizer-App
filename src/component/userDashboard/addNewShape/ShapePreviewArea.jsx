@@ -43,7 +43,7 @@ export default function ShapePreviewArea({ file, shapeData }) {
         maxWidth="sm"
       >
         <DialogTitle sx={{ m: 0, p: 2, display: 'flex', justifyContent: 'space-between' }}>
-          <Typography variant="h6">Cake Preview</Typography>
+          <Typography variant="h6" component="span">Cake Preview</Typography>
           <IconButton onClick={() => setOpenDialog(false)} size="small">
             <Close />
           </IconButton>
