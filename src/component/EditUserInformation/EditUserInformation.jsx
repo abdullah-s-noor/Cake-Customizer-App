@@ -99,7 +99,7 @@ export default function EditUserInformation() {
         {loader ? <Loader /> :
           <Box
             sx={{
-              maxWidth: 400,
+              minWidth: 400,
               mx: "auto",
               mt: 10,
               mb: 10,
@@ -114,7 +114,7 @@ export default function EditUserInformation() {
               Updating user details.
             </Typography>
 
-            <Grid container spacing={2} sx={{ mt: 2 }}>
+            <Grid container spacing={2} sx={{ mt:2,display: "flex", flexDirection : "column" }}>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
@@ -127,7 +127,7 @@ export default function EditUserInformation() {
                 />
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid item xs={12} >
                 <TextField
                   fullWidth
                   label="Email"
@@ -171,6 +171,7 @@ export default function EditUserInformation() {
                 <Button
                   variant="contained"
                   onClick={handleSave}
+                  disabled={loading}
                   sx={{ background: Theme.palette.primary.main }}
                 >
                   {loading ? "Saving..." : "Save"}
