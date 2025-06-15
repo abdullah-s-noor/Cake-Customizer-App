@@ -25,6 +25,7 @@ import Profile from "../Profile/Profile.jsx";
 import Favourite from "../Favourite/Favourite.jsx"
 import ProtectedRoute from "../protectedRoute/ProtectedRoute.jsx";
 import AddNewShape from "../userDashboard/addNewShape/AddNewShape.jsx";
+import SeeAll from "../userDashboard/home/SeeAll.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -43,6 +44,10 @@ export const router = createBrowserRouter([
       {
         path: "register",
         element: <Register />,
+      },
+      {
+        path: "seeall",
+        element: <SeeAll />,
       },
       {
         path: "login",
