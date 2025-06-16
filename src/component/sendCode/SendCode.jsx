@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react'
 import Input from '../../pages/Input'
 import { useFormik } from 'formik'
 import { Box, Card, Typography, Button, Alert, Link as MuiLink } from '@mui/material'
-import axios from 'axios'
 import validationSchema from './validationSchema'
 import inputs from './inputs'
 import { Link as RouterLink, useLocation } from 'react-router-dom'
@@ -10,6 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import styles from '../register/styles';
 import LeftSideAth from '../../pages/LeftSideAth'
 import { ArrowBackIos, Password } from '@mui/icons-material'
+import {api} from "../../api/api.js";
 import { UserContext } from '../context/User'
 
 function SendCode() {
@@ -29,7 +29,7 @@ function SendCode() {
   const onSubmit = async (values) => {
     console.log('Sending Data:', values)
     try {
-      const { data } = await axios.post('https://bimicake.onrender.com/auth/send-code', values)
+      const { data } = await api.post('/auth/send-code', values)
       console.log('Response from server:', data)
       setServerError('') // Clear any previous error
       navigate('/forget-password', { state: { email: values.email,from:location } });

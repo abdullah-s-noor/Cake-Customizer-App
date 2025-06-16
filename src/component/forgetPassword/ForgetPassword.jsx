@@ -8,12 +8,11 @@ import {
   Alert,
   Link as MuiLink,
 } from '@mui/material';
-import axios from 'axios';
 import { useLocation, useNavigate, Link as RouterLink } from 'react-router-dom';
 import { MuiOtpInput } from 'mui-one-time-password-input';
 import { ArrowBackIos } from '@mui/icons-material';
 import { toast } from 'react-toastify';
-
+import {api} from "../../api/api.js";
 import validationSchema from './validationSchema';
 import inputs from './inputs.js';
 import Input from '../../pages/Input';
@@ -53,7 +52,7 @@ function SendCode() {
   const handleResendCode = async () => {
     try {
       if (!emailFromRoute) return alert('Email is missing');
-      const { data } = await axios.post('https://bimicake.onrender.com/auth/send-code', {
+       await api.post('/auth/send-code', {
         email: emailFromRoute,
       });
       handleOtpChange('');
@@ -73,7 +72,7 @@ function SendCode() {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        const res = await axios.post('https://bimicake.onrender.com/auth/forgot-password', {
+        const res = await api.post('/auth/forgot-password', {
           code: otp,
           password: values.password,
         });
