@@ -9,22 +9,22 @@ import {
   Typography
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
-import CakePreview from '../customCake/CakePreview';
+import CakePreview from '../customCake/CakePreview'; 
 
-export default function ToppingPreviewArea({ file, flavorData, selectedShape }) {
+export default function ToppingPreviewArea({ file, toppingData, selectedShape }) {
   const [openDialog, setOpenDialog] = useState(false);
 
   // Close dialog if any essential prop is missing
   useEffect(() => {
-    if (!file || !selectedShape || !flavorData) {
+    if (!file || !selectedShape || !toppingData) {
       setOpenDialog(false);
     }
-  }, [file, selectedShape, flavorData]);
+  }, [file, selectedShape, toppingData]);
 
   return (
     <Box mt={3} textAlign="center">
       {/* Show Preview Button only when all data is available */}
-      {!openDialog && file && selectedShape && flavorData && (
+      {!openDialog && file && selectedShape && toppingData && (
         <Button
           variant="outlined"
           fullWidth
@@ -62,8 +62,8 @@ export default function ToppingPreviewArea({ file, flavorData, selectedShape }) 
           <Box mt={2}>
             <CakePreview
               selectedShape={selectedShape}
-              selectedFlavor={flavorData}
-              selectedTopping={null}
+              selectedFlavor={null}
+              selectedTopping={toppingData}
               selectedColor={''}
               value={3}
               b={0}
