@@ -11,7 +11,7 @@ import styles from '../register/styles';
 import LeftSideAth from '../../pages/LeftSideAth'
 import { Password, Token } from '@mui/icons-material'
 import { UserContext } from '../context/User'
-
+import { api } from '../../api/api'
 function Login() {
     const navigate = useNavigate()
     const { userToken, setUserToken } = useContext(UserContext);
@@ -31,7 +31,7 @@ function Login() {
     const onSubmit = async (values,{setSubmitting}) => {
         console.log('Sending Data:', values)
         try {
-            const { data } = await axios.post('https://bimicake.onrender.com/auth/login', values)
+            const { data } = await api.post('/auth/login', values)
             console.log('Response from server:', data)
             setServerError('') // Clear any previous error
             localStorage.setItem("userToken", data.token);

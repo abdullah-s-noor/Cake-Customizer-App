@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, Card, Typography, Alert } from '@mui/material';
 import { useFormik } from 'formik';
-import axios from 'axios';
 import Input from '../../../pages/Input';
 import validationSchema from './validationSchema';
 import inputs from './inputs';
@@ -52,7 +51,7 @@ function AddNewShape() {
                 resetForm();
                 setFile(null);
             } catch (error) {
-                setServerError('Failed to add shape.');
+                setServerError(error.response?.data?.message || 'Failed to add shape.');
                 console.error(error);
             } finally {
                 setSubmitting(false);
@@ -75,20 +74,17 @@ function AddNewShape() {
                 {serverError && <Alert severity="error">{serverError}</Alert>}
 
                 <Box component="form" onSubmit={formik.handleSubmit} noValidate m={3}>
-                    {/* 🖼️ Upload File */}
+                    {/*Upload File */}
                     <Box mb={2}>
                         <UploadFile
                             file={file}
                             onFileSelect={(f) => setFile(f)}
                             onRemove={() => setFile(null)}
-                            text='Add new Shape'
-
+                            text='Add new shape image'
                         />
                     </Box>
-
-                    {/* 📝 Text Fields */}
+                    {/* inputs => name, price, weight, capacity, dimensions, svg Path, svg viewBox*/}
                     {inputs(formik)
-                        .filter(input => input.name !== 'image') // Skip image
                         .map((input, index) => (
                             <Box key={index} mb={2}>
                                 <Input
@@ -105,7 +101,7 @@ function AddNewShape() {
                                 />
                             </Box>
                         ))}
-
+                    {/* check SVG Path and ViewBox on the shape before submission */}
                     <ShapePreviewArea
                         file={file}
                         shapeData={{
@@ -124,7 +120,6 @@ function AddNewShape() {
                     >
                         {formik.isSubmitting ? 'Submitting...' : 'Add Shape'}
                     </Button>
-
                 </Box>
             </Card>
         </Box>

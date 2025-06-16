@@ -27,6 +27,7 @@ import ProtectedRoute from "../protectedRoute/ProtectedRoute.jsx";
 import AddNewShape from "../userDashboard/addNewShape/AddNewShape.jsx";
 import SeeAll from "../userDashboard/home/SeeAll.jsx";
 import AddNewFlavor from "../userDashboard/addNewFlavor/AddNewFlavor.jsx";
+import AddNewTopping from "../userDashboard/addNewTopping/AddNewTopping.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ export const router = createBrowserRouter([
     element: <Layout />,
     errorElement: <NotFound />,
     children: [
+      {
+        path: "addnewtopping",
+        element: <AddNewTopping />,
+      },
       {
         path:'addnewshape',
         element: <AddNewShape />,

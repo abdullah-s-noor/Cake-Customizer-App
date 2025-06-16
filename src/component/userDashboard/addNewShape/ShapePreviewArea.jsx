@@ -9,7 +9,7 @@ import {
   Typography
 } from '@mui/material';
 import { Clear, Close } from '@mui/icons-material';
-import CakePreview from '../customCake/CakePreview'; // Adjust path as needed
+import CakePreview from '../customCake/CakePreview';
 
 export default function ShapePreviewArea({ file, shapeData }) {
   const [openDialog, setOpenDialog] = useState(false);
@@ -90,6 +90,7 @@ export default function ShapePreviewArea({ file, shapeData }) {
               selectedTopping={null}
               selectedColor={selectedColor}
               value={3}
+              b={0}
             />
           </Box>
         </DialogContent>

@@ -1,24 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Card, Typography, Button, Alert } from '@mui/material';
 import { useFormik } from 'formik';
-import axios from 'axios';
 import Input from '../../../pages/Input';
 import UploadFile from '../../../pages/UploadFile';
 import validationSchema from './validationSchema';
 import inputs from './inputs';
-import ShapeSelector from '../../../pages/ShapeSelector'; // Adjust the path if needed
+import ShapeSelector from '../../../pages/ShapeSelector';
 import theme from '../../../theme';
 import { toast } from 'react-toastify';
-import FlavorPreviewArea from './FlavorPreviewArea';
+import ToppingPreviewArea from './ToppingPreviewArea';
 import { api } from '../../../api/api';
-export default function AddNewFlavor() {
+import CollectionSelector from '../../../pages/CollectionSelector';
+export default function Topping() {
     const [serverError, setServerError] = useState('');
     const [selectedShape, setSelectedShape] = useState(null);
     const [file, setFile] = useState(null);
+    const [selectedCollection, setSelectedCollection] = useState(null);
+
 
     const formik = useFormik({
         initialValues: {
-            flavor: '',
+            topping: '',
             price: '',
         },
         validationSchema,
@@ -29,17 +31,24 @@ export default function AddNewFlavor() {
                     setSubmitting(false);
                     return;
                 }
+                if (!selectedCollection) {
+                    setServerError('Please select a collection.');
+                    setSubmitting(false);
+                    return;
+                }
 
                 if (!file) {
-                    setServerError('Please upload a flavor image.');
+                    setServerError('Please upload a topping image.');
                     setSubmitting(false);
                     return;
                 }
 
                 const formData = new FormData();
-                formData.append('name', `${selectedShape.name}_${values.flavor.toLowerCase()}`);
+                formData.append('name', `${selectedShape.name}_${values.topping.toLowerCase()}`);
                 formData.append('price', values.price);
+                formData.append('cakeCollection', selectedCollection._id);
                 formData.append('image', file);
+
                 console.log('Form Data Content:');
                 formData.forEach((value, key) => {
                     if (key === 'name' && typeof value === 'string') {
@@ -49,25 +58,25 @@ export default function AddNewFlavor() {
                     }
                 });
 
-
-                // First post the flavor data to the server
-                const response1 = await api.post('/custom/flavor', formData);
+                // first post the topping data to the server
+                const response1 = await api.post('/custom/topping', formData);
                 console.log('Server response:', response1.data.item._id);
                 const payload = {
-                    flavorIds: [response1.data.item._id],
+                    toppingIds: [response1.data.item._id],
                 };
-                // Then update the shape with the new flavor
+                // then patch the shape with the topping data
                 const response2 = await api.patch(`/custom/shapes/${selectedShape._id}/add-customization`, payload);
-                console.log('Shape updated with flavor:', response2.data);
+                console.log('Shape updated with topping:', response2.data);
 
-                toast.success('Flavor added successfully!');
+                toast.success('Topping added successfully!');
                 setServerError('');
                 resetForm();
                 setFile(null);
                 setSelectedShape(null);
+                setSelectedCollection(null);
             } catch (error) {
                 console.error(error);
-                setServerError(error.response?.data?.message || 'Failed to add flavor.');
+                setServerError(error.response?.data?.message || 'Failed to add topping.');
             } finally {
                 setSubmitting(false);
             }
@@ -83,7 +92,7 @@ export default function AddNewFlavor() {
                     mb={2}
                     sx={{ color: 'white', textAlign: 'center', bgcolor: theme.palette.primary.main, borderRadius: 1 }}
                 >
-                    Add New flavor
+                    Add New topping
                 </Typography>
                 {serverError && <Alert severity="error">{serverError}</Alert>}
 
@@ -92,18 +101,20 @@ export default function AddNewFlavor() {
                     <Box mb={2}>
                         <ShapeSelector selectedShape={selectedShape} onSelect={setSelectedShape} />
                     </Box>
-
+                    {/* Collection Selector */}
+                    <Box mb={2}>
+                        <CollectionSelector selectedCollection={selectedCollection} onSelect={setSelectedCollection} />
+                    </Box>
                     {/* Upload image */}
                     <Box mb={2}>
                         <UploadFile
                             file={file}
                             onFileSelect={(f) => setFile(f)}
                             onRemove={() => setFile(null)}
-                            text='Add new flavor image'
+                            text='Add new topping image'
                         />
                     </Box>
-
-                    {/* Inputs=> name , price */}
+                    {/* inputs => name and price */}
                     {inputs(formik).map((input, index) => (
                         <Box key={index} mb={2}>
                             <Input
@@ -120,11 +131,11 @@ export default function AddNewFlavor() {
                             />
                         </Box>
                     ))}
-                    {/* Preview the flavor on the selected shape before submission */}
+                    {/* Preview the topping on the selected shape before submission */}
                     {/* This preview component is shown only when an image is uploaded and a shape is selected */}
-                    <FlavorPreviewArea
+                    <ToppingPreviewArea
                         file={file}
-                        flavorData={{
+                        toppingData={{
                             image: { secure_url: file ? URL.createObjectURL(file) : '' },
                         }}
                         selectedShape={selectedShape}
@@ -135,10 +146,12 @@ export default function AddNewFlavor() {
                         variant="contained"
                         disabled={formik.isSubmitting}
                     >
-                        {formik.isSubmitting ? 'Submitting...' : 'Add Flavor'}
+                        {formik.isSubmitting ? 'Submitting...' : 'Add Topping'}
                     </Button>
                 </Box>
             </Card>
         </Box>
     );
+
+
 }

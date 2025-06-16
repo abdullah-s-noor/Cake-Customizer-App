@@ -48,13 +48,7 @@ const inputs = (formik) => [
         title: "SVG ViewBox",
         value: formik.values.viewBox,
     },
-    {
-        name: "image",
-        id: "image",
-        type: "file",
-        title: "Image File",
-        value: formik.values.image,
-    },
+
 ];
 
 export default inputs;

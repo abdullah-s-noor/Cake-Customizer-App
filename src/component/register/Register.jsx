@@ -9,6 +9,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import styles from './styles';
 import LeftSideAth from '../../pages/LeftSideAth';
 import { UserContext } from '../context/User';
+import { api } from '../../api/api';
 function Register() {
     const navigate = useNavigate();
     const [serverError, setServerError] = useState('')
@@ -28,7 +29,7 @@ function Register() {
     const onSubmit = async (values,{setSubmitting}) => {
         console.log('Sending Data:', values);
         try {
-        const {data} = await axios.post('https://bimicake.onrender.com/auth/register', values)
+        const {data} = await api.post('/auth/register', values)
         console.log('Response from server:', data)
         setServerError('') // Clear any previous error
         navigate('/login')

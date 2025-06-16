@@ -18,6 +18,7 @@ export default function UserContextProvider({ children }) {
   const getUserData = async () => {
     try {
       const response = await api.get(`/auth/profile`);
+      console.log(response);
       if (response && response.data && response.data.user) {
         setUserInfo(response.data.user);
         console.log(response.data.user);
