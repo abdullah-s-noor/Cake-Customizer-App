@@ -126,7 +126,6 @@ export default function EditUserInformation() {
                 />
               </Grid>
               <Grid item xs={12} >
-              <Grid item xs={12}>
                 <TextField
                   fullWidth
                   label="Email"
