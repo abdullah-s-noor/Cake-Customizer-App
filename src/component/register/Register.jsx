@@ -10,6 +10,7 @@ import styles from './styles';
 import LeftSideAth from '../../pages/LeftSideAth';
 import { UserContext } from '../context/User';
 import { api } from '../../api/api';
+import { toast } from 'react-toastify';
 function Register() {
     const navigate = useNavigate();
     const [serverError, setServerError] = useState('')
@@ -32,6 +33,7 @@ function Register() {
         const {data} = await api.post('/auth/register', values)
         console.log('Response from server:', data)
         setServerError('') // Clear any previous error
+        toast.success('Registration successful! Please log in.');
         navigate('/login')
         } catch (error) {
             console.log('Error during registration:', error);

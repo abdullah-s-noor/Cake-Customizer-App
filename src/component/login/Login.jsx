@@ -11,37 +11,56 @@ import LeftSideAth from '../../pages/LeftSideAth'
 import { Password, Token } from '@mui/icons-material'
 import { UserContext } from '../context/User'
 import { api } from '../../api/api'
+import { jwtDecode } from 'jwt-decode'
 function Login() {
     const navigate = useNavigate()
-    const { userToken, setUserToken } = useContext(UserContext);
+    const { userToken, setUserToken,setLoader } = useContext(UserContext);
     const location = useLocation();
-    const from = location.state?.from?.pathname || '/';
+    console.log(location?.state?.from?.pathname);
     useEffect(() => {
         if (userToken) {
-            navigate(from, { replace: true });
+            console.log("inside useEffect of Login component");
+            const tokenInfo = jwtDecode(userToken);
+            const from = location?.state?.from?.pathname || "/";
+
+            if (tokenInfo?.role === "admin") {
+                if (from === "/profile" || from === "/edituserinformation" || from === "/changepassword") {
+                    navigate(from, { replace: true });
+                }
+                else {
+                    navigate(from.startsWith("/dashboard") ? from : "/dashboard", { replace: true });
+                }
+            } else {
+                navigate(from.startsWith("/dashboard") ? "/notfound" : from, { replace: true });
+            }
         }
-    }, [userToken, from, navigate]);
+    }, [userToken, location.state, navigate]);
+
+
     const [serverError, setServerError] = useState('')
     const initialValues = {
         phone: '',
         password: '',
     }
 
-    const onSubmit = async (values,{setSubmitting}) => {
+    const onSubmit = async (values, { setSubmitting }) => {
         console.log('Sending Data:', values)
         try {
             const { data } = await api.post('/auth/login', values)
             console.log('Response from server:', data)
             setServerError('') // Clear any previous error
             localStorage.setItem("userToken", data.token);
-            setUserToken(data.token);
+            const token = localStorage.getItem('userToken');
+            setUserToken(token);
+            setLoader(true);
+
         } catch (error) {
             if (error.response && error.response.data && error.response.data.message) {
                 setServerError(error.response.data.message)
             } else {
                 setServerError('Something went wrong. Please try again.')
             }
-        }finally{
+        } finally {
             setSubmitting(false);
         }
     }
@@ -99,7 +118,7 @@ function Login() {
                         <Box component="form" onSubmit={formik.handleSubmit} sx={styles.form}>
                             {renderInput}
                             <Button variant="contained" fullWidth type="submit" sx={styles.submitButton} disabled={formik.isSubmitting}>
-                                {formik.isSubmitting?'Signing in...':'Sign In'}
+                                {formik.isSubmitting ? 'Signing in...' : 'Sign In'}
                             </Button>
                             <Button variant="contained" fullWidth type="submit" sx={{ ...styles.exploreButton, display: { xs: 'flex', md: 'none' } }}
                                 onClick={() => navigate('/')}

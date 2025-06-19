@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Box, Button, Card, Typography, Alert } from '@mui/material';
 import { useFormik } from 'formik';
 import Input from '../../../pages/Input';
@@ -9,10 +9,11 @@ import UploadFile from '../../../pages/UploadFile';
 import { toast } from 'react-toastify';
 import { api } from '../../../api/api';
 import ShapePreviewArea from './ShapePreviewArea';
+import { UserContext } from '../../context/User';
+import { useNavigate } from 'react-router-dom';
 function AddNewShape() {
     const [serverError, setServerError] = useState('');
     const [file, setFile] = useState(null);
-
     const formik = useFormik({
         initialValues: {
             shape: '',
@@ -60,7 +61,7 @@ function AddNewShape() {
     });
 
     return (
-        <Box maxWidth={600} mx="auto" mt={5}>
+        <Box maxWidth={600} width={'100%'} mx="auto" mt={5}>
             <Card sx={{ p: 0, m: 1, boxShadow: 3 }}>
                 <Typography
                     variant="h5"

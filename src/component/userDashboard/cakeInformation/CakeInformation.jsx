@@ -6,6 +6,7 @@ import RateandReview from '../RateandReview/RateandReview';
 import CakePreview from '../customCake/CakePreview';
 import { Cake } from '@mui/icons-material';
 import Theme from "../../../../src/theme.js";
+import {api} from '../../../api/api.js';
 
 const StyledRating = styled(Rating)({
   '& .MuiRating-iconFilled': {
@@ -62,7 +63,38 @@ export default function CakeDetails() {
         reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
       ).toFixed(1)
       : 0;
+  const handleCart = async() => {
+    const cartItem = {
+      shape: orderDetails.shape._id,
+      flavor: orderDetails.flavor._id,
+      topping: orderDetails.topping._id,
+      color: orderDetails.color,
+      file: orderDetails.file,
+      cakeMessage: orderDetails.cakeMessage,
+      instructions: orderDetails.instructions,
+      type : 'custom',
+    };
+    console.log('Cart Item:', cartItem);
+    const formData = new FormData();
+    formData.append('shape', orderDetails.shape._id);
+    formData.append('flavor', orderDetails.flavor._id);
+    formData.append('topping', orderDetails.topping._id);
+    formData.append('color', orderDetails.color);
+    formData.append('file', orderDetails.file);
+    formData.append('cakeMessage', orderDetails.cakeMessage);
+    formData.append('instructions', orderDetails.instructions);
+    formData.append('type', 'custom');
+    console.log('Form Data:', formData);
 
+    console.log(cartItem);
+    try {
+      const {data} =await api.post('/cake/custom/new', cartItem)
+      console.log('Cart item added:', data);
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    }
+
+  }
   return (
     <>
     
@@ -143,6 +175,7 @@ export default function CakeDetails() {
                 variant="contained"
                 fullWidth
                 sx={{ py: 1.5, fontWeight: 'bold', backgroundColor:Theme.palette.primary.main, color: 'white', borderRadius: 2 }}
+                onClick={()=>handleCart()}
               >
                 Add to Cart
               </Button>

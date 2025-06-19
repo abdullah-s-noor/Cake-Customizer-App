@@ -3,7 +3,8 @@ import { UserContext } from '../context/User';
 import React, { useContext } from 'react';
 
 function ProtectedRoute({ children }) {
-    const { userToken } = useContext(UserContext);
+    console.log("ProtectedRoute rendered");
+    const { userToken } = useContext(UserContext);// for (user,admin) protected route
     const location =useLocation();
     
     if (!userToken) {
@@ -12,6 +13,7 @@ function ProtectedRoute({ children }) {
         //you are inside a conditional render
         //without replace:Now the user can click the  "Back" button and go back to the protected page they shouldn't be able to access (like /profile) when make logout.
     }
+
 
     return children;
 }

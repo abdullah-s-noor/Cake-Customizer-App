@@ -10,20 +10,27 @@ function Layout() {
   const [sidebarDisplay, setSidebarDisplay] = useState("none");
   const [sidebarType, setSidebarType] = useState('permanent');
 
-  
+
 
   const location = useLocation();
-  const isAuthPage = location.pathname === '/login' || location.pathname === '/send-code' || location.pathname === '/forget-password' || location.pathname === '/register';
+  const isAuthPage = location.pathname === '/custom-cake' ||location.pathname === '/login' || location.pathname === '/send-code' || location.pathname === '/forget-password' || location.pathname === '/register';
+  const withoutFooter = location.pathname === '/custom-cake' || location.pathname === '/login' || location.pathname === '/send-code' || location.pathname === '/forget-password' || location.pathname === '/register';
+  const withoutNavbar =  location.pathname === '/login' || location.pathname === '/send-code' || location.pathname === '/forget-password' || location.pathname === '/register';
   return (
     <>
-      {!isAuthPage && (
-        <>
-          <Navbar setSidebarDisplay={setSidebarDisplay} setSidebarType={setSidebarType}  />
-          <Sidebar sidebarDisplay={sidebarDisplay} sidebarType={sidebarType} setSidebarDisplay={setSidebarDisplay} />
-        </>
-      )}
-      <Outlet/>
-      {!isAuthPage && <Footer />}
+      <Box
+        sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+      >
+
+        {!withoutNavbar && (
+          <>
+            <Navbar setSidebarDisplay={setSidebarDisplay} setSidebarType={setSidebarType} />
+            <Sidebar sidebarDisplay={sidebarDisplay} sidebarType={sidebarType} setSidebarDisplay={setSidebarDisplay} />
+          </>
+        )}
+        <Outlet />
+      </Box>
+      {!withoutFooter && <Footer />}
     </>
   )
 }

@@ -18,6 +18,7 @@ function ToppingTab({ toppings, selectedTopping, setSelectedTopping,handlePriceC
         height: { xs: 360, sm: 500, md: 600 },
         overflowY: 'auto',
         margin: 0,
+        pb: 3,
         '&::-webkit-scrollbar': {
           width: '10px',
         },
@@ -69,7 +70,7 @@ function ToppingTab({ toppings, selectedTopping, setSelectedTopping,handlePriceC
                     />
                     <ImageListItemBar
                       sx={{ textAlign: 'center' }}
-                      title={item.name}
+                      title={item.name.split('_')[1]}
                       subtitle={
                         <Box>
                           <Typography variant="body2" fontWeight="bold">

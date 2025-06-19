@@ -1,10 +1,19 @@
 import axios from 'axios';
 
-const token = localStorage.getItem("userToken");
-
 export const api = axios.create({
-  baseURL: "https://bimicake-c8zf.onrender.com", // you can customize this
-  headers:{
-    Authorization: `${token}`,
-  }
+  baseURL: "https://bimicake-c8zf.onrender.com",
 });
+
+// Add a request interceptor to dynamically attach token
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("userToken");
+    if (token) {
+      config.headers.Authorization = `${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);

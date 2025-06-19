@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { use, useContext, useEffect, useState } from 'react'
 import { AppBar, Toolbar, Box, IconButton, Link, Badge } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import { AccountCircle, Favorite, ShoppingCart, SmartButton } from '@mui/icons-material'
@@ -6,11 +6,11 @@ import { styles } from './styles'
 import Search from '../../pages/Search'
 import { useMediaQuery } from '@mui/material'
 import './navBarStyle.css'
-import {Link as MuiLink, useNavigate} from 'react-router-dom'
+import { Link as MuiLink, useNavigate } from 'react-router-dom'
 import { UserContext } from '../context/User'
 function Navbar({ setSidebarDisplay, setSidebarType }) {
-  const navigate=useNavigate();
-  const {userToken,logout} =useContext(UserContext);
+  const navigate = useNavigate();
+  const { userToken, logout } = useContext(UserContext);
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down('md'))
   const [navBarProps, setNavBarProps] = useState({
     sx: {
@@ -101,9 +101,21 @@ function Navbar({ setSidebarDisplay, setSidebarType }) {
               <ShoppingCart fontSize="medium" />
             </Badge>
           </IconButton>
-          <IconButton color="inherit" sx={styles.iconBtn} onClick={()=>{userToken?logout():navigate('/login')}}>
-              {userToken?'logout':<AccountCircle fontSize="medium" />}
+          <IconButton
+            color="inherit"
+            sx={styles.iconBtn}
+            onClick={() => {
+              if (userToken) {
+                logout(); 
+                console.log(1);             // clear context
+              } else {
+                navigate('/login');
+              }
+            }}
+          >
+            {userToken ? 'Logout' : <AccountCircle fontSize="medium" />}
           </IconButton>
+
         </Box>
 
       </Toolbar>
