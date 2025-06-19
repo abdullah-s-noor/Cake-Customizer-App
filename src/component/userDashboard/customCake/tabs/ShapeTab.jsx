@@ -37,6 +37,7 @@ return (
                     transition: '0.2s',
                     position: 'relative',
                     bgcolor: selectedShape._id === item._id ? '#f6e6ec' : 'transparent',
+                    pb: 4
                 }}
                 
             >

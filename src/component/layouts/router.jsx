@@ -28,13 +28,97 @@ import AddNewShape from "../userDashboard/addNewShape/AddNewShape.jsx";
 import SeeAll from "../userDashboard/home/SeeAll.jsx";
 import AddNewFlavor from "../userDashboard/addNewFlavor/AddNewFlavor.jsx";
 import AddNewTopping from "../userDashboard/addNewTopping/AddNewTopping.jsx";
-
+import AdminProtectedRoute from "../protectedRoute/AdminProtectedRoute.jsx";
+import SeparateProtectedRoute from "../protectedRoute/SeparateProtectedRoute.jsx";
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
     errorElement: <NotFound />,
     children: [
+      {
+        path: "/",
+        element: <SeparateProtectedRoute><Home /></SeparateProtectedRoute>,//non logged in user and user can access this page not admin
+      },
+      {
+        path: "register",
+        element: <Register />,//non logged in user can access this page
+      },
+      {
+        path: "login",
+        element:<Login /> ,//non logged in user can access this page
+      },
+      {
+        path: "send-code",
+        element: <SendCode />,//non logged in user can access this page
+      },
+      {
+        path: "forget-password",
+        element: <ForgetPassword />,//non logged in user can access this page
+      },
+      {
+        path: "profile",
+        element:<ProtectedRoute> <Profile /></ProtectedRoute> ,//user and admin can access this page
+      },
+      {
+        path: "edituserinformation",
+        element: <ProtectedRoute><EditUserInformation /></ProtectedRoute>,//user and admin can access this page
+      },
+      {
+        path: "changepassword",
+        element: <ProtectedRoute><ChangePassword /></ProtectedRoute>,//user and admin can access this page
+      },
+      
+      {
+        path: "seeall",
+        element: <SeparateProtectedRoute><SeeAll /></SeparateProtectedRoute>,////non logged in user and user can access this page not admin
+      },
+      {
+        path: "custom-cake",
+        element: <SeparateProtectedRoute><CustomCake /></SeparateProtectedRoute>,////non logged in user and user can access this page not admin
+      },
+      {
+        path: "cakeinformation",
+        element: <SeparateProtectedRoute><CakeInformation /></SeparateProtectedRoute>,////non logged in user and user can access this page not admin
+      },
+      
+      {
+        path: "favourite",
+        element: <SeparateProtectedRoute><Favourite /></SeparateProtectedRoute>//
+      },
+      // {
+      //   path: "categories",
+      //   element: <Categories />,
+      // }
+      
+      {
+        path: "cart",
+        element:  <SeparateProtectedRoute><Cart /></SeparateProtectedRoute>,
+      },
+      
+      
+      {
+        path: "*",
+        element: <NotFound />,
+      },
+    ],
+  },
+  {
+    path: "/dashboard",//all this pagees are protected by adminProtectedRoute
+    //that means only admin can access this pages
+    //if user is not admin then he will display page not found
+    //if user is not logged in then he will redirect to login page
+    element:<AdminProtectedRoute> <DashboardLayout /></AdminProtectedRoute>,
+    errorElement:<NotFound />,
+    children: [
+      {
+        path: "home",
+        element: <HomeDashboard />,
+      },
+      {
+        path: "categories",
+        element: <CategoriesDashboard />,
+      },
       {
         path: "addnewtopping",
         element: <AddNewTopping />,
@@ -48,68 +132,9 @@ export const router = createBrowserRouter([
         element: <AddNewFlavor />,
       },
       {
-        path: "/",
-        element: <Home />,
-      },
-      {
-        path: "register",
-        element: <Register />,
-      },
-      {
-        path: "seeall",
-        element: <SeeAll />,
-      },
-      {
-        path: "login",
-        element:<Login /> ,
-      },
-      {
-        path: "send-code",
-        element: <SendCode />,
-      },
-      {
-        path: "forget-password",
-        element: <ForgetPassword />,
-      },
-      {
-        path: "profile",
-        element: <Profile /> ,
-      },
-      {
-        path: "edituserinformation",
-        element: <EditUserInformation />,
-      },
-      {
-        path: "changepassword",
-        element: <ChangePassword />,
-      },
-      
-      {
-        path: "custom-cake",
-        element:   <CustomCake />,
-      },
-      {
-        path: "cakeinformation",
-        element: <CakeInformation />,
-      },
-      
-      {
-        path: "favourite",
-        element: <Favourite />
-      },
-      {
-        path: "categories",
-        element: <Categories />,
-      },
-      {
         path: "addnewcake",
         element: <AddNewCake />,
       },
-      {
-        path: "cart",
-        element: <Cart />,
-      },
-      
       {
         path: "adminmanageorders",
         element: <AdminManageOrders />,
@@ -121,29 +146,6 @@ export const router = createBrowserRouter([
       {
         path: "adminmanageusers",
         element: <AdminManageUsers />,
-      },
-      {
-        path: "*",
-        element: <NotFound />,
-      },
-    ],
-  },
-  {
-    path: "/dashboard",
-    element: <DashboardLayout />,
-    errorElement:<NotFound />,
-    children: [
-      {
-        path: "home",
-        element: <HomeDashboard />,
-      },
-      {
-        path: "categories",
-        element: <CategoriesDashboard />,
-      },
-      {
-        path: "*",
-        element: <NotFound />,
       },
     ],
   },

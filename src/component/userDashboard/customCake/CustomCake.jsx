@@ -17,11 +17,10 @@ import ToppingTab from './tabs/ToppingTab';
 import ColorTab from './tabs/ColorTab';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Test from './Test';
-import axios from 'axios';
 import Loader from '../../Loaders/Loader';
 import { order } from '@mui/system';
 import { useOutletContext } from 'react-router-dom';
-
+import {api} from '../../../api/api';
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -89,7 +88,7 @@ export default function VerticalTabs() {
 
     const fetchData = async () => {
       try {
-        const { data } = await axios.get('/data/data.json');
+        const { data } = await api.get('/custom/shapes/options');
         setShapes(data.shapes);
         let initialShape = await data.shapes[0];
         if (location?.state?.orderDetails?.shape) {
@@ -112,16 +111,17 @@ export default function VerticalTabs() {
 
   const handleSelectedShape = (shape) => {
     const { flavors, toppings, ...thisShape } = shape
+    console.log('shape', shape);
     setSelectedShape(thisShape);
     setFlavors(shape.flavors);
     const matchedFlavor = shape.flavors.find(
-      (flavor) => flavor.name === selectedFlavor?.name
+      (flavor) => flavor.name.split('_')[1] === selectedFlavor?.name.split('_')[1]
     );
     setSelectedFlavor(matchedFlavor);
 
     setToppings(shape.toppings);
     const matchedtopping = shape.toppings.find(
-      (topping) => topping.name === selectedTopping?.name
+      (topping) => topping.name.split('_')[1] === selectedTopping?.name.split('_')[1]
     );
     setSelectedTopping(matchedtopping);
     const filePrice = uploadedFile ? 4 : 0;
@@ -222,13 +222,17 @@ export default function VerticalTabs() {
                   />
                 </TabPanel>
 
-                <TabPanel value={value} index={1}>
+                <TabPanel value={value} index={1}>    
+                  {
+                  flavors.length>0?              
                   <FlavorTab
                     flavors={flavors}
                     selectedFlavor={selectedFlavor}
                     setSelectedFlavor={setSelectedFlavor}
                     handlePriceChange={handlePriceChange}
                   />
+                  :<Typography sx={{textAlign:'center'}} variant='body1'>No flavors available</Typography>
+                  }
                 </TabPanel>
 
                 <TabPanel value={value} index={2}>
@@ -240,12 +244,13 @@ export default function VerticalTabs() {
                 </TabPanel>
 
                 <TabPanel value={value} index={3}>
-                  <ToppingTab
+                  {
+                  toppings.length>0?<ToppingTab
                     toppings={toppings}
                     selectedTopping={selectedTopping}
                     setSelectedTopping={setSelectedTopping}
                     handlePriceChange={handlePriceChange}
-                  />
+                  />:<Typography sx={{textAlign:'center'}} variant='body1'>No toppings available</Typography>}
                 </TabPanel>
                 <TabPanel value={value} index={4}>
                   <CollectionTab
@@ -259,7 +264,7 @@ export default function VerticalTabs() {
                   />
                 </TabPanel>
 
-                <Box sx={{ position: 'absolute', bottom: 33, left: 0, right: 0, display: 'flex', justifyContent: 'center' }}>
+                <Box sx={{ position: 'absolute', bottom: 2, left: 0, right: 0, display: 'flex', justifyContent: 'center' }}>
                   <Button onClick={handleNext} variant='contained' sx={{
 
                     backgroundColor: '#723d46',
@@ -268,9 +273,9 @@ export default function VerticalTabs() {
                       color: 'white',
                     },
                     width: { xs: '100%' },
-                    height: '40px',
+                    height: '30px',
                     fontSize: { xs: '14px', sm: '17px' },
-                    padding: '0 16px',
+                    padding: '0 12px',
                     textTransform: 'none',
                     boxShadow: 'none',
                     borderRadius: '8px',

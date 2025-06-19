@@ -32,7 +32,8 @@ export default function ManageOrders() {
       try {
         const responseData = (await api.get("/order/all?limit=20")).data;
         setOrderRows(responseData.orders);
-      } catch {
+      } catch (error) {
+        console.error("Error fetching orders:", error);
         toast.error("An error occured during fetching orders");
       } finally {
         setLoading(false);

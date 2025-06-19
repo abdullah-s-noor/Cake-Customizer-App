@@ -3,7 +3,9 @@ import { Box, ImageList, ImageListItem, ImageListItemBar, Typography } from '@mu
 import React, { useEffect } from 'react'
 
 function FlavorTab({ flavors, selectedFlavor, setSelectedFlavor,handlePriceChange }) {
-
+  useEffect(() => {
+    console.log('flavors', flavors);
+  },[]);
     const handleSelectedFlavor = (flavor) => {
       const newPrice = flavor?.price||0;
       const oldPrice = selectedFlavor?.price||0;
@@ -17,6 +19,7 @@ function FlavorTab({ flavors, selectedFlavor, setSelectedFlavor,handlePriceChang
           height: { xs: 360, sm: 500, md: 600 },
           overflowY: 'auto',
           margin: 0,
+           pb: 3,
           '&::-webkit-scrollbar': {
             width: '10px',
           },
@@ -68,7 +71,7 @@ function FlavorTab({ flavors, selectedFlavor, setSelectedFlavor,handlePriceChang
             />
             <ImageListItemBar
               sx={{ textAlign: 'center' }}
-              title={item.name}
+              title={item.name.split('_')[1]}
               subtitle={
                 <Box>
                   <Typography variant="body2" fontWeight="bold">
