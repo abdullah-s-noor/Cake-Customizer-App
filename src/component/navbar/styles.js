@@ -9,6 +9,7 @@ export const styles = {
       bgcolor: 'inherit',
       width: '100%',
       boxShadow: 'none',
+      
     },
     toolbar: {
       justifyContent: 'space-between',

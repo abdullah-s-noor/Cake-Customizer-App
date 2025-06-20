@@ -79,7 +79,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "cakeinformation",
-        element: <SeparateProtectedRoute><CakeInformation /></SeparateProtectedRoute>,////non logged in user and user can access this page not admin
+        element: <CakeInformation />,////non logged in user and user can access this page not admin
       },
       
       {

@@ -14,27 +14,30 @@ import { api } from '../../api/api'
 import { jwtDecode } from 'jwt-decode'
 function Login() {
     const navigate = useNavigate()
-    const { userToken, setUserToken,setLoader } = useContext(UserContext);
+    const { userToken, setUserToken, setLoader } = useContext(UserContext);
     const location = useLocation();
-    console.log(location?.state?.from?.pathname);
     useEffect(() => {
         if (userToken) {
-            console.log("inside useEffect of Login component");
             const tokenInfo = jwtDecode(userToken);
             const from = location?.state?.from?.pathname || "/";
+            const orderDetails = location?.state?.orderDetails || location?.state?.from?.state?.orderDetails;
 
             if (tokenInfo?.role === "admin") {
-                if (from === "/profile" || from === "/edituserinformation" || from === "/changepassword") {
+                if (["/profile", "/edituserinformation", "/changepassword"].includes(from)) {
                     navigate(from, { replace: true });
-                }
-                else {
+                } else {
                     navigate(from.startsWith("/dashboard") ? from : "/dashboard", { replace: true });
                 }
             } else {
-                navigate(from.startsWith("/dashboard") ? "/notfound" : from, { replace: true });
+                if (from === "/cakeinformation" && orderDetails) {
+                    navigate("/cakeinformation", { state: { orderDetails }, replace: true });
+                } else {
+                    navigate(from.startsWith("/dashboard") ? "/notfound" : from, { replace: true });
+                }
             }
         }
     }, [userToken, location.state, navigate]);
+
 
 
     const [serverError, setServerError] = useState('')

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Box, Typography, Grid, Button, Rating } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -6,7 +6,9 @@ import RateandReview from '../RateandReview/RateandReview';
 import CakePreview from '../customCake/CakePreview';
 import { Cake } from '@mui/icons-material';
 import Theme from "../../../../src/theme.js";
-import {api} from '../../../api/api.js';
+import { api } from '../../../api/api.js';
+import { UserContext } from '../../context/User';
+import { toast } from 'react-toastify';
 
 const StyledRating = styled(Rating)({
   '& .MuiRating-iconFilled': {
@@ -18,8 +20,8 @@ const StyledRating = styled(Rating)({
 });
 
 export default function CakeDetails() {
+  const { userToken, userInfo } = useContext(UserContext)
   const location = useLocation();
-  console.log(location);
   const navigate = useNavigate();
 
   const [orderDetails, setOrderDetails] = useState({
@@ -27,22 +29,26 @@ export default function CakeDetails() {
     flavor: null,
     topping: null,
     color: null,
-    file:null,
-    cakeMessage:null,
-    instructions:null,
-    price:0,
+    file: null,
+    cakeMessage: null,
+    instructions: null,
+    price: 0,
   });
 
   /** Authorization: if no state, you are not allowd to preview this component */
   useEffect(() => {
-    
-    if (!location.state || !location.state.orderDetails) {
-      navigate('/custom-cake');
+    console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh');
+    console.log(location);
+    const passedState = location?.state?.orderDetails;
+    console.log("location cakeinformation", passedState)
+    if (passedState) {
+      setOrderDetails(passedState);
+    } else {
+      // fallback: could fetch from backend if you store it, or go back
+      toast.warn("No cake information provided.");
+      navigate("/custom-cake");
     }
-    console.log(orderDetails);
-    setOrderDetails(location?.state?.orderDetails)
-
-  }, [])
+  }, [location]);
 
 
   const [open, setOpen] = useState(false);
@@ -63,18 +69,12 @@ export default function CakeDetails() {
         reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
       ).toFixed(1)
       : 0;
-  const handleCart = async() => {
-    const cartItem = {
-      shape: orderDetails.shape._id,
-      flavor: orderDetails.flavor._id,
-      topping: orderDetails.topping._id,
-      color: orderDetails.color,
-      file: orderDetails.file,
-      cakeMessage: orderDetails.cakeMessage,
-      instructions: orderDetails.instructions,
-      type : 'custom',
-    };
-    console.log('Cart Item:', cartItem);
+  const handleCart = async () => {
+    if (!userToken) {
+      toast.warn("You need to log in before adding to cart.");
+      navigate('/login', { state: { from: location,orderDetails }, replace: true });
+      return;
+    }
     const formData = new FormData();
     formData.append('shape', orderDetails.shape._id);
     formData.append('flavor', orderDetails.flavor._id);
@@ -84,12 +84,13 @@ export default function CakeDetails() {
     formData.append('cakeMessage', orderDetails.cakeMessage);
     formData.append('instructions', orderDetails.instructions);
     formData.append('type', 'custom');
-    console.log('Form Data:', formData);
-
-    console.log(cartItem);
+    formData.forEach((value, key) => {
+      console.log(`${key}:`, value);
+    });
     try {
-      const {data} =await api.post('/cake/custom/new', cartItem)
+      const { data } = await api.post('/cake/custom/new', formData)
       console.log('Cart item added:', data);
+      console.log(data);
     } catch (error) {
       console.error('Error adding to cart:', error);
     }
@@ -97,7 +98,7 @@ export default function CakeDetails() {
   }
   return (
     <>
-    
+
       <RateandReview open={open} onClose={handleClose} cakeId={orderDetails?.shape?._id || 'unknown'} />
 
       <Box py={4} sx={{ px: { xs: 6, md: 2 }, maxWidth: 1200, mx: 'auto' }}>
@@ -174,8 +175,8 @@ export default function CakeDetails() {
               <Button
                 variant="contained"
                 fullWidth
-                sx={{ py: 1.5, fontWeight: 'bold', backgroundColor:Theme.palette.primary.main, color: 'white', borderRadius: 2 }}
-                onClick={()=>handleCart()}
+                sx={{ py: 1.5, fontWeight: 'bold', backgroundColor: Theme.palette.primary.main, color: 'white', borderRadius: 2 }}
+                onClick={() => handleCart()}
               >
                 Add to Cart
               </Button>
@@ -183,7 +184,7 @@ export default function CakeDetails() {
                 variant="contained"
                 fullWidth
                 sx={{ py: 1.5, fontWeight: 'bold', backgroundColor: Theme.palette.primary.main, color: 'white', borderRadius: 2 }}
-                onClick={() => navigate('/custom-cake', { state: {orderDetails} })} // Navigate back to custom cake creation
+                onClick={() => navigate('/custom-cake', { state: { orderDetails } })} // Navigate back to custom cake creation
               >
                 Edit Cake
               </Button>
