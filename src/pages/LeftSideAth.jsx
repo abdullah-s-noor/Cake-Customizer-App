@@ -26,7 +26,7 @@ function LeftSideAth() {
                     <Typography variant="body1" sx={styles.description}>
                         Enjoy the best cake customization experience. Simple, elegant, and delicious!
                     </Typography>
-                    <Button sx={styles.exploreButton} onClick={() => navigate('/home')}>
+                    <Button sx={styles.exploreButton} onClick={() => navigate('/')}>
                         Explore as Guest
                     </Button>
 

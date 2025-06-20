@@ -1,9 +1,7 @@
 import axios from 'axios';
-
 export const api = axios.create({
   baseURL: "https://bimicake-c8zf.onrender.com",
 });
-
 // Add a request interceptor to dynamically attach token
 api.interceptors.request.use(
   (config) => {
@@ -17,3 +15,8 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+
+
+
+

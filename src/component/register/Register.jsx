@@ -95,7 +95,7 @@ function Register() {
                             {formik.isSubmitting ? 'Creating account...' : 'Create Account'}
                         </Button>
                         <Button variant="contained" fullWidth type="submit" sx={{...styles.exploreButton ,display:{xs:'flex',md:'none'}}}
-                            onClick={() => navigate('/home')}
+                            onClick={() => navigate('/')}
                         >
                             Explore As Guest
                         </Button>
