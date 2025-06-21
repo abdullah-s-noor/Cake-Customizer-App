@@ -21,6 +21,7 @@ import Loader from '../../Loaders/Loader';
 import { order } from '@mui/system';
 import { useOutletContext } from 'react-router-dom';
 import {api} from '../../../api/api';
+import theme from '../../../theme'
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -195,10 +196,10 @@ export default function VerticalTabs() {
                   borderColor: 'divider',
                   width: { xs: '25%', sm: 'none' },
                   '& .Mui-selected': {
-                    color: '#723d46',
+                    color: theme.palette.primary.main,
                   },
                   '& .MuiTabs-indicator': {
-                    backgroundColor: '#723d46',
+                    backgroundColor: theme.palette.primary.main,
                   },
                 }}
               >
@@ -267,9 +268,9 @@ export default function VerticalTabs() {
                 <Box sx={{ position: 'absolute', bottom: 2, left: 0, right: 0, display: 'flex', justifyContent: 'center' }}>
                   <Button onClick={handleNext} variant='contained' sx={{
 
-                    backgroundColor: '#723d46',
+                    backgroundColor: theme.palette.primary.main,
                     '&:hover': {
-                      backgroundColor: '#5a2f38',
+                      backgroundColor: theme.palette.secondary.main,
                       color: 'white',
                     },
                     width: { xs: '100%' },
@@ -307,7 +308,7 @@ export default function VerticalTabs() {
                 selectedColor={selectedColor}
                 value={value}
               />
-              <Typography sx={{ position: 'absolute', right: 16, top: 16, color: '#723d46' }} variant="h6">
+              <Typography sx={{ position: 'absolute', right: 16, top: 16, color: theme.palette.primary.main }} variant="h6">
                 {price} ₪
               </Typography>
             </Box>

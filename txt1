@@ -1,100 +1,38 @@
-import React, { useState, useEffect, useContext } from "react";
-import { TextField, Button, Grid, Typography, Box } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { api } from "../../api/api";
-import { toast } from "react-toastify";
-import { EditValidationSchema } from "./validation";
-import Loader from "../Loaders/Loader";
-import { UserContext } from "../context/User";
+import React, { useState } from 'react'
+import { Outlet, useLocation } from 'react-router-dom'
+import Navbar from '../navbar/Navbar'
+import Footer from '../footer/Footer'
+import Sidebar from '../sidebar/Sidebar.jsx'
+import { Box } from '@mui/material'
 
-function formatDateToLong(dateString) {
-  if (!dateString) return "—";
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) return "—";
-  return new Intl.DateTimeFormat("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(date);
-}
+function Layout() {
 
-export default function EditUserInformation() {
-  document.title = "Edit User Information";
-  const { GetUserData, userInfo,userToken ,loader} = useContext(UserContext);
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [user, setUser] = useState({
-    username: "",
-    email: "",
-    phone: "",
-    birthdate: "",
-  });
-  const [originalUser, setOriginalUser] = useState(null);
+  const [sidebarDisplay, setSidebarDisplay] = useState("none");
+  const [sidebarType, setSidebarType] = useState('permanent');
 
-  useEffect(() => {
-    if(!userToken){
-      navigate('/',{state:{form:location},replace:true})
-    }
-    else if (userToken&&!userInfo) {
-      GetUserData();
-      console.log(userInfo)
-    }
-  }, [userToken]);
-  const handleChange = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
-    setErrors((prevErrors) => ({ ...prevErrors, [e.target.name]: "" }));
-  };
 
-  const handleSave = async () => {
-    if (
-      originalUser &&
-      user.username === originalUser.username &&
-      user.birthdate === originalUser.birthdate
-    ) {
-      toast.info("No changes were made to your profile information.");
-      return;
-    }
-    setLoading(true);
 
-    try {
-      await EditValidationSchema.validate(user, { abortEarly: false });
-
-      const payload = {
-        username: user.username,
-        birthdate: user.birthdate,
-      };
-
-      const response = await api.put("/auth/profile", payload);
-
-      if (response && response.data && response.data.message) {
-        toast.success(response.data.message);
-        navigate("/profile");
-      }
-    } catch (err) {
-      if (err.name === "ValidationError") {
-        const newErrors = {};
-        err.inner.forEach((e) => {
-          newErrors[e.path] = e.message;
-        });
-        setErrors(newErrors);
-      } else {
-        toast.error("An error occurred while updating user information.");
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCancel = () => {
-    toast.success("Changes canceled.");
-    navigate("/profile");
-  };
-
+  const location = useLocation();
+  const isAuthPage = location.pathname === '/custom-cake' ||location.pathname === '/login' || location.pathname === '/send-code' || location.pathname === '/forget-password' || location.pathname === '/register';
+  const withoutFooter = location.pathname === '/custom-cake' || location.pathname === '/login' || location.pathname === '/send-code' || location.pathname === '/forget-password' || location.pathname === '/register';
+  const withoutNavbar =  location.pathname === '/login' || location.pathname === '/send-code' || location.pathname === '/forget-password' || location.pathname === '/register';
   return (
     <>
+      <Box
+        sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+      >
 
-      
+        {!withoutNavbar && (
+          <>
+            <Navbar setSidebarDisplay={setSidebarDisplay} setSidebarType={setSidebarType} />
+            <Sidebar sidebarDisplay={sidebarDisplay} sidebarType={sidebarType} setSidebarDisplay={setSidebarDisplay} />
+          </>
+        )}
+        <Outlet />
+      </Box>
+      {!withoutFooter && <Footer />}
     </>
-  );
+  )
 }
+
+export default Layout

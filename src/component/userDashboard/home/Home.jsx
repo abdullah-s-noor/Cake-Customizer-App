@@ -13,7 +13,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import "./homePageStyle.css"; // Assuming you have a CSS file for styles
 // Use direct paths since these are in public/
-const Logo = "/image/da.png";
+const Logo = "/image/imageCakes/shapes/double barrel/flavors/Red Velvet.png";
 const Make = "/image/makecake.png";
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import Theme from "../../../../src/theme.js";
@@ -55,13 +55,13 @@ const girlCakes = [
 const CakeCard = ({ cake }) => (
   <Card
     sx={{
-      
+
       width: { xs: 120, sm: 150, md: 170, lg: 290 },
-      flexShrink: 0,  
-      background: Theme.palette.background.default,
+      flexShrink: 0,
+      background: 'white',
       //border: "solid 1px #723d46",
       mx: 1,
-     // boxShadow: 3,
+      // boxShadow: 3,
       borderRadius: 2,
     }}
   >
@@ -78,6 +78,7 @@ const CakeCard = ({ cake }) => (
 );
 // Carousel Component
 import { useOutletContext } from "react-router-dom";
+import theme from "../../../../src/theme.js";
 
 const CakeCarousel = ({ title, cakes }) => {
 
@@ -105,14 +106,14 @@ const CakeCarousel = ({ title, cakes }) => {
     <Box mt={6} className="middle" >
       <Typography
         variant="h6"
-       // ml={6}
+        // ml={6}
         //mb={2}
-        sx={{ 
-          fontSize: { xs: "13px", md: "25px" }, 
+        sx={{
+          fontSize: { xs: "13px", md: "25px" },
           textAlign: "center",
           width: '100%',
           color: 'black'
-         }}
+        }}
       >
         {title}
       </Typography>
@@ -123,8 +124,9 @@ const CakeCarousel = ({ title, cakes }) => {
           sx={{
             bgcolor: "white",
             boxShadow: 2,
-            "&:hover": { 
-              bgcolor: "#f5f5f5", 
+            "&:hover": {
+              bgcolor: theme.palette.secondary.main
+              ,
             },
           }}
         >
@@ -133,7 +135,7 @@ const CakeCarousel = ({ title, cakes }) => {
 
         {/* Scrollable Container */}
         <Box
-        className="cake-carousel-container"
+          className="cake-carousel-container"
           paddingBottom="3px"
           ref={scrollRef}
           display="flex"
@@ -144,20 +146,23 @@ const CakeCarousel = ({ title, cakes }) => {
             <CakeCard key={index} cake={cake} />
           ))}
         </Box>
-
         {/* Right Arrow */}
+
+
         <IconButton
           onClick={() => scroll("right")}
           sx={{
             bgcolor: "white",
             boxShadow: 2,
-            "&:hover": { bgcolor: "#f5f5f5" },
+            "&:hover": {
+              bgcolor: theme.palette.secondary.main,
+            },
           }}
         >
           <ArrowForwardIosIcon fontSize="small" />
         </IconButton>
       </Box>
-    </Box>
+    </Box >
   );
 };
 
@@ -201,13 +206,13 @@ export default function Home() {
             size="large"
             sx={{
               textTransform: 'none',
-              bgcolor: '#723d46',
+              bgcolor: Theme.palette.primary.main,
               color: 'white',
               mt: 3,
               fontSize: { xs: '14px', md: '16px' },
               borderRadius: 0,
               '&:hover': {
-                bgcolor: '#8e4c57',
+                bgcolor: theme.palette.secondary.main,
               }
             }}
           >

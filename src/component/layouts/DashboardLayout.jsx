@@ -1,5 +1,5 @@
 import { UserContext } from '../context/User';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, Fragment } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from '../navbar/Navbar';
 import Footer from '../footer/Footer';
@@ -7,28 +7,42 @@ import Sidebar from '../sidebar/Sidebar.jsx';
 import { Box } from '@mui/material';
 
 function Layout() {
-  const [sidebarDisplay, setSidebarDisplay] = useState("none");
-  const [sidebarType, setSidebarType] = useState('permanent');
-
   const location = useLocation();
   const isAuthPage =
     location.pathname === '/login' ||
     location.pathname === '/send-code' ||
     location.pathname === '/forget-password' ||
     location.pathname === '/register';
-
+  const drawerWidth = 280;
   return (
     <>
       <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-        {!isAuthPage && (
-          <>
-            <Navbar setSidebarDisplay={setSidebarDisplay} setSidebarType={setSidebarType} />
-            <Sidebar sidebarDisplay={sidebarDisplay} sidebarType={sidebarType} setSidebarDisplay={setSidebarDisplay} />
-          </>
-        )}
-        <Outlet />
+        {!isAuthPage && <Navbar drawerWidth={drawerWidth} />}
+
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            width: { md: `calc(100% - ${drawerWidth}px)` }, // Fixed
+            ml: { md: `${drawerWidth}px` }
+          }}
+        >
+          <Outlet />
+        </Box>
       </Box>
-      {!isAuthPage && <Footer />}
+
+      {!isAuthPage &&
+
+        < Box
+          component="div"
+          sx={{
+            width: { md: `calc(100% - ${drawerWidth}px)` }, // Fixed
+            ml: { md: `${drawerWidth}px` }
+          }}
+        >
+          <Footer />
+        </Box >
+      }
     </>
   );
 }

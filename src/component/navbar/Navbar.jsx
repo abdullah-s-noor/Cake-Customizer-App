@@ -1,28 +1,71 @@
-import React, { use, useContext, useEffect, useState } from 'react'
-import { AppBar, Toolbar, Box, IconButton, Link, Badge } from '@mui/material'
-import MenuIcon from '@mui/icons-material/Menu'
-import { AccountCircle, Favorite, ShoppingCart, SmartButton } from '@mui/icons-material'
-import { styles } from './styles'
-import Search from '../../pages/Search'
-import { useMediaQuery } from '@mui/material'
-import './navBarStyle.css'
-import { Link as MuiLink, useNavigate } from 'react-router-dom'
-import { UserContext } from '../context/User'
-function Navbar({ setSidebarDisplay, setSidebarType }) {
+import React, { useContext, useEffect, useState } from 'react';
+import {
+  AppBar,
+  Toolbar,
+  Box,
+  IconButton,
+  Link,
+  Badge,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  useMediaQuery,
+  useTheme,
+  Typography
+} from '@mui/material';
+import {
+  Menu as MenuIcon,
+  Home,
+  Add,
+  Person2,
+  Settings,
+  Logout,
+  Favorite,
+  ShoppingCart,
+  AccountCircle,
+  PersonAddAlt,
+  Login,
+  Cake,
+  ContactMail,
+  Info,
+  Dashboard,
+  Category,
+  AddCircle,
+  ListAlt,
+  CollectionsBookmark,
+  Group,
+  Create
+} from '@mui/icons-material';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { UserContext } from '../context/User';
+import { styles } from './styles';
+import Search from '../../pages/Search';
+import './navBarStyle.css';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import theme  from  '../../theme';
+
+function Navbar({drawerWidth}) {
   const navigate = useNavigate();
-  const { userToken, logout } = useContext(UserContext);
-  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down('md'))
+  const { userToken, userInfo, logout } = useContext(UserContext);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
+  const isAdmin = userToken && userInfo?.role === 'admin';
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [navBarProps, setNavBarProps] = useState({
     sx: {
       boxShadow: 'none',
       bgcolor: 'transparent',
       position: 'static'
     },
-    color: 'primary',
-  })
+    color: 'primary'
+  });
 
   useEffect(() => {
-
     if (location.pathname === '/') {
       setNavBarProps({
         sx: {
@@ -31,96 +74,288 @@ function Navbar({ setSidebarDisplay, setSidebarType }) {
           position: 'absolute'
         },
         color: 'primary'
-      })
-    }
-    else {
+      });
+    } else {
       setNavBarProps({
         sx: {
-          bgcolor: '#723d46',
+          bgcolor: theme.palette.primary.main,
           position: 'static',
           boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)'
         },
         color: 'primary'
-      })
+      });
     }
-  }, [location.pathname])
+  }, [location.pathname]);
+
+  const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
+
+  const handleLogout = () => {
+    logout();
+  };
+  const drawerGuest = [
+    { text: 'Home', icon: <Home />, path: '/' },
+    { text: (<><span>Customize</span><br /><span>Your Cake</span></>), icon: <Cake />, path: '/custom-cake' },
+    { text: 'SignUp', icon: <PersonAddAlt />, path: '/register' },
+    { text: 'About Us', icon: <Info />, path: '/' },
+    { text: 'Contact Us', icon: <ContactMail />, path: '/' },
+    { text: 'Login', icon: <Login />, path: '/Login' },
+  ];
+   const drawerUser = [
+    { text: 'Home', icon: <Home />, path: '/' },
+    { text: (<><span>Customize</span><br /><span>Your Cake</span></>), icon: <Cake />, path: '/custom-cake' },
+    { text: 'Profile', icon: <Person2 />, path: '/profile' },
+    { text: 'Favorite', icon: <Favorite />, path: '/favorite' },
+    { text: 'Order', icon: <ShoppingCart />, path: '/order' },
+    { text: 'Cart', icon: <ShoppingCart />, path: '/cart' },
+    { text: 'About Us', icon: <Info />, path: '/' },
+    { text: 'Contact Us', icon: <ContactMail />, path: '/' },
+    { text: 'Logout', icon: <Logout />, action: handleLogout }
+    
+  ];
+  const drawerAdmin = [
+  { text: 'Dashboard Home', icon: <Dashboard />, path: '/dashboard/home' },
+  { text: 'Manage Categories', icon: <Category />, path: '/dashboard/categories' },
+
+  { text: 'Create New Cake', icon: <Create />, path: '/dashboard/addnewcake' },
+  {
+    text: 'Add List',
+    icon: <AddCircle />,
+    children: [
+      { text: 'Add New Topping', icon: <AddCircle />, path: '/dashboard/addnewtopping' },
+      { text: 'Add New Shape', icon: <AddCircle />, path: '/dashboard/addnewshape' },
+      { text: 'Add New Flavor', icon: <AddCircle />, path: '/dashboard/addnewflavor' },
+    ],
+  },
+  {
+    text: 'Manage List',
+    icon: <AddCircle />,
+    children: [
+      { text: 'Manage Orders', icon: <ListAlt />, path: '/dashboard/adminmanageorders' },
+  { text: 'Manage Collections', icon: <CollectionsBookmark />, path: '/dashboard/adminmanagecollections' },
+  { text: 'Manage Users', icon: <Group />, path: '/dashboard/adminmanageusers' },
+    ],
+  },
+  
+  
+  { text: 'About Us', icon: <Info />, path: '/' },
+  { text: 'Contact Us', icon: <ContactMail />, path: '/' },
+  { text: 'Logout', icon: <Logout />, action: handleLogout },
+];
+
+const drawerItems = isAdmin ? drawerAdmin : userToken ? drawerUser : drawerGuest;
+  const [openMenus, setOpenMenus] = useState({});
+
+  const handleToggleMenu = (text) => {
+    setOpenMenus((prev) => ({
+      ...prev,
+      [text]: !prev[text],
+    }));
+  };
+
+  const drawer = (
+    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
+      <Toolbar />
+      <List>
+        {drawerItems?.map(({ text, icon, path, action, children }) => {
+          const hasChildren = Array.isArray(children) && children.length > 0;
+          const key = typeof text === 'string' ? text : Math.random();
+          return (
+            <React.Fragment key={key}>
+              <ListItem disablePadding>
+                <ListItemButton
+                  component={path && !hasChildren ? RouterLink : 'button'}
+                  to={path && !hasChildren ? path : undefined}
+                  onClick={
+                    hasChildren
+                      ? (e) => {
+                          e.stopPropagation();
+                          handleToggleMenu(key);
+                        }
+                      : action
+                  }
+                >
+                  <ListItemIcon>{icon}</ListItemIcon>
+                  <ListItemText primary={text} />
+                  {hasChildren &&
+                    (openMenus[key] ? <ExpandLess /> : <ExpandMore />)}
+                </ListItemButton>
+              </ListItem>
+              {hasChildren && openMenus[key] && (
+                <List sx={{ pl: 4 }}>
+                  {children.map((child) => (
+                    <ListItem key={child.text} disablePadding>
+                      <ListItemButton
+                        component={child.path ? RouterLink : 'button'}
+                        to={child.path || undefined}
+                        onClick={child.action}
+                      >
+                        <ListItemIcon>{child.icon}</ListItemIcon>
+                        <ListItemText primary={child.text} />
+                      </ListItemButton>
+                    </ListItem>
+                  ))}
+                </List>
+              )}
+            </React.Fragment>
+          );
+        })}
+      </List>
+    </Box>
+  );
 
   return (
+    <>
+      <AppBar enableColorOnDark {...navBarProps}>
+        <Toolbar sx={styles.toolbar}>
+          {isMobile && (
+            <Box sx={styles.leftSection}>
+              <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                sx={{ mr: 2 }}
+                onClick={handleDrawerToggle}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Box>
+          )}
 
-    <
-      // @ts-ignore
-      AppBar
-
-      enableColorOnDark
-      {...navBarProps}
-    >
-      <Toolbar sx={styles.toolbar}>
-        {
-          isSmallScreen &&
-          < Box sx={styles.leftSection}>
-            <IconButton
-              size="large"
-              edge="start"
+          <Box sx={styles.logoBox}>
+            <Link
+              component={RouterLink}
+              to={(userToken && userInfo && userInfo.role === 'admin') ? '/dashboard' : "/"}
               color="inherit"
-              sx={{ mr: 2 }}
+              sx={styles.logoLink}
+              underline="none"
+            >
+              {(userToken && userInfo && userInfo.role === 'admin') ? (
+                <Typography
+                  variant="h4"
+                  sx={{
+                    fontWeight: { xs: 700, md: 700 },
+                    letterSpacing: 2,
+                    color: '#fff',
+                    px: 2,
+                    py: 1,
+                    borderRadius: 2,
+                    fontSize: { xs: '30px', md: '35px' },
+                    fontFamily: '"42dot Sans", sans-serif !important',
+                    display: 'inline-block',
+                  }}
+                >
+                  Dashboard
+                </Typography>
+              ) : (
+                <img src="/image/2.png" alt="Logo" style={styles.logoImg} />
+              )}
+            </Link>
+          </Box>
+
+          {!isMobile && !(userToken && userInfo && userInfo.role === 'admin') && (
+            <div className="navbar-links">
+              <RouterLink
+                className={location.pathname === '/' ? 'nav-link' : 'nav-link-notHome'}
+                to="/"
+              >
+                Home
+              </RouterLink>
+              <RouterLink
+                className={location.pathname === '/' ? 'nav-link' : 'nav-link-notHome'}
+                to="/about"
+              >
+                About us
+              </RouterLink>
+              <RouterLink
+                className={location.pathname === '/' ? 'nav-link' : 'nav-link-notHome'}
+                to="/contact"
+              >
+                Contact us
+              </RouterLink>
+            </div>
+          )}
+
+          <Box sx={styles.rightSection}>
+            {(userToken && userInfo && userInfo.role === 'user') && (
+              <>
+                <IconButton sx={{ ...styles.iconBtn, ...styles.favoriteIcon }}>
+                  <Badge badgeContent={2} color="error">
+                    <Favorite fontSize="medium" />
+                  </Badge>
+                </IconButton>
+                <IconButton sx={{ ...styles.iconBtn, ...styles.cartIcon }}>
+                  <Badge badgeContent={4} color="info">
+                    <ShoppingCart fontSize="medium" />
+                  </Badge>
+                </IconButton>
+              </>
+            )}
+            <IconButton
+              sx={{ ...styles.iconBtn, ...(userToken ? styles.logoutIcon : styles.accountIcon) }}
               onClick={() => {
-                setSidebarDisplay('block')
-                setSidebarType('temporary')
+                userToken ? logout() : navigate('/login');
               }}
             >
-              <MenuIcon />
+              {userToken ? <Logout fontSize="medium" /> : <AccountCircle fontSize="medium" />}
             </IconButton>
           </Box>
-        }
+        </Toolbar>
+      </AppBar>
 
-        {/* Center - Logo */}
-        <Box sx={styles.logoBox}>
-          <Link href="/" underline="none" color="inherit" sx={styles.logoLink}>
-            <img src="public/image/2.png" alt="Logo" style={styles.logoImg} />
-          </Link>
-        </Box>
-
-        {
-          !isSmallScreen &&
-
-          <div className='navbar-links'>
-            <a className={location.pathname == '/' ? 'nav-link' : 'nav-link-notHome'}>Home</a>
-            <a className={location.pathname == '/' ? 'nav-link' : 'nav-link-notHome'}>About us</a>
-            <a className={location.pathname == '/' ? 'nav-link' : 'nav-link-notHome'}>contact us</a>
-          </div>
-        }
-        {/* Right - Icons */}
-        <Box sx={styles.rightSection}>
-          {/*<Search xs="none" md="block" />*/}
-          <IconButton color="inherit" sx={styles.iconBtn}>
-
-            <Favorite fontSize="medium" />
-          </IconButton>
-          <IconButton color="inherit" sx={styles.iconBtn}>
-            <Badge badgeContent={4} color="primary">
-              <ShoppingCart fontSize="medium" />
-            </Badge>
-          </IconButton>
-          <IconButton
-            color="inherit"
-            sx={styles.iconBtn}
-            onClick={() => {
-              if (userToken) {
-                logout(); 
-                console.log(1);             // clear context
-              } else {
-                navigate('/login');
+      {/* Drawer logic for admin dashboard */}
+      {(userToken && userInfo && userInfo.role === 'admin') ? (
+        isDesktop ? (
+          <Drawer
+            variant="permanent"
+            open
+            sx={{
+              '& .MuiDrawer-paper': {
+                boxSizing: 'border-box',
+                width: drawerWidth,
+                top: 0,
+                left: 0,
+                zIndex: theme.zIndex.appBar - 1,
               }
             }}
           >
-            {userToken ? 'Logout' : <AccountCircle fontSize="medium" />}
-          </IconButton>
-
-        </Box>
-
-      </Toolbar>
-    </AppBar >
-  )
+            {drawer}
+          </Drawer>
+        ) : (
+          <Drawer
+            variant="temporary"
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            ModalProps={{ keepMounted: true }}
+            sx={{
+              '& .MuiDrawer-paper': {
+                boxSizing: 'border-box',
+                width: drawerWidth
+              }
+            }}
+          >
+            {drawer}
+          </Drawer>
+        )
+      ) : (
+        isMobile && (
+          <Drawer
+            variant="temporary"
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            ModalProps={{ keepMounted: true }}
+            sx={{
+              '& .MuiDrawer-paper': {
+                boxSizing: 'border-box',
+                width: drawerWidth
+              }
+            }}
+          >
+            {drawer}
+          </Drawer>
+        )
+      )}
+    </>
+  );
 }
 
-export default Navbar
+export default Navbar;
