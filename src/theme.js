@@ -4,18 +4,20 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#123456', // main color
+      main: '#875c69', // main color
     },
     secondary: {
-      main: '#432199', // hover color
+      main: '#734f59', // hover color
     },
     background: {
-      default: '#008080', // page background
+      default: '#f9f9f9', // page background
     },
+  
   },
   typography: {
-    fontFamily: 'Roboto, Arial, sans-serif',
+    fontFamily: '"42dot Sans", sans-serif',
   },
+
 });
 
 export default theme;

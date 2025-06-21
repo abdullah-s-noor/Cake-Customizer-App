@@ -1,7 +1,7 @@
 import { CheckCircleOutline } from '@mui/icons-material';
 import { Box, ImageList, ImageListItem, ImageListItemBar, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react'
-
+import theme from '../../../../theme'
 function ShapeTab({ shapes, selectedShape, setSelectedShape }) {
 
 return (
@@ -21,7 +21,7 @@ return (
             },
             '&::-webkit-scrollbar-thumb': {
                 borderRadius: '8px',
-                backgroundColor: '#723d46',
+                backgroundColor: theme.palette.primary.main,
             },
         }}
     >
@@ -48,7 +48,7 @@ return (
                             position: 'absolute',
                             top: 8,
                             right: 8,
-                            color: '#723d46',
+                            color: theme.palette.primary.main,
                             background: '#fff',
                             borderRadius: '50%',
                         }}

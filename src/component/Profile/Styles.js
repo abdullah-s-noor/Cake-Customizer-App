@@ -1,8 +1,8 @@
-
+import Theme from  '../../theme'
 const Style = {
   btnStyle: {
-    bgcolor: "#723d46",
-    "&:hover": { bgcolor: "#8e4c57" },
+    bgcolor: Theme.palette.primary.main,
+    "&:hover": { bgcolor: Theme.palette.secondary.main },
     width: 160,
     height: 40,
     borderRadius: "6px",

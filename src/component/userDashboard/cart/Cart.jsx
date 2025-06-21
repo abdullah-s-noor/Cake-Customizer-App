@@ -19,6 +19,7 @@ import ConfDelete from "../../Conformation/ConfDelete";
 import CakePreview from "../customCake/CakePreview";
 import Loader from "../../Loaders/Loader";
 import Theme from "../../../../src/theme";
+import theme from "../../../../src/theme";
 
 export default function Cart() {
   document.title = "Cart";
@@ -193,8 +194,8 @@ export default function Cart() {
                 fullWidth
                 variant="contained"
                 sx={{
-                  background: "linear-gradient(to right, #f7e4e4, #e0bfbf)",
-                  color: "#000",
+                  background:theme.palette.primary.main,
+                  color: "#fff",
                   fontWeight: "bold",
                   borderRadius: 2,
                   textTransform: "none",
