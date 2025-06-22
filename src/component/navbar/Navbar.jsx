@@ -46,7 +46,6 @@ import { styles } from './styles';
 import Search from '../../pages/Search';
 import './navBarStyle.css';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import theme  from  '../../theme';
 
 function Navbar({drawerWidth}) {
   const navigate = useNavigate();
@@ -136,9 +135,7 @@ function Navbar({drawerWidth}) {
     ],
   },
   
-  
-  { text: 'About Us', icon: <Info />, path: '/' },
-  { text: 'Contact Us', icon: <ContactMail />, path: '/' },
+  { text: 'Profile', icon: <Person2 />, path: '/profile' },
   { text: 'Logout', icon: <Logout />, action: handleLogout },
 ];
 
