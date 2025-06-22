@@ -69,33 +69,103 @@ export default function CakeDetails() {
         reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
       ).toFixed(1)
       : 0;
+
+
+  function loadImage(src) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = src;
+    });
+  }
   const handleCart = async () => {
     if (!userToken) {
       toast.warn("You need to log in before adding to cart.");
-      navigate('/login', { state: { from: location,orderDetails }, replace: true });
+      navigate('/login', { state: { from: location, orderDetails }, replace: true });
       return;
     }
-    const formData = new FormData();
-    formData.append('shape', orderDetails.shape._id);
-    formData.append('flavor', orderDetails.flavor._id);
-    formData.append('topping', orderDetails.topping._id);
-    formData.append('color', orderDetails.color);
-    formData.append('file', orderDetails.file);
-    formData.append('cakeMessage', orderDetails.cakeMessage);
-    formData.append('instructions', orderDetails.instructions);
-    formData.append('type', 'custom');
-    formData.forEach((value, key) => {
-      console.log(`${key}:`, value);
-    });
+    const [x, y, width, height] = orderDetails.shape.viewBox.split(' ').map(Number);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+
     try {
-      const { data } = await api.post('/cake/custom/new', formData)
-      console.log('Cart item added:', data);
-      console.log(data);
+      // 1. Draw shape base
+      const shapeImg = await loadImage(orderDetails.shape.image.secure_url);
+      ctx.drawImage(shapeImg, 0, 0, width, height);
+
+      // 2. Draw color if provided
+      if (orderDetails.color && orderDetails.shape.d) {
+        const path = new Path2D(orderDetails.shape.d);
+
+        ctx.save();
+        ctx.clip(path); // only color inside shape
+        ctx.globalCompositeOperation = 'multiply';
+        ctx.fillStyle = orderDetails.color;
+        ctx.fillRect(0, 0, width, height);
+        ctx.restore();
+
+        ctx.globalCompositeOperation = 'source-over';
+      } else if (orderDetails.flavor?.image?.secure_url) {
+        // 3. If no color, draw flavor
+        const flavorImg = await loadImage(orderDetails.flavor.image.secure_url);
+        ctx.drawImage(flavorImg, 0, 0, width, height);
+      }
+
+      // 4. Draw topping if exists
+      if (orderDetails.topping?.image?.secure_url) {
+        const toppingImg = await loadImage(orderDetails.topping.image.secure_url);
+        ctx.drawImage(toppingImg, 0, 0, width, height);
+      }
+
+      // 5. Convert to blob and submit
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+      if (blob) {
+        const file = new File([blob], 'custom-cake.png', { type: 'image/png' });
+
+        const formData = new FormData();
+        formData.append('shape', orderDetails.shape._id);
+        formData.append('flavor', orderDetails.flavor._id);
+        formData.append('topping', orderDetails.topping._id);
+        formData.append('color', orderDetails.color);
+        formData.append('file', orderDetails.file);
+        formData.append('cakeMessage', orderDetails.cakeMessage);
+        formData.append('instructions', orderDetails.instructions);
+        formData.append('type', 'custom');
+        formData.forEach((value, key) => {
+          console.log(`${key}:`, value);
+        });
+        const { data } = await api.post('/cake/custom/new', formData)
+        toast.success('Custom cake added to cart successfully!');
+        console.log('Cart item added:', data);
+        console.log(data);
+        const url = URL.createObjectURL(file);
+        window.open(url);
+      }
     } catch (error) {
       console.error('Error adding to cart:', error);
+      toast.error("Failed to add cake to cart.");
     }
 
-  }
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   return (
     <>
 

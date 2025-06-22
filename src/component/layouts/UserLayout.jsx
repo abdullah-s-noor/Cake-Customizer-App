@@ -13,10 +13,13 @@ function Layout() {
     location.pathname === '/send-code' ||
     location.pathname === '/forget-password' ||
     location.pathname === '/register';
+    const AuthFooter =
+    location.pathname==='custom-cake'||
+    location.pathname==='cakeinformation';
   const drawerWidth = 280;
   return (
     <>
-      <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh",maxHeight: '100vh'}}>
         {!isAuthPage && <Navbar drawerWidth={drawerWidth} />}
 
         <Box
@@ -29,7 +32,7 @@ function Layout() {
         </Box>
       </Box>
 
-      {!isAuthPage &&
+      {!isAuthPage &&AuthFooter&&
 
           <Footer />
       }

@@ -166,11 +166,12 @@ export default function VerticalTabs() {
       else if (!selectedTopping) setValue(3);
     }
   };
+  const navHeight=64;
   return (
     <>
       {
         loading ? <Loader /> :
-          <Box sx={{ display: 'flex', flexDirection: 'column-reverse', flexWrap: 'wrap', width: '100%', height: { sm: 500, md: 600 } }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column-reverse', flexWrap: 'wrap', width: '100%', height: {sm: `calc(100vh - ${navHeight}px)` } }}>
             {/* TABS */}
             <Box
               sx={{
@@ -219,6 +220,7 @@ export default function VerticalTabs() {
                     shapes={shapes}
                     selectedShape={selectedShape}
                     setSelectedShape={handleSelectedShape}
+                    navHeight={navHeight}
 
                   />
                 </TabPanel>
