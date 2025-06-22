@@ -1,104 +1,75 @@
 import React from 'react';
-import { Box, Typography, Card, CardContent, Button, Grid } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import AdminManageOrders from '../Admin_Manage/AdminManageOrders';
-import AdminManageUsers from '../Admin_Manage/AdminManageUsers';
-import AdminManageCollections from '../Admin_Manage/AdminManageCollections';
+import { Box, Typography, Card, CardContent, Grid, Divider, Container } from '@mui/material';
 
 const Dashboard = () => {
-  const navigate = useNavigate();
-
-  const tabs = [
-    'Dashboard',
-    'Orders',
-    'Menu',
-    'Inventory',
-    'Delivery',
-    'Finance',
-    'Users',
-    'Reviews',
-    'Settings',
-  ];
-
   const cards = [
     {
       title: 'Orders',
       subtitle: "Today's Orders: 156\nPending Orders: 23",
-      button: 'View Orders',
-      route: AdminManageOrders,
     },
     {
-      title: 'Menu Management',
-      subtitle: 'Total Items: 245\nCategories: 12',
-      button: 'Manage Menu',
-      route: '/menu',
+      title: 'Product Management',
+      subtitle: 'Total Products: 1,234\nNew Products: 12',
     },
     {
-      title: 'Kitchen Inventory',
-      subtitle: 'Low Stock Items: 9\nTotal Items: 156',
-      button: 'Check Inventory',
-      route: '/inventory',
+      title: 'User Management',
+      subtitle: 'Total Users: 1,235\nNew Signups: 17',
+    },
+    {
+      title: 'Finance Overview',
+      subtitle: "Today's Revenue: $4,560\nPending Payouts: $1,200",
+    },
+    {
+      title: 'Delivery Status',
+      subtitle: 'Ongoing: 12\nCompleted: 144',
+    },
+    {
+      title: 'Reviews',
+      subtitle: 'New Reviews: 8\nAverage Rating: 4.3★',
+    },
+    {
+      title: 'System Alerts',
+      subtitle: 'Warnings: 2\nErrors: 0',
+    },
+    {
+      title: 'Settings Overview',
+      subtitle: 'Last Update: 2 days ago\nAdmin Users: 5',
     },
   ];
 
   return (
-    <Box sx={{ bgcolor: '#121212', color: '#fff', minHeight: '100vh', p: 3 }}>
-      <Grid container spacing={2}>
-        {/* Vertical Tabs */}
-        <Grid item xs={12} sm={3} md={2}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-            {tabs.map((label, i) => (
-              <Box
-                key={i}
+    <Box sx={{ bgcolor: 'background.default', color: 'primary.main', minHeight: '100vh', py: 5 }}>
+      <Container>
+        <Typography variant="h4" fontWeight={600} gutterBottom>
+          Admin Dashboard
+        </Typography>
+        <Divider sx={{ mb: 4 }} />
+
+        <Grid container spacing={4} display="flex" justifyContent="center">
+          {cards.map((card, index) => (
+            <Grid item xs={12} sm={6} md={4} key={index}>
+              <Card
+                elevation={3}
                 sx={{
-                  px: 2,
-                  py: 1,
-                  borderRadius: '4px',
-                  bgcolor: label === 'Dashboard' ? '#9c27b0' : 'transparent',
-                  color: label === 'Dashboard' ? '#fff' : '#aaa',
-                  fontWeight: 500,
-                  cursor: 'pointer',
-                  '&:hover': {
-                    bgcolor: '#333',
-                  },
+                  width : 300,
+                  height: 200,
+                  boxShadow: '10px 10px 10px rgba(44, 41, 41, 0.32)',
                 }}
               >
-                {label}
-              </Box>
-            ))}
-          </Box>
+                <CardContent 
+                sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                  <Typography variant="h6" fontWeight={600} gutterBottom sx={{ color:"primary.main" }} >
+                    {card.title}
+                  </Typography>
+                  <Typography variant="body1" sx={{ whiteSpace: 'pre-line', color:"primary.main"  }}>
+                    {card.subtitle}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
         </Grid>
-
-        {/* Dashboard Content */}
-        <Grid item xs={12} sm={9} md={10}>
-          <Typography variant="h4" gutterBottom>
-            Dashboard
-          </Typography>
-
-          <Grid container spacing={2}>
-            {cards.map((card, i) => (
-              <Grid item xs={12} sm={6} md={4} key={i}>
-                <Card sx={{ backgroundColor: '#1e1e1e', color: '#fff', minHeight: 140 }}>
-                  <CardContent>
-                    <Typography variant="h6">{card.title}</Typography>
-                    <Typography variant="body2" sx={{ whiteSpace: 'pre-line', mt: 1 }}>
-                      {card.subtitle}
-                    </Typography>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      sx={{ mt: 2 }}
-                      onClick={() => navigate(card.route)}
-                    >
-                      {card.button}
-                    </Button>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Grid>
-      </Grid>
+      </Container>
     </Box>
   );
 };

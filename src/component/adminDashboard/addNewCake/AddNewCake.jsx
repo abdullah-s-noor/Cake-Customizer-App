@@ -123,7 +123,7 @@ export default function AddNewCake() {
         onConfirm={handleButton}
       />
       <Box
-        maxWidth={500}
+        maxWidth={560}
         mx="auto"
         mt={5}
         p={3}

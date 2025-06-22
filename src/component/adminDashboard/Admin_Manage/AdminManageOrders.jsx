@@ -107,7 +107,7 @@ export default function ManageOrders() {
     {
       field: "user",
       headerName: "Customer",
-      flex: 1,
+      width: 200,
       align: "center",
       headerAlign: "center",
     },
@@ -132,7 +132,7 @@ export default function ManageOrders() {
     {
       field: "totalPrice",
       headerName: "Price",
-      width: 120,
+      width: 90,
       align: "center",
       headerAlign: "center",
       renderCell: (params) => `${params.value}₪`,
@@ -140,7 +140,7 @@ export default function ManageOrders() {
     {
       field: "status",
       headerName: "Status",
-      width: 130,
+      width: 110,
       align: "center",
       headerAlign: "center",
       renderCell: (params) => (
@@ -162,7 +162,7 @@ export default function ManageOrders() {
     {
       field: "actions",
       headerName: "Actions",
-      width: 250,
+      width: 152,
       align: "center",
       headerAlign: "center",
       sortable: false,

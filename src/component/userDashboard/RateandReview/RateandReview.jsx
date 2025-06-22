@@ -21,7 +21,12 @@ export default function ReviewModal({ open, onClose, cakeId  }) {
   });
 
   const submitReview = async () => {
-    if (!reviewData.comment) {
+    console.log(cakeId);
+    if(!cakeId){
+        toast.error("Please select a cake");
+        return;
+    }
+    if (!reviewData.comment||!reviewData.rating) {
       toast.error("Please fill in all fields");
       return;
     }
@@ -33,21 +38,13 @@ export default function ReviewModal({ open, onClose, cakeId  }) {
     }
 
     try {
-      const response = await api.post("/rate/add/",formData, 
-        {
-          headers: {
-            "Content-Type": "form-data",
-          },
-        }
-      );
-
+      const response = await api.post("/rate/add/",formData);
       toast.success("Review submitted successfully!");
       return response.data; 
     }
      
      catch (error) {
-      // Handle error (e.g., show error message)
-      toast.error(error.message);
+      toast.error(error.response?.data?.message ||error.message);
     }finally{
         onClose();
     }
@@ -65,7 +62,7 @@ export default function ReviewModal({ open, onClose, cakeId  }) {
         <Typography mb={1}>Your review about this product:</Typography>
         <Rating
           name="rating"
-          precision={0.5}
+          precision={1}
           value={reviewData.rating}
           onChange={(e, newValue) => handleChange("rating", newValue)}
         />
