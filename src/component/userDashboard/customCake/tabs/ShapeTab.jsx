@@ -2,13 +2,13 @@ import { CheckCircleOutline } from '@mui/icons-material';
 import { Box, ImageList, ImageListItem, ImageListItemBar, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import theme from '../../../../theme'
-function ShapeTab({ shapes, selectedShape, setSelectedShape }) {
+function ShapeTab({ shapes, selectedShape, setSelectedShape,navHeight }) {
 
 return (
     <ImageList
         sx={{
             m: '1px',
-            height: { xs: 360, sm: 500, md: 600 },
+            height: { xs: 360, sm: `calc(100vh - ${navHeight}px)` },
             overflowY: 'auto',
             margin: 0,
             '&::-webkit-scrollbar': {
@@ -37,7 +37,7 @@ return (
                     transition: '0.2s',
                     position: 'relative',
                     bgcolor: selectedShape._id === item._id ? '#f6e6ec' : 'transparent',
-                    pb: 4
+                    pb: 0
                 }}
                 
             >
