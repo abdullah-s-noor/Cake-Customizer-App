@@ -45,17 +45,17 @@ export default function ManageOrders() {
   const getStatusChip = (status) => {
     let color, label;
     switch (status) {
-      case "pending":
+      case "shipped":
         color = "warning";
-        label = "Pending";
+        label = "Shipped";
         break;
       case "accepted":
         color = "success";
         label = "Accepted";
         break;
-      case "cancelled":
+      case "rejected":
         color = "error";
-        label = "Cancelled";
+        label = "Rejected";
         break;
       default:
         color = "default";
@@ -68,16 +68,16 @@ export default function ManageOrders() {
   // const handleCancel = async (id) => {
   //   try {
   //     const user = orderRows.find((row) => row._id === id);
-  //     if (user.status !== "cancelled") {
+  //     if (user.status !== "rejected") {
   //       await api.post("/order/cancel", { orderId: id });
   //       setOrderRows((prev) =>
   //         prev.map((row) =>
-  //           row._id === id ? { ...row, status: "cancelled" } : row
+  //           row._id === id ? { ...row, status: "rejected" } : row
   //         )
   //       );
-  //       toast.success("Order cancelled successfully");
+  //       toast.success("Order rejected successfully");
   //     } else {
-  //       toast.info("Order is already cancelled");
+  //       toast.info("Order is already rejected");
   //     }
   //   } catch {
   //     toast.error("Failed to update order status");
@@ -255,19 +255,19 @@ export default function ManageOrders() {
             </MenuItem>
             <MenuItem
               onClick={() => {
-                updateStatus(selectedOrderId, "pending");
+                updateStatus(selectedOrderId, "shipped");
                 setMenuAnchorEl(null);
               }}
             >
-              Pending
+              Shipped
             </MenuItem>
             <MenuItem
               onClick={() => {
-                updateStatus(selectedOrderId, "cancelled");
+                updateStatus(selectedOrderId, "rejected");
                 setMenuAnchorEl(null);
               }}
             >
-              Cancelled
+              Rejected
             </MenuItem>
           </Menu>
         </Box>

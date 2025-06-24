@@ -25,14 +25,14 @@ export default function ReviewModal({ open, onClose, cakeId  }) {
       toast.error("Please fill in all fields");
       return;
     }
-
     const formData = new FormData();
     formData.append("cakeId", cakeId);
     for(const key in reviewData){
-        formData.append(key, reviewData[key]);
+      formData.append(key, reviewData[key]);
     }
-
+    
     try {
+      console.log(reviewData)
       const response = await api.post("/rate/add/",formData, 
         {
           headers: {

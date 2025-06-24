@@ -23,8 +23,9 @@ export default function CakeDetails() {
   const { userToken, userInfo } = useContext(UserContext)
   const location = useLocation();
   const navigate = useNavigate();
-
+  const [isEditMode, setIsEditMode] = useState(false);
   const [orderDetails, setOrderDetails] = useState({
+    cakeId: null,
     shape: null,
     flavor: null,
     topping: null,
@@ -37,16 +38,15 @@ export default function CakeDetails() {
 
   /** Authorization: if no state, you are not allowd to preview this component */
   useEffect(() => {
-    console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh');
-    console.log(location);
     const passedState = location?.state?.orderDetails;
-    console.log("location cakeinformation", passedState)
+    const isEdit = location?.state?.isEdit;
+
     if (passedState) {
       setOrderDetails(passedState);
+      setIsEditMode(!!isEdit);
     } else {
-      // fallback: could fetch from backend if you store it, or go back
-      toast.warn("No cake information provided.");
-      navigate("/custom-cake");
+      toast.warn('No cake information provided.');
+      navigate('/custom-cake');
     }
   }, [location]);
 
@@ -126,7 +126,7 @@ export default function CakeDetails() {
       const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
       if (blob) {
         const file = new File([blob], 'custom-cake.png', { type: 'image/png' });
-
+        console.log(file)
         const formData = new FormData();
         formData.append('shape', orderDetails.shape._id);
         formData.append('flavor', orderDetails.flavor._id);
@@ -136,13 +136,26 @@ export default function CakeDetails() {
         formData.append('cakeMessage', orderDetails.cakeMessage);
         formData.append('instructions', orderDetails.instructions);
         formData.append('type', 'custom');
+        formData.append('basecake',file );
+        window
         formData.forEach((value, key) => {
           console.log(`${key}:`, value);
         });
-        const { data } = await api.post('/cake/custom/new', formData)
+        if (isEditMode && orderDetails.cakeId) {
+          await api.put(`/cake/custom/${orderDetails.cakeId}`, formData);
+          toast.success('Cake updated successfully!');
+        } else {
+          const { data } = await api.post('/cake/custom/new', formData);
+          console.log(111111111111111111111111111)
+          const payload = {
+            userId: userInfo._id,
+            cakeId: data.cake,
+            quantity: "1"
+          };
+          await api.post('/cart/add', payload);
+          toast.success('Custom cake added to cart successfully!');
+        }
         toast.success('Custom cake added to cart successfully!');
-        console.log('Cart item added:', data);
-        console.log(data);
         const url = URL.createObjectURL(file);
         window.open(url);
       }
@@ -173,7 +186,7 @@ export default function CakeDetails() {
 
       <Box py={4} sx={{ px: { xs: 6, md: 2 }, maxWidth: 1200, mx: 'auto' }}>
         <Grid container spacing={4}>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={6} sx={{mx:'auto'}}>
             <CakePreview
               selectedShape={orderDetails.shape}
               selectedFlavor={orderDetails.flavor}
@@ -184,7 +197,7 @@ export default function CakeDetails() {
 
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={6} sx={{mx:'auto'}}>
             <Typography variant="h5" fontWeight="bold" textAlign="center">
               Customized Cake
             </Typography>
@@ -211,7 +224,7 @@ export default function CakeDetails() {
             </Box>
             <Box mt={4} display="flex" justifyContent="space-between">
               <Typography variant="subtitle2" fontWeight="bold">Flavor:</Typography>
-              <Typography>{orderDetails?.flavor?.name}</Typography>
+              <Typography>{orderDetails?.flavor?.name.split('_')[1]}</Typography>
             </Box>
             <Box mt={4} display="flex" justifyContent="space-between">
               <Typography variant="subtitle2" fontWeight="bold">Color:</Typography>
@@ -220,7 +233,7 @@ export default function CakeDetails() {
             </Box>
             <Box mt={4} display="flex" justifyContent="space-between">
               <Typography variant="subtitle2" fontWeight="bold">Topping:</Typography>
-              <Typography>{orderDetails?.topping?.name}</Typography>
+              <Typography>{orderDetails?.topping?.name.split('_')[1]}</Typography>
             </Box>
             <Box mt={4} display="flex" justifyContent="space-between">
               <Typography variant="subtitle2" fontWeight="bold">Price:</Typography>
@@ -246,9 +259,9 @@ export default function CakeDetails() {
                 variant="contained"
                 fullWidth
                 sx={{ py: 1.5, fontWeight: 'bold', backgroundColor: Theme.palette.primary.main, color: 'white', borderRadius: 2 }}
-                onClick={() => handleCart()}
+                onClick={handleCart}
               >
-                Add to Cart
+                {isEditMode ? 'Update Cake in Cart' : 'Add to Cart'}
               </Button>
               <Button
                 variant="contained"

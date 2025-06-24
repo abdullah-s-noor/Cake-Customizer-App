@@ -3,8 +3,11 @@ import { Box, Button } from '@mui/material';
 
 const CakePreview = ({ selectedShape: shape, selectedFlavor: flavor, selectedTopping: topping, selectedColor: color=null,value ,xs= 240, sm= 280, md= 450,b=50}) => {
 useEffect(() => {
-  console.log(color);
-},[]);
+  console.log(shape);
+  console.log(flavor);
+  console.log(topping);
+  console.log(color)
+},[shape]);
   return (
     <Box
       sx={{

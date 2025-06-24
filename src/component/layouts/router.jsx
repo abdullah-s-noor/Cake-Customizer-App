@@ -46,7 +46,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "login",
-        element:<Login /> ,//non logged in user can access this page
+        element: <Login />,//non logged in user can access this page
       },
       {
         path: "send-code",
@@ -58,7 +58,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "profile",
-        element:<ProtectedRoute> <Profile /></ProtectedRoute> ,//user and admin can access this page
+        element: <ProtectedRoute> <Profile /></ProtectedRoute>,//user and admin can access this page
       },
       {
         path: "edituserinformation",
@@ -68,7 +68,7 @@ export const router = createBrowserRouter([
         path: "changepassword",
         element: <ProtectedRoute><ChangePassword /></ProtectedRoute>,//user and admin can access this page
       },
-      
+
       {
         path: "seeall",
         element: <SeparateProtectedRoute><SeeAll /></SeparateProtectedRoute>,////non logged in user and user can access this page not admin
@@ -79,9 +79,18 @@ export const router = createBrowserRouter([
       },
       {
         path: "cakeinformation",
-        element: <CakeInformation />,////non logged in user and user can access this page not admin
+        children: [
+          {
+            index: true,
+            element: <CakeInformation />, // When no ID, used for preview after creation
+          },
+          {
+            path: ":id", // When editing an existing cake
+            element: <CakeInformation />,
+          },
+        ],
       },
-      
+
       {
         path: "favourite",
         element: <SeparateProtectedRoute><Favourite /></SeparateProtectedRoute>//
@@ -90,13 +99,13 @@ export const router = createBrowserRouter([
       //   path: "categories",
       //   element: <Categories />,
       // }
-      
+
       {
         path: "cart",
-        element:  <SeparateProtectedRoute><Cart /></SeparateProtectedRoute>,
+        element: <SeparateProtectedRoute><Cart /></SeparateProtectedRoute>,
       },
-      
-      
+
+
       {
         path: "*",
         element: <NotFound />,
@@ -108,8 +117,8 @@ export const router = createBrowserRouter([
     //that means only admin can access this pages
     //if user is not admin then he will display page not found
     //if user is not logged in then he will redirect to login page
-    element:<AdminProtectedRoute> <DashboardLayout /></AdminProtectedRoute>,
-    errorElement:<NotFound />,
+    element: <AdminProtectedRoute> <DashboardLayout /></AdminProtectedRoute>,
+    errorElement: <NotFound />,
     children: [
       {
         path: "home",
@@ -124,7 +133,7 @@ export const router = createBrowserRouter([
         element: <AddNewTopping />,
       },
       {
-        path:'addnewshape',
+        path: 'addnewshape',
         element: <AddNewShape />,
       },
       {
@@ -139,7 +148,7 @@ export const router = createBrowserRouter([
         path: "adminmanageorders",
         element: <AdminManageOrders />,
       },
-      { 
+      {
         path: "adminmanagecollections",
         element: <AdminManageCollections />,
       },
