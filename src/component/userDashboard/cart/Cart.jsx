@@ -20,7 +20,7 @@ import CakePreview from "../customCake/CakePreview";
 import Loader from "../../Loaders/Loader";
 import Theme from "../../../../src/theme";
 import theme from "../../../../src/theme";
-
+import {api} from "../../../api/api"
 export default function Cart() {
   document.title = "Cart";
   const navigate = useNavigate();
@@ -34,12 +34,12 @@ export default function Cart() {
         const { data } = await axios.get("/data/getCart.json");
 
         // Add quantity to each item if it's not already present
-        const itemsWithQuantity = data.items.map((item, index) => ({
+        const itemsWithQuantity = data.cart.items.map((item, index) => ({
           ...item,
           id: item.id || index + 1,
           quantity: item.quantity || 1,
         }));
-
+        console.log(itemsWithQuantity)
         setCartItems(itemsWithQuantity);
       } catch (err) {
         toast.error("Failed to load cart items.");
@@ -49,7 +49,7 @@ export default function Cart() {
       }
     };
     fetchCart();
-  }, []);
+  }, [navigate,location]);
 
   const handleAdd = (itemId) => {
     setCartItems((prevItems) =>
@@ -105,7 +105,7 @@ export default function Cart() {
         loading ? (
           <Loader />
         ) : cartItems && cartItems.length > 0 ? (
-          <Box maxWidth={900} mx="auto" p={3}>
+          <Box maxWidth={900} mx="auto" p={{ xs: 1, sm: 3 }}>
             <Grid container justifyContent="space-between" alignItems="center" mb={2}>
               <Typography variant="h6" fontWeight="bold">
                 Cart
@@ -125,33 +125,47 @@ export default function Cart() {
                 }}
               >
 
-                <CakePreview
-                  selectedShape={item.shape}
-                  selectedFlavor={item.flavor}
-                  selectedTopping={item.topping}
-                  selectedColor={item.color}
-                  value={3}
-                  xs={150}
-                  sm={150}
-                  md={150}
-                  b={40}
-                />
-
-                <Box flex={1} display="flex" alignItems="center">
-                  <CardContent sx={{ py: 1, pl: 0 }}>
-                    <Box display="flex" alignItems="center">
-                      <Typography fontWeight="bold">
-                        {item.shape?.name}
+                <Box display="flex" alignItems="center" pl={1} pr={{ xs: 1, sm: 4 }}>
+                  {/* Show normal image */}
+                  <Box
+                    component="img"
+                    src={item.image || "/image/testCake/2.png"}
+                    alt={item.cake.topping.name.split('_')[1] || "Cake"}
+                    sx={{ width: { xs: 68, sm: 140 }, transform: "translateY(-10%)" }}
+                  />
+                </Box>
+                <Box flex={1} display="flex" alignItems="center" >
+                  <CardContent sx={{ py: 1, pl: 0, pr: 0 }}>
+                    <Box display="flex" sx={{ fontSize: '10px' }}>
+                      <Typography fontWeight="bold" sx={{ fontSize: { xs: '14', sm: '20px' } }}>
+                        {item.cake.shape?.name}
                       </Typography>
-                      <Button onClick={() => navigate("/custom-cake")}>
-                        <EditOutlinedIcon fontSize="small" sx={{ ml: 1, fontSize: 16 }} />
+                      <Button onClick={() =>
+                        navigate(`/cakeinformation/${item._id}`, {
+                          state: {
+                            isEdit: true,
+                            orderDetails: {
+                              cakeId: item._id,
+                              shape: item.cake.shape,
+                              flavor: item.cake.flavor,
+                              topping: item.cake.topping,
+                              color: item.cake.color || '#000',
+                              cakeMessage: item.cake.cakeMessage || '1234',
+                              file: item.cake.file || null,
+                              instructions: item.cake.instructions || '',
+                              price: item.cake.finalPrice,
+                            }, // pass entire item so CakeInformation can pre-fill
+                          }
+                        })} sx={{ p: '0' }}>
+                        <EditOutlinedIcon fontSize="small" sx={{ ml: 0, fontSize: 16 }} />
                       </Button>
+
                     </Box>
-                    <Typography variant="body2" color="text.secondary">
-                      {item.flavor?.name}
+                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '10', sm: '15px' } }}>
+                      {item.cake.flavor?.name}
                     </Typography>
                     <Typography variant="body2" mt={1}>
-                      {item.price} ₪
+                      {item.cake.finalPrice} ₪
                     </Typography>
                   </CardContent>
                 </Box>
@@ -194,7 +208,7 @@ export default function Cart() {
                 fullWidth
                 variant="contained"
                 sx={{
-                  background:theme.palette.primary.main,
+                  background: theme.palette.primary.main,
                   color: "#fff",
                   fontWeight: "bold",
                   borderRadius: 2,

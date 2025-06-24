@@ -29,7 +29,7 @@ export default function Profile() {
     if (userToken && !userInfo) {
       getUserData();
     }
-
+    
 
   }, []);
 

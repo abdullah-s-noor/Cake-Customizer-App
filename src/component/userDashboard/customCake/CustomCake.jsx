@@ -16,11 +16,8 @@ import CakePreview from './CakePreview';
 import ToppingTab from './tabs/ToppingTab';
 import ColorTab from './tabs/ColorTab';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Test from './Test';
 import Loader from '../../Loaders/Loader';
-import { order } from '@mui/system';
-import { useOutletContext } from 'react-router-dom';
-import {api} from '../../../api/api';
+import { api } from '../../../api/api';
 import theme from '../../../theme'
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -89,7 +86,7 @@ export default function VerticalTabs() {
 
     const fetchData = async () => {
       try {
-        const { data } = await api.get('/custom/shapes/options');
+        const { data } = await api.get('/custom/shapes/optioncs');
         setShapes(data.shapes);
         let initialShape = await data.shapes[0];
         if (location?.state?.orderDetails?.shape) {
@@ -135,7 +132,9 @@ export default function VerticalTabs() {
   const handleSubmit = () => {
 
     /** collect details in one object */
+    const cakeId=location?.state?.orderDetails?.cakeId||null
     const orderDetails = {
+      cakeId:cakeId,
       shape: selectedShape,
       flavor: selectedFlavor,
       topping: selectedTopping,
@@ -145,8 +144,12 @@ export default function VerticalTabs() {
       instructions: instructions,
       price: price,
     }
+    const isEdit=!!cakeId
 
-    navigate('/cakeinformation', { state: { orderDetails } });
+
+    navigate(`/cakeinformation${isEdit ? `/${cakeId}` : ''}`, {
+    state: { orderDetails, isEdit }
+  });
 
   }
   const totalTabs = 5;
@@ -166,12 +169,13 @@ export default function VerticalTabs() {
       else if (!selectedTopping) setValue(3);
     }
   };
-  const navHeight=64;
+  const navHeight = { xs: 48, sm: 64 };
+  const heightPreview = { xs: 300 };
   return (
     <>
       {
         loading ? <Loader /> :
-          <Box sx={{ display: 'flex', flexDirection: 'column-reverse', flexWrap: 'wrap', width: '100%', height: {sm: `calc(100vh - ${navHeight}px)` } }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column-reverse', flexWrap: 'wrap', width: '100%', height: { sm: `calc(100vh - ${navHeight.sm}px)` } }}>
             {/* TABS */}
             <Box
               sx={{
@@ -179,7 +183,10 @@ export default function VerticalTabs() {
                 flexGrow: 1,
                 bgcolor: 'background.paper',
                 display: 'flex',
-                height: 'inherit',
+                height: {
+                  xs: `calc(100vh - ${heightPreview.xs + navHeight.xs}px)`,
+                  sm: `calc(100vh - ${navHeight.sm}px)`
+                },
               }}
             >
               <Tabs
@@ -188,7 +195,7 @@ export default function VerticalTabs() {
                 value={value}
                 onChange={handleChange}
                 aria-label="Vertical tabs example"
-                
+
                 // @ts-ignore
                 textColor="#723d46"
                 indicatorColorindicatorColorindicatorColor
@@ -221,20 +228,21 @@ export default function VerticalTabs() {
                     selectedShape={selectedShape}
                     setSelectedShape={handleSelectedShape}
                     navHeight={navHeight}
+                    heightPreview={heightPreview}
 
                   />
                 </TabPanel>
 
-                <TabPanel value={value} index={1}>    
+                <TabPanel value={value} index={1}>
                   {
-                  flavors.length>0?              
-                  <FlavorTab
-                    flavors={flavors}
-                    selectedFlavor={selectedFlavor}
-                    setSelectedFlavor={setSelectedFlavor}
-                    handlePriceChange={handlePriceChange}
-                  />
-                  :<Typography sx={{textAlign:'center'}} variant='body1'>No flavors available</Typography>
+                    flavors.length > 0 ?
+                      <FlavorTab
+                        flavors={flavors}
+                        selectedFlavor={selectedFlavor}
+                        setSelectedFlavor={setSelectedFlavor}
+                        handlePriceChange={handlePriceChange}
+                      />
+                      : <Typography sx={{ textAlign: 'center' }} variant='body1'>No flavors available</Typography>
                   }
                 </TabPanel>
 
@@ -248,12 +256,12 @@ export default function VerticalTabs() {
 
                 <TabPanel value={value} index={3}>
                   {
-                  toppings.length>0?<ToppingTab
-                    toppings={toppings}
-                    selectedTopping={selectedTopping}
-                    setSelectedTopping={setSelectedTopping}
-                    handlePriceChange={handlePriceChange}
-                  />:<Typography sx={{textAlign:'center'}} variant='body1'>No toppings available</Typography>}
+                    toppings.length > 0 ? <ToppingTab
+                      toppings={toppings}
+                      selectedTopping={selectedTopping}
+                      setSelectedTopping={setSelectedTopping}
+                      handlePriceChange={handlePriceChange}
+                    /> : <Typography sx={{ textAlign: 'center' }} variant='body1'>No toppings available</Typography>}
                 </TabPanel>
                 <TabPanel value={value} index={4}>
                   <CollectionTab

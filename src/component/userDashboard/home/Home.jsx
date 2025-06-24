@@ -20,9 +20,9 @@ import Theme from "../../../../src/theme.js";
 
 // Mock data
 const mockCakes = [
-  { title: "Forever Bliss", flavor: "Bastashio", weight: "400 ml", img: Logo },
-  { title: "Pure Romance", flavor: "Vanilla", weight: "140 ml", img: Logo },
-  { title: "Elegant Charm", flavor: "Chocolate", weight: "120 ml", img: Logo },
+  { title: "Forever Bliss", flavor: "Bastashio", weight: "400 ml", img: "/image/testCake/1.png" },
+  { title: "Pure Romance", flavor: "Vanilla", weight: "140 ml", img: "/image/testCake/2.png" },
+  { title: "Elegant Charm", flavor: "Chocolate", weight: "120 ml", img: "/image/testCake/3.png" },
   { title: "Dreamy Delight", flavor: "Fruits", weight: "180 ml", img: Logo },
   { title: "Sweet Harmony", flavor: "Red Velvet", weight: "200 ml", img: Logo },
   { title: "Golden Love", flavor: "Lemon", weight: "300 ml", img: Logo },
@@ -51,126 +51,166 @@ const girlCakes = [
   { title: "Ballerina", flavor: "Red Velvet", weight: "50 ml", img: Logo },
 ];
 
-// Cake Card
-const CakeCard = ({ cake }) => (
-  <Card
-    sx={{
-
-      width: { xs: 120, sm: 150, md: 170, lg: 290 },
-      flexShrink: 0,
-      background: 'white',
-      //border: "solid 1px #723d46",
-      mx: 1,
-      // boxShadow: 3,
-      borderRadius: 2,
-    }}
-  >
-    <CardMedia component="img" sx={{ height: { xs: 170, md: 230, lg: 270 } }} image={cake.img} alt={cake.title} />
-    <CardContent>
-      <Typography fontWeight="bold" fontSize="14px" >
-        {cake.title}
-      </Typography>
-      <Typography variant="body2">
-        {cake.flavor} • {cake.weight}
-      </Typography>
-    </CardContent>
-  </Card>
-);
-// Carousel Component
 import { useOutletContext } from "react-router-dom";
 import theme from "../../../../src/theme.js";
 
-const CakeCarousel = ({ title, cakes }) => {
-
-  // @ts-ignore
-  // @ts-ignore
-  const scrollRef = useRef();
-
-  const scroll = (direction) => {
-    const container = scrollRef.current;
-    if (!container) return;
-
-    const card = container.querySelector("div > div"); // gets one CakeCard wrapper
-    if (!card) return;
-
-    const cardWidth = card.offsetWidth + 16; // get actual card width + margin (mx: 1 = 8px each side)
-    const scrollAmount = cardWidth * 2; // scroll 6 cards at a time
-
-    container.scrollBy({
-      left: direction === "right" ? scrollAmount : -scrollAmount,
-      behavior: "smooth",
-    });
-  };
-
-  return (
-    <Box mt={6} className="middle" >
-      <Typography
-        variant="h6"
-        // ml={6}
-        //mb={2}
-        sx={{
-          fontSize: { xs: "13px", md: "25px" },
-          textAlign: "center",
-          width: '100%',
-          color: 'black'
-        }}
-      >
-        {title}
-      </Typography>
-      <Box position="relative" display="flex" alignItems="center" width="100%">
-        {/* Left Arrow */}
-        <IconButton
-          onClick={() => scroll("left")}
-          sx={{
-            bgcolor: "white",
-            boxShadow: 2,
-            "&:hover": {
-              bgcolor: theme.palette.secondary.main
-              ,
-            },
-          }}
-        >
-          <ArrowBackIosIcon fontSize="small" />
-        </IconButton>
-
-        {/* Scrollable Container */}
-        <Box
-          className="cake-carousel-container"
-          paddingBottom="3px"
-          ref={scrollRef}
-          display="flex"
-          overflow="hidden"
-          justifyContent="space-between"
-        >
-          {cakes.map((cake, index) => (
-            <CakeCard key={index} cake={cake} />
-          ))}
-        </Box>
-        {/* Right Arrow */}
-
-
-        <IconButton
-          onClick={() => scroll("right")}
-          sx={{
-            bgcolor: "white",
-            boxShadow: 2,
-            "&:hover": {
-              bgcolor: theme.palette.secondary.main,
-            },
-          }}
-        >
-          <ArrowForwardIosIcon fontSize="small" />
-        </IconButton>
-      </Box>
-    </Box >
-  );
-};
 
 
 // Home Page
 export default function Home() {
   const navigate = useNavigate();
+  // Cake Card
+  const CakeCard = ({ cake }) => (
+    <Card
+      sx={{
 
+        width: { xs: 170, sm: 200, md: 220, lg: 300 },
+        flexShrink: 0,
+        background: 'white',
+        //border: "solid 1px #723d46",
+        mx: 1,
+        // boxShadow: 3,
+        borderRadius: 2,
+      }}
+    >
+      <Box display="flex" justifyContent={'center'} >
+        {/* Show normal image */}
+        <Box
+          component="img"
+          src={cake.img}
+          alt={"Cake"}
+          height={{ xs: 194.55, sm: 229.21, md: 252.33, lg: 344.75 }}
+          sx={{
+            width: { xs: '100%' },
+            transform: "translateY(-10%)",
+          }}
+        />
+      </Box>
+      <CardContent>
+        <Typography fontWeight="bold" fontSize="14px" >
+          {cake.title}
+        </Typography>
+        <Typography variant="body2">
+          {cake.flavor} • {cake.weight}
+        </Typography>
+      </CardContent>
+    </Card>
+  );
+  // Carousel Component
+  const CakeCarousel = ({ title, cakes }) => {
+
+    // @ts-ignore
+    // @ts-ignore
+    const scrollRef = useRef();
+
+    const scroll = (direction) => {
+      const container = scrollRef.current;
+      if (!container) return;
+
+      const card = container.querySelector("div > div"); // gets one CakeCard wrapper
+      if (!card) return;
+
+      const cardWidth = card.offsetWidth + 16; // get actual card width + margin (mx: 1 = 8px each side)
+      const scrollAmount = cardWidth * 2; // scroll 6 cards at a time
+
+      container.scrollBy({
+        left: direction === "right" ? scrollAmount : -scrollAmount,
+        behavior: "smooth",
+      });
+    };
+
+    return (
+      <Box mt={6} className="middle" >
+        <Typography
+          variant="h6"
+          // ml={6}
+          //mb={2}
+          sx={{
+            fontSize: { xs: "13px", md: "25px" },
+            textAlign: "center",
+            width: '100%',
+            color: 'black',
+          }}
+        >
+          {title}
+        </Typography>
+        <Box
+          display="flex"
+          justifyContent="flex-end"
+          alignItems="center"
+          width="100%"
+          mb={1}
+          pr={1}
+        >
+          <Button
+            variant="text"
+            endIcon={<ArrowOutwardIcon />}
+            sx={{
+              color: theme.palette.primary.main,
+              fontWeight: 'bold',
+              textTransform: 'none',
+              fontSize: { xs: '13px', md: '16px' },
+              '&:hover': {
+                color: theme.palette.secondary.main,
+                background: 'transparent'
+              }
+            }}
+            onClick={() => { navigate('/seeall') }}
+          >
+            See all
+          </Button>
+        </Box>
+        <Box position="relative" display="flex" alignItems="center" width="100%">
+          {/* Left Arrow */}
+          <IconButton
+            onClick={() => scroll("left")}
+            sx={{
+              bgcolor: "white",
+              boxShadow: 2,
+              "&:hover": {
+                bgcolor: theme.palette.secondary.main
+                ,
+              },
+            }}
+          >
+            <ArrowBackIosIcon fontSize="small" />
+          </IconButton>
+
+          {/* Scrollable Container */}
+          <Box
+            className="cake-carousel-container"
+            paddingBottom="3px"
+            ref={scrollRef}
+            display="flex"
+            overflow="hidden"
+            justifyContent="space-between"
+            sx={{
+              gap: { xs: '0px', sm: '18px' }
+            }}
+          >
+            {cakes.map((cake, index) => (
+              <CakeCard key={index} cake={cake} />
+            ))}
+          </Box>
+          {/* Right Arrow */}
+
+
+          <IconButton
+            onClick={() => scroll("right")}
+            sx={{
+              bgcolor: "white",
+              boxShadow: 2,
+              "&:hover": {
+                bgcolor: theme.palette.secondary.main,
+              },
+            }}
+          >
+            <ArrowForwardIosIcon fontSize="small" />
+          </IconButton>
+        </Box>
+      </Box >
+    );
+  };
   return (
     <Box>
       {/* Banner */}

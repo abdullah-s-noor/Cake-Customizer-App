@@ -32,7 +32,7 @@ function Login() {
                 if (from === "/cakeinformation" && orderDetails) {
                     navigate("/cakeinformation", { state: { orderDetails }, replace: true });
                 } else {
-                    navigate(from.startsWith("/dashboard") ? "/notfound" : from, { replace: true });
+                    navigate(from.startsWith("/dashboard") ? "/" : from, { replace: true });
                 }
             }
         }

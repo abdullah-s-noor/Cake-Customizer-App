@@ -65,10 +65,10 @@ export default function EditUserInformation() {
       };
 
       const response = await api.put("/auth/profile", payload);
-      const { email, username, birthdate, phone } = response.data.user;
+      const { email, username, birthdate, phone,role } = response.data.user;
       if (response && response.data && response.data.message) {
         toast.success(response.data.message);
-        setUserInfo({ email, username, birthdate, phone });
+        setUserInfo({ email, username, birthdate, phone,role });
         navigate("/profile");
       }
     } catch (err) {

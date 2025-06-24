@@ -58,7 +58,7 @@ export default function ChangePassword() {
       });
 
       toast.success(res.data.message);
-      navigate("/login");
+      navigate("/profile");
     } catch (err) {
       if (err.name === "ValidationError") {
         const validationErrors = err.inner.reduce((acc, error) => {

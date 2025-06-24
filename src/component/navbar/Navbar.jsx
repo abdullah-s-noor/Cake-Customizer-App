@@ -40,6 +40,7 @@ import {
   Group,
   Create
 } from '@mui/icons-material';
+import { Heart } from 'lucide-react';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { UserContext } from '../context/User';
 import { styles } from './styles';
@@ -284,12 +285,18 @@ const drawerItems = isAdmin ? drawerAdmin : userToken ? drawerUser : drawerGuest
           <Box sx={styles.rightSection}>
             {(userToken && userInfo && userInfo.role === 'user') && (
               <>
-                <IconButton sx={{ ...styles.iconBtn, ...styles.favoriteIcon }}>
+                <IconButton 
+                  sx={{ ...styles.iconBtn, ...styles.favoriteIcon }}
+                  onClick={() => navigate('/favourite')}
+                >
                   <Badge badgeContent={2} color="error">
-                    <Favorite fontSize="medium" />
+                    <Heart size={24} color="#fff" />
                   </Badge>
                 </IconButton>
-                <IconButton sx={{ ...styles.iconBtn, ...styles.cartIcon }}>
+                <IconButton 
+                  sx={{ ...styles.iconBtn, ...styles.cartIcon }}
+                  onClick={() => navigate('/cart')}
+                >
                   <Badge badgeContent={4} color="info">
                     <ShoppingCart fontSize="medium" />
                   </Badge>
