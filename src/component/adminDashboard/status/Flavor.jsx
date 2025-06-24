@@ -3,71 +3,40 @@ import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
-import { api } from '../../../api/api'
+import { api } from "../../../api/api";
 import Loader from "../../Loaders/Loader";
 import { toast } from "react-toastify";
 import Theme from "../../../../src/theme.js";
 
-function formatDateToLong(dateString) {
-  if (!dateString) return '—';
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) return '—';
-  return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(date);
-}
-
-
-export default function Admin_Manage() {
+export default function Flavor() {
   const columns = [
-    
     {
-      field: "username",
-      headerName: "Full Name",
+      field: "name",
+      headerName: "Flavor Name",
       width: 200,
       align: "center",
       headerAlign: "center",
-    },
-    {
-      field: "email",
-      headerName: "Email",
-      width: 250,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "phone",
-      headerName: "Phone Number",
-      width: 160,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "role",
-      headerName: "Role",
-      width: 120,
-      align: "center",
-      headerAlign: "center",
+      renderCell: (params) => {
+        const name = params.value;
+        const underscoreIndex = name.indexOf("_");
+        return (
+          <span>
+            {underscoreIndex !== -1 ? name.slice(underscoreIndex + 1) : name}
+          </span>
+        );
+      },
     },
     {
       field: "status",
       headerName: "Status",
-      width: 120,
+      width: 150,
       align: "center",
       headerAlign: "center",
-    },
-    {
-      field: "birthdate",
-      headerName: "Birth Date",
-      width: 130,
-      align: "center",
-      headerAlign: "center",
-      renderCell: (params) => {
-        return formatDateToLong(params.value);
-      }
     },
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      width: 148,
       align: "center",
       headerAlign: "center",
       sortable: false,
@@ -81,13 +50,12 @@ export default function Admin_Manage() {
               borderRadius: "5px",
               padding: "5px 10px",
               border: "none",
-              // disabled: true,
               cursor: "pointer",
               "&:hover": {
                 backgroundColor: Theme.palette.secondary.main,
               },
             }}
-            onClick={() => handleStatus(params.row._id)}
+            onClick={() => handleStatus(params.row._id, params.row.status)}
           >
             change status
           </Button>
@@ -96,74 +64,85 @@ export default function Admin_Manage() {
     },
   ];
   const [rows, setRows] = useState([]);
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
+
+  const getSlicedName = (name) => {
+    const underscoreIndex = name.indexOf("_");
+    return underscoreIndex !== -1 ? name.slice(underscoreIndex + 1) : name;
+  };
+
+  const uniqueRows = [];
+  const seen = new Set();
+  for (const row of rows) {
+    const sliced = getSlicedName(row.name);
+    if (!seen.has(sliced)) {
+      seen.add(sliced);
+      uniqueRows.push(row);
+    }
+  }
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseData = (await api.get('/user?page=1&limit=5')).data
-        setRows(responseData.users)
+        const responseData = (await api.get("/custom/flavor")).data;
+        setRows(responseData.items);
       } catch {
-        toast.error("An error occured during fetching users")
+        toast.error("An error occurred during fetching flavors");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
-    fetchData()
-  }, [])
+    };
+    fetchData();
+  }, []);
 
-  const handleStatus = async (id) => {
-  try {
-    // Find the user to check their status
-    const user = rows.find((row) => row._id === id);
-    if ( user.status === "active") {
-      // Update user status to "inactive"
-      await api.patch(`/user/${id}`);
+  const handleStatus = async (id, currentStatus) => {
+    try {
+      const newStatus = currentStatus === "active" ? "inactive" : "active";
+      await api.patch(`/custom/flavor/${id}`, { status: newStatus });
       setRows((prev) =>
         prev.map((row) =>
-          row._id === id ? { ...row, status: "inactive" } : row
+          row._id === id ? { ...row, status: newStatus } : row
         )
       );
-      toast.success("User inactivated successfully");
-    } else {
-       await api.patch(`/user/${id}`);
-      setRows((prev) =>
-        prev.map((row) =>
-          row._id === id ? { ...row, status: "active" } : row
-        )
+      toast.success(
+        `Flavor ${newStatus === "active" ? "activated" : "inactivated"} successfully`
       );
-      toast.success("User activated successfully");
+
+      if (newStatus === "inactive") {
+        await api.patch(`/cake/unavailable-by-flavor/${id}`);
+        toast.info("All cakes with this flavor are now unavailable.");
+      }
+    } catch {
+      toast.error("Failed to update flavor or related cakes");
     }
-  } catch {
-    toast.error("Failed to update user status");
-  }
-};
+  };
 
   return (
     <>
-      {loading ? <Loader /> :
+      {loading ? (
+        <Loader />
+      ) : (
         <Box
           sx={{
             height: 500,
-            width: "83.8%",
+            width: 500,
             mt: 7,
             justifyContent: "center",
             mx: "auto",
           }}
         >
           <DataGrid
-            rows={rows}
-            // @ts-ignore
+            rows={uniqueRows}
             columns={columns}
             getRowId={(row) => row._id}
-             autoHeight
+            autoHeight
             initialState={{
               pagination: {
                 paginationModel: { pageSize: 5 },
               },
             }}
             pageSizeOptions={[5]}
-             sx={{
+            sx={{
               "& .MuiDataGrid-cell": {
                 justifyContent: "center",
                 alignItems: "center",
@@ -177,7 +156,7 @@ export default function Admin_Manage() {
             }}
           />
         </Box>
-      }
+      )}
     </>
   );
 }

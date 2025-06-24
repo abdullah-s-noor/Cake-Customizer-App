@@ -47,7 +47,6 @@ import { styles } from './styles';
 import Search from '../../pages/Search';
 import './navBarStyle.css';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import theme  from  '../../theme';
 
 function Navbar({drawerWidth}) {
   const navigate = useNavigate();
@@ -131,15 +130,22 @@ function Navbar({drawerWidth}) {
     text: 'Manage List',
     icon: <AddCircle />,
     children: [
-      { text: 'Manage Orders', icon: <ListAlt />, path: '/dashboard/adminmanageorders' },
+  { text: 'Manage Orders', icon: <ListAlt />, path: '/dashboard/adminmanageorders' },
   { text: 'Manage Collections', icon: <CollectionsBookmark />, path: '/dashboard/adminmanagecollections' },
   { text: 'Manage Users', icon: <Group />, path: '/dashboard/adminmanageusers' },
     ],
   },
+  {
+    text:"Manage Cake",
+    icon: <Cake />,
+    children: [
+      { text: 'Manage Toppings', icon: <Cake />, path: '/dashboard/adminmanagetoppings' },
+      { text: 'Manage Shapes', icon: <Cake />, path: '/dashboard/adminmanageshapes' },
+      { text: 'Manage Flavors', icon: <Cake />, path: '/dashboard/adminmanageflavors' },
+    ],
+  },
   
-  
-  { text: 'About Us', icon: <Info />, path: '/' },
-  { text: 'Contact Us', icon: <ContactMail />, path: '/' },
+  { text: 'Profile', icon: <Person2 />, path: '/profile' },
   { text: 'Logout', icon: <Logout />, action: handleLogout },
 ];
 

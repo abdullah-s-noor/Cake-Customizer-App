@@ -30,6 +30,10 @@ import AddNewFlavor from "../userDashboard/addNewFlavor/AddNewFlavor.jsx";
 import AddNewTopping from "../userDashboard/addNewTopping/AddNewTopping.jsx";
 import AdminProtectedRoute from "../protectedRoute/AdminProtectedRoute.jsx";
 import SeparateProtectedRoute from "../protectedRoute/SeparateProtectedRoute.jsx";
+import AdminManageToppings from "../adminDashboard/status/Topping.jsx";
+import AdminManageFlavors from "../adminDashboard/status/Flavor.jsx";
+import AdminManageShapes from "../adminDashboard/status/Shape.jsx";
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -155,6 +159,18 @@ export const router = createBrowserRouter([
       {
         path: "adminmanageusers",
         element: <AdminManageUsers />,
+      },
+      {
+        path: "adminmanagetoppings",
+        element: <AdminManageToppings />,
+      },
+      {
+        path: "adminmanageflavors",
+        element: <AdminManageFlavors />,
+      },
+      {
+        path: "adminmanageshapes",
+        element: <AdminManageShapes />,
       },
     ],
   },
