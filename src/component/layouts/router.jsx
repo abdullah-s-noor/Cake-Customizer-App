@@ -33,6 +33,7 @@ import SeparateProtectedRoute from "../protectedRoute/SeparateProtectedRoute.jsx
 import AdminManageToppings from "../adminDashboard/status/Topping.jsx";
 import AdminManageFlavors from "../adminDashboard/status/Flavor.jsx";
 import AdminManageShapes from "../adminDashboard/status/Shape.jsx";
+import Order from "../userDashboard/order/OrderPage.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -109,7 +110,10 @@ export const router = createBrowserRouter([
         element: <SeparateProtectedRoute><Cart /></SeparateProtectedRoute>,
       },
 
-
+      {
+        path: "order",
+        element: <SeparateProtectedRoute><Order /></SeparateProtectedRoute>,
+      },
       {
         path: "*",
         element: <NotFound />,
