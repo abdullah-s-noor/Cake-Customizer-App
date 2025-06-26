@@ -98,20 +98,13 @@ export default function Topping() {
   const handleStatus = async (id, currentStatus) => {
     try {
       const newStatus = currentStatus === "active" ? "inactive" : "active";
-      await api.patch(`/custom/topping/${id}`, { status: newStatus });
+      await api.patch(`/custom/topping/${id}/toggle-status`, { status: newStatus });
       setRows((prev) =>
         prev.map((row) =>
           row._id === id ? { ...row, status: newStatus } : row
         )
       );
-      toast.success(
-        `Topping ${newStatus === "active" ? "activated" : "inactivated"} successfully`
-      );
-
-      if (newStatus === "inactive") {
-        await api.patch(`/cake/unavailable-by-topping/${id}`);
-        toast.info("All cakes with this topping are now unavailable.");
-      }
+      toast.success(`Topping ${newStatus === "active" ? "activated" : "inactivated"} successfully`);
     } catch {
       toast.error("Failed to update topping or related cakes");
     }

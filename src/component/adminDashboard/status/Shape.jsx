@@ -98,20 +98,13 @@ export default function Shape() {
   const handleStatus = async (id, currentStatus) => {
     try {
       const newStatus = currentStatus === "active" ? "inactive" : "active";
-      await api.patch(`/custom/shape/${id}`, { status: newStatus });
+      await api.patch(`/custom/shape/${id}/toggle-status`, { status: newStatus });
       setRows((prev) =>
         prev.map((row) =>
           row._id === id ? { ...row, status: newStatus } : row
         )
       );
-      toast.success(
-        `shape ${newStatus === "active" ? "activated" : "inactivated"} successfully`
-      );
-
-      if (newStatus === "inactive") {
-        await api.patch(`/cake/unavailable-by-shape/${id}`);
-        toast.info("All cakes with this shape are now unavailable.");
-      }
+      toast.success(`shape ${newStatus === "active" ? "activated" : "inactivated"} successfully`);
     } catch {
       toast.error("Failed to update shape or related cakes");
     }

@@ -34,6 +34,7 @@ import AdminManageToppings from "../adminDashboard/status/Topping.jsx";
 import AdminManageFlavors from "../adminDashboard/status/Flavor.jsx";
 import AdminManageShapes from "../adminDashboard/status/Shape.jsx";
 import Order from "../userDashboard/order/OrderPage.jsx";
+import GetCakes from "../adminDashboard/getCakes/GetCakes.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -175,6 +176,10 @@ export const router = createBrowserRouter([
       {
         path: "adminmanageshapes",
         element: <AdminManageShapes />,
+      },
+      {
+        path: "getcakes",
+        element: <GetCakes />,
       },
     ],
   },
