@@ -1,38 +1,49 @@
-import React from 'react';
-import { Container, Typography, Box } from '@mui/material';
-import OrderItem from './OrderItem';
+import React, { useEffect, useState } from "react";
+import { Box, Typography } from "@mui/material";
+import { api } from "../../../api/api.js";
+import Loader from "../../Loaders/Loader";
+import { toast } from "react-toastify";
+import OrderItem from "./OrderItem";
 
-const mockOrders = [
-  {
-    id: 1,
-    status: 'Shipped',
-    cakes: [
-      { name: 'Chocolate Cake', image: '/images/chocolate.jpg', price: '$25' },
-      { name: 'Vanilla Cake', image: '/images/vanilla.jpg', price: '$20' },
-      { name: 'Red Velvet Cake', image: '/images/redvelvet.jpg', price: '$30' },
-    ],
-  },
-  {
-    id: 2,
-    status: 'Accepted',
-    cakes: [
-      { name: 'Strawberry Cheesecake', image: '/images/strawberry.jpg', price: '$28' },
-      { name: 'Carrot Cake', image: '/images/carrot.jpg', price: '$22' },
-    ],
-  },
-];
+export default function OrdersPage() {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-export default function OrderPage() {
+  const fetchOrders = async () => {
+    try {
+      const res = await api.get("/order/user-orders"); // 👈 Adjust endpoint if needed
+      if (res?.data?.orders) {
+        setOrders(res.data.orders);
+      } else {
+        toast.info(res?.data?.message || "No orders found.");
+        setOrders([]);
+      }
+    } catch {
+      toast.error("Failed to fetch orders");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  if (loading) return <Loader />;
+
   return (
-    <Container maxWidth="md">
-      <Box my={4}>
-        <Typography variant="h4" gutterBottom>
-          Your Orders
-        </Typography>
-        {mockOrders.map((order) => (
-          <OrderItem key={order.id} order={order} />
-        ))}
-      </Box>
-    </Container>
+    <Box sx={{ p: 4 }}>
+      <Typography variant="h4" gutterBottom>
+        My Orders
+      </Typography>
+
+      {orders.length === 0 ? (
+        <Typography>No orders yet.</Typography>
+      ) : (
+        orders.map((order) => (
+          <OrderItem key={order._id || order.id} order={order} />
+        ))
+      )}
+    </Box>
   );
 }
