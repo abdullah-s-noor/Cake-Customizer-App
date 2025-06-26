@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import {
   Box,
   Typography,
@@ -17,86 +17,139 @@ const Logo = "/image/imageCakes/shapes/double barrel/flavors/Red Velvet.png";
 const Make = "/image/makecake.png";
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import Theme from "../../../../src/theme.js";
-
-// Mock data
-const mockCakes = [
-  { title: "Forever Bliss", flavor: "Bastashio", weight: "400 ml", img: "/image/testCake/1.png" },
-  { title: "Pure Romance", flavor: "Vanilla", weight: "140 ml", img: "/image/testCake/2.png" },
-  { title: "Elegant Charm", flavor: "Chocolate", weight: "120 ml", img: "/image/testCake/3.png" },
-  { title: "Dreamy Delight", flavor: "Fruits", weight: "180 ml", img: Logo },
-  { title: "Sweet Harmony", flavor: "Red Velvet", weight: "200 ml", img: Logo },
-  { title: "Golden Love", flavor: "Lemon", weight: "300 ml", img: Logo },
-  { title: "Snow Kiss", flavor: "White Chocolate", weight: "250 ml", img: Logo },
-  // Repeating for scroll testing
-  { title: "Forever Bliss", flavor: "Bastashio", weight: "400 ml", img: Logo },
-  { title: "Pure Romance", flavor: "Vanilla", weight: "140 ml", img: Logo },
-  { title: "Elegant Charm", flavor: "Chocolate", weight: "120 ml", img: Logo },
-  { title: "Dreamy Delight", flavor: "Fruits", weight: "180 ml", img: Logo },
-  { title: "Sweet Harmony", flavor: "Red Velvet", weight: "200 ml", img: Logo },
-  { title: "Golden Love", flavor: "Lemon", weight: "300 ml", img: Logo },
-  { title: "Snow Kiss", flavor: "White Chocolate", weight: "250 ml", img: Logo },
-];
-
-const girlCakes = [
-  { title: "Pini Ribbons", flavor: "Bastashio", weight: "40 ml", img: Logo },
-  { title: "Queen", flavor: "Vanilla", weight: "50 ml", img: Logo },
-  { title: "Butterflies", flavor: "Chocolate", weight: "60 ml", img: Logo },
-  { title: "Pink Hearts", flavor: "Fruits", weight: "50 ml", img: Logo },
-  { title: "Ballerina", flavor: "Red Velvet", weight: "50 ml", img: Logo },
-  // Repeating for scroll testing
-  { title: "Pini Ribbons", flavor: "Bastashio", weight: "40 ml", img: Logo },
-  { title: "Queen", flavor: "Vanilla", weight: "50 ml", img: Logo },
-  { title: "Butterflies", flavor: "Chocolateae0d5e", weight: "60 ml", img: Logo },
-  { title: "Pink Hearts", flavor: "Fruits", weight: "50 ml", img: Logo },
-  { title: "Ballerina", flavor: "Red Velvet", weight: "50 ml", img: Logo },
-];
+import { Favorite, FavoriteBorder } from "@mui/icons-material";
+import { api } from "../../../api/api";
 
 import { useOutletContext } from "react-router-dom";
 import theme from "../../../../src/theme.js";
+import { toast } from "react-toastify";
+import { UserContext } from "../../context/User";
+import Loader from "../../Loaders/Loader";
 
 
 
 // Home Page
 export default function Home() {
+  const [favorites, setFavorites] = useState([]);
+  const { userToken, userInfo } = useContext(UserContext)
+  const [collections, setCollections] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAllData = async () => {
+      try {
+        let favRes = { data: { favorite: { cakes: [] } } };
+        if (userToken) {
+          favRes = await api.get("/favorite");
+        }
+        const colRes = await api.get("/collections/collections-with-cakes");
+
+        const cakeIds = favRes.data.favorite?.cakes?.map(cake => cake._id) || [];
+        setFavorites(cakeIds);
+
+        setCollections(colRes.data.data || []);
+      } catch (err) {
+        toast.error("Error fetching home data");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAllData();
+  }, []);
+
   const navigate = useNavigate();
   // Cake Card
-  const CakeCard = ({ cake }) => (
-    <Card
-      sx={{
+  const CakeCard = ({ cake }) => {
+    const isFavorited = favorites.includes(cake.cakeId);
+    const [isLoading, setIsLoading] = useState(false);
 
-        width: { xs: 170, sm: 200, md: 220, lg: 300 },
-        flexShrink: 0,
-        background: 'white',
-        //border: "solid 1px #723d46",
-        mx: 1,
-        // boxShadow: 3,
-        borderRadius: 2,
-      }}
-    >
-      <Box display="flex" justifyContent={'center'} >
-        {/* Show normal image */}
-        <Box
-          component="img"
-          src={cake.img}
-          alt={"Cake"}
-          height={{ xs: 194.55, sm: 229.21, md: 252.33, lg: 344.75 }}
-          sx={{
-            width: { xs: '100%' },
-            transform: "translateY(-10%)",
-          }}
-        />
-      </Box>
-      <CardContent>
-        <Typography fontWeight="bold" fontSize="14px" >
-          {cake.title}
-        </Typography>
-        <Typography variant="body2">
-          {cake.flavor} • {cake.weight}
-        </Typography>
-      </CardContent>
-    </Card>
-  );
-  // Carousel Component
+    const handleFavorite = async (cakeId, isFavorited) => {
+      if (!userToken) {
+        navigate('/login');
+        return;
+      }
+
+      setIsLoading(true);
+
+      const deploy = {
+        userId: userInfo._id,
+        cakeId,
+      };
+
+      try {
+        if (isFavorited) {
+          await api.post("/favorite/remove", deploy);
+          setFavorites((prev) => prev.filter((id) => id !== cakeId));
+        } else {
+          await api.post("/favorite/add", deploy);
+          setFavorites((prev) => [...prev, cakeId]);
+        }
+      } catch (err) {
+        console.error("Error updating favorite:", err);
+        toast.error("Could not update favorite.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    return (
+      <Card
+        sx={{
+          width: { xs: 170, sm: 200, md: 220, lg: 300 },
+          flexShrink: 0,
+          background: 'white',
+          mx: 1,
+          borderRadius: 2,
+        }}
+      >
+        <Box display="flex" justifyContent={'center'} position="relative">
+          <Box
+            component="img"
+            src={cake.image}
+            alt={"Cake"}
+            height={{ xs: 194.55, sm: 229.21, md: 252.33, lg: 344.75 }}
+            sx={{
+              width: '100%',
+              transform: "translateY(-10%)",
+            }}
+          />
+          <IconButton
+            sx={{ position: "absolute", top: 8, right: 8 }}
+            onClick={() => handleFavorite(cake.cakeId, isFavorited)}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <Box
+                sx={{
+                  width: 20,
+                  height: 20,
+                  border: '2px solid #ccc',
+                  borderTop: '2px solid red',
+                  borderRadius: '50%',
+                  animation: 'spin 0.6s linear infinite',
+                }}
+              />
+            ) : isFavorited ? (
+              <Favorite color="error" />
+            ) : (
+              <FavoriteBorder />
+            )}
+          </IconButton>
+        </Box>
+        <CardContent>
+          <Typography fontWeight="bold" fontSize="14px">
+            {cake.cake_name.split('_')[1]}
+          </Typography>
+          <Typography fontSize="13px" color="text.secondary" mt={0.5}>
+            {cake?.price}₪
+          </Typography>
+        </CardContent>
+      </Card>
+    );
+  };
+
   const CakeCarousel = ({ title, cakes }) => {
 
     // @ts-ignore
@@ -111,7 +164,7 @@ export default function Home() {
       if (!card) return;
 
       const cardWidth = card.offsetWidth + 16; // get actual card width + margin (mx: 1 = 8px each side)
-      const scrollAmount = cardWidth * 2; // scroll 6 cards at a time
+      const scrollAmount = cardWidth * (window.innerWidth < theme.breakpoints.values.sm ? 1 : 2); // scroll 1 card on xs, 2 on sm+
 
       container.scrollBy({
         left: direction === "right" ? scrollAmount : -scrollAmount,
@@ -212,59 +265,65 @@ export default function Home() {
     );
   };
   return (
-    <Box>
-      {/* Banner */}
-      <Box
-        sx={{
-          // width: { xs: "100%", sm: "80%", md: "70%", lg: "60%" },
-          height: "auto",
-          margin: "0 auto",
-          display: "block",
-          cursor: "pointer",
-        }}
-      >
-        <div className="home-page-wallpaper">
-          <Typography variant="h1"
-            sx={{ fontSize: { xs: "50px", md: "70px", lg: '80px' }, color: "white", fontWeight: "bold" }}
-          >
-            Bimi Cake
-          </Typography>
-          <Typography variant="h2"
-            sx={{ fontSize: { xs: "18px", md: "20px", lg: '30px' }, color: "white", mt: 2 }}
-          >
-            Delicious Cakes Made to Order
-          </Typography>
-          <Typography variant="h2"
-            sx={{ fontSize: { xs: "18px", md: "20px", lg: '30px' }, color: "white", mt: 2 }}
-          >
-            Fresh, Beautiful, and Baked with Love!
-          </Typography>
+    <>
 
-          <Button variant="contained"
-            onClick={() => navigate('/custom-cake', { state: { fromHome: true } })}
-            endIcon={<ArrowOutwardIcon />}
-            size="large"
-            sx={{
-              textTransform: 'none',
-              bgcolor: Theme.palette.primary.main,
-              color: 'white',
-              mt: 3,
-              fontSize: { xs: '14px', md: '16px' },
-              borderRadius: 0,
-              '&:hover': {
-                bgcolor: theme.palette.secondary.main,
-              }
-            }}
-          >
-            Customize your cake
-          </Button>
-        </div>
+      <Box>
+        {/* Banner */}
+        <Box
+          sx={{
+            // width: { xs: "100%", sm: "80%", md: "70%", lg: "60%" },
+            height: "auto",
+            margin: "0 auto",
+            display: "block",
+            cursor: "pointer",
+          }}
+        >
+          <div className="home-page-wallpaper">
+            <Typography variant="h1"
+              sx={{ fontSize: { xs: "50px", md: "70px", lg: '80px' }, color: "white", fontWeight: "bold" }}
+            >
+              Bimi Cake
+            </Typography>
+            <Typography variant="h2"
+              sx={{ fontSize: { xs: "18px", md: "20px", lg: '30px' }, color: "white", mt: 2 }}
+            >
+              Delicious Cakes Made to Order
+            </Typography>
+            <Typography variant="h2"
+              sx={{ fontSize: { xs: "18px", md: "20px", lg: '30px' }, color: "white", mt: 2 }}
+            >
+              Fresh, Beautiful, and Baked with Love!
+            </Typography>
 
+            <Button variant="contained"
+              onClick={() => navigate('/custom-cake', { state: { fromHome: true } })}
+              endIcon={<ArrowOutwardIcon />}
+              size="large"
+              sx={{
+                textTransform: 'none',
+                bgcolor: Theme.palette.primary.main,
+                color: 'white',
+                mt: 3,
+                fontSize: { xs: '14px', md: '16px' },
+                borderRadius: 0,
+                '&:hover': {
+                  bgcolor: theme.palette.secondary.main,
+                }
+              }}
+            >
+              Customize your cake
+            </Button>
+          </div>
+
+        </Box>
+
+        {/* Carousels */}
+        {loading ? <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+          <Loader />
+        </Box> : (
+          <CakeCarousel title={collections[0]?.collectionName || "Collection"} cakes={collections[0]?.cakes || []} />
+        )}
       </Box>
-
-      {/* Carousels */}
-      <CakeCarousel title="Wedding Vibes Collection" cakes={mockCakes} />
-      <CakeCarousel title="Girl Vibes Collection" cakes={girlCakes} />
-    </Box>
+    </>
   );
 }
