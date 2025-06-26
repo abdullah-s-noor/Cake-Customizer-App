@@ -86,7 +86,7 @@ export default function VerticalTabs() {
 
     const fetchData = async () => {
       try {
-        const { data } = await api.get('/custom/shapes/optioncs');
+        const { data } = await api.get('/custom/shapes/options');
         setShapes(data.shapes);
         let initialShape = await data.shapes[0];
         if (location?.state?.orderDetails?.shape) {

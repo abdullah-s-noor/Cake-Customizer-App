@@ -126,18 +126,20 @@ export default function CakeDetails() {
       const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
       if (blob) {
         const file = new File([blob], 'custom-cake.png', { type: 'image/png' });
-        console.log(file)
         const formData = new FormData();
         formData.append('shape', orderDetails.shape._id);
         formData.append('flavor', orderDetails.flavor._id);
         formData.append('topping', orderDetails.topping._id);
         formData.append('color', orderDetails.color);
-        formData.append('file', orderDetails.file);
+        if (orderDetails.file) {
+          formData.append('file', orderDetails.file);
+        }
         formData.append('cakeMessage', orderDetails.cakeMessage);
         formData.append('instructions', orderDetails.instructions);
-        formData.append('type', 'custom');
+        formData.append('type', 'system');
         formData.append('basecake',file );
-        window
+        // Open the generated file in a new window
+        console.log(1232214421241)
         formData.forEach((value, key) => {
           console.log(`${key}:`, value);
         });
@@ -146,12 +148,15 @@ export default function CakeDetails() {
           toast.success('Cake updated successfully!');
         } else {
           const { data } = await api.post('/cake/custom/new', formData);
-          console.log(111111111111111111111111111)
+          console.log(data.cake)
+          const fileURL = window.URL.createObjectURL(file);
+          window.open(fileURL, '_blank');
           const payload = {
             userId: userInfo._id,
             cakeId: data.cake,
-            quantity: "1"
+            quantity: 1
           };
+          
           await api.post('/cart/add', payload);
           toast.success('Custom cake added to cart successfully!');
         }
@@ -162,6 +167,7 @@ export default function CakeDetails() {
     } catch (error) {
       console.error('Error adding to cart:', error);
       toast.error("Failed to add cake to cart.");
+
     }
 
   };
