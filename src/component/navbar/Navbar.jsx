@@ -144,6 +144,9 @@ function Navbar({drawerWidth}) {
       { text: 'Manage Flavors', icon: <Cake />, path: '/dashboard/adminmanageflavors' },
     ],
   },
+  {
+    text:"Get All Cake",icon:<Cake/>,path:"/dashboard/getcakes",
+  },
   
   { text: 'Profile', icon: <Person2 />, path: '/profile' },
   { text: 'Logout', icon: <Logout />, action: handleLogout },

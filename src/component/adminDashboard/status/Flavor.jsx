@@ -98,20 +98,13 @@ export default function Flavor() {
   const handleStatus = async (id, currentStatus) => {
     try {
       const newStatus = currentStatus === "active" ? "inactive" : "active";
-      await api.patch(`/custom/flavor/${id}`, { status: newStatus });
+      await api.patch(`/custom/flavor/${id}/toggle-status`);
       setRows((prev) =>
         prev.map((row) =>
           row._id === id ? { ...row, status: newStatus } : row
         )
       );
-      toast.success(
-        `Flavor ${newStatus === "active" ? "activated" : "inactivated"} successfully`
-      );
-
-      if (newStatus === "inactive") {
-        await api.patch(`/cake/unavailable-by-flavor/${id}`);
-        toast.info("All cakes with this flavor are now unavailable.");
-      }
+      toast.success( `Flavor ${newStatus === "active" ? "activated" : "inactivated"} successfully`);
     } catch {
       toast.error("Failed to update flavor or related cakes");
     }
