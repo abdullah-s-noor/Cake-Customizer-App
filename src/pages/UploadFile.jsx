@@ -2,8 +2,10 @@ import React, { useRef } from 'react';
 import { Box, Typography, IconButton } from '@mui/material';
 import { Delete, AddCircleOutline } from '@mui/icons-material';
 
-function UploadFile({ file, onFileSelect, onRemove,text='📷 Attach a photo for printing' }) {
+function UploadFile({ file, onFileSelect, onRemove, text = '📷 Attach a photo for printing' }) {
   // @ts-ignore
+  console
+    .log(file)
   const inputRef = useRef();
 
   const handleFileChange = (e) => {
@@ -12,13 +14,19 @@ function UploadFile({ file, onFileSelect, onRemove,text='📷 Attach a photo for
       onFileSelect(selected);
     }
   };
+  const getImageSrc = (file) => {
+    if (!file) return null;
+    if (file instanceof File) return URL.createObjectURL(file);
+    if (file.secure_url) return file.secure_url;
+    return null;
+  };
 
   return (
     <Box
       sx={{
         border: '2px dashed #bbb',
         borderRadius: 2,
-        p: 4,
+        p: {xs:2,sm:4},
         textAlign: 'center',
         bgcolor: '#f5f5f5',
         cursor: 'pointer',
@@ -43,16 +51,16 @@ function UploadFile({ file, onFileSelect, onRemove,text='📷 Attach a photo for
       {!file ? (
         <>
           <IconButton size="large" disableRipple>
-            <AddCircleOutline sx={{ fontSize: 40, color: '#999' }} />
+            <AddCircleOutline sx={{ fontSize: {xs:20,sm:40}, color: '#999' }} />
           </IconButton>
-          <Typography variant="body1" color="text.secondary">
+          <Typography variant="body2" color="text.secondary">
             {text}
           </Typography>
         </>
       ) : (
         <Box sx={{ position: 'relative', display: 'inline-block' }}>
           <img
-            src={URL.createObjectURL(file)}
+            src={getImageSrc(file)}
             alt="Uploaded"
             style={{ maxHeight: 100, borderRadius: 8 }}
           />

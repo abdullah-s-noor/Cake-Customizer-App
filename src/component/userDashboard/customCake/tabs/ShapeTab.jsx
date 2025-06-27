@@ -7,10 +7,10 @@ function ShapeTab({ shapes, selectedShape, setSelectedShape, navHeight, heightPr
     return (
         <ImageList
             sx={{
-                m: '1px',
+                pb: 3,
                 height: {
                     xs: `calc(100vh - ${heightPreview.xs + navHeight.xs}px)`,
-                    sm: `calc(100vh - ${navHeight.sm}px)`
+                    md: `calc(100vh - ${navHeight.md}px)`
                 },
 
                 overflowY: 'auto',
@@ -41,7 +41,7 @@ function ShapeTab({ shapes, selectedShape, setSelectedShape, navHeight, heightPr
                         transition: '0.2s',
                         position: 'relative',
                         bgcolor: selectedShape._id === item._id ? '#f6e6ec' : 'transparent',
-                        pb: 0
+                        
                     }}
 
                 >
@@ -55,6 +55,7 @@ function ShapeTab({ shapes, selectedShape, setSelectedShape, navHeight, heightPr
                                 color: theme.palette.primary.main,
                                 background: '#fff',
                                 borderRadius: '50%',
+                                
                             }}
                         />
                     }

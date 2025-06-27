@@ -10,7 +10,14 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function InstructionAccordion({ value, onChange }) {
   return (
-    <Accordion sx={{ bgcolor: '#f5f5f5', borderRadius: '8px' }}>
+    <Accordion
+      defaultExpanded
+      sx={{
+        bgcolor: '#f5f5f5',
+        borderRadius: '8px',
+        boxShadow: 'none',
+      }}
+    >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="extra-instructions-content"
@@ -28,6 +35,7 @@ export default function InstructionAccordion({ value, onChange }) {
           placeholder="Add any extra notes here..."
           value={value}
           onChange={onChange}
+          sx={{ mt: 1 }}
         />
       </AccordionDetails>
     </Accordion>

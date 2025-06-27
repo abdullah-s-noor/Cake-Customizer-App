@@ -53,37 +53,40 @@ function a11yProps(index) {
 }
 
 export default function VerticalTabs() {
-
+  const isCakeEdited = (original, current) => {
+    if (!original || !current) return false;
+    const keysToCheck = ['shape', 'flavor', 'topping', 'color', 'cakeMessage', 'instructions'];
+    const isDifferent = keysToCheck.some((key) => {
+      const orig = original[key];
+      const curr = current[key];
+      if (!orig && curr) return true;
+      if (orig && !curr) return true;
+      if (orig?._id && curr?._id) return orig._id !== curr._id;
+      return orig !== curr;
+    });
+    const fileChanged = !!current.file;
+    return isDifferent || fileChanged;
+  };
   // @ts-ignore
 
   const navigate = useNavigate();
   const location = useLocation();
-
-
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(true);
-
   const [shapes, setShapes] = useState([]);
   const [selectedShape, setSelectedShape] = useState(location?.state?.orderDetails?.shape || null);
-
   const [flavors, setFlavors] = useState([]);
   const [selectedFlavor, setSelectedFlavor] = useState(location?.state?.orderDetails?.flavor || null);
-
   const [toppings, setToppings] = useState([]);
   const [selectedTopping, setSelectedTopping] = useState(location?.state?.orderDetails?.topping || null);
-
   const [selectedColor, setSelectedColor] = useState(location?.state?.orderDetails?.color || null);
-
   const [price, setPrice] = useState(0);
-
   const [uploadedFile, setUploadedFile] = useState(location?.state?.orderDetails?.file || null);
   const [cakeMessage, setCakeMessage] = useState(location?.state?.orderDetails?.cakeMessage || '');
   const [instructions, setInstructions] = useState(location?.state?.orderDetails?.instructions || '');
-
+  const [originalDetails, setOriginalDetails] = useState(location?.state?.originalDetails || null);
 
   useEffect(() => {
-
-
     const fetchData = async () => {
       try {
         const { data } = await api.get('/custom/shapes/options');
@@ -109,7 +112,6 @@ export default function VerticalTabs() {
 
   const handleSelectedShape = (shape) => {
     const { flavors, toppings, ...thisShape } = shape
-    console.log('shape', shape);
     setSelectedShape(thisShape);
     setFlavors(shape.flavors);
     const matchedFlavor = shape.flavors.find(
@@ -130,11 +132,10 @@ export default function VerticalTabs() {
   }
 
   const handleSubmit = () => {
+    const cakeId = location?.state?.originalDetails?._id || null;
+    const from = location?.state?.from;
 
-    /** collect details in one object */
-    const cakeId=location?.state?.orderDetails?.cakeId||null
-    const orderDetails = {
-      cakeId:cakeId,
+    const currentDetails = {
       shape: selectedShape,
       flavor: selectedFlavor,
       topping: selectedTopping,
@@ -143,15 +144,34 @@ export default function VerticalTabs() {
       file: uploadedFile,
       instructions: instructions,
       price: price,
+    };
+    if (!originalDetails) {
+      navigate('/cakeinformation', { state: { orderDetails: currentDetails } })
     }
-    const isEdit=!!cakeId
 
+    const isEdit = !isCakeEdited(originalDetails, currentDetails);
+    console.log(isEdit)
+    if (from === 'cart') {
+      navigate(`/cakeinformation/${cakeId}`, {
+        state: {
+          orderDetails: currentDetails,
+          originalDetails,
+          isEdit,
+          from: 'cart'
+        },
+      });
+    } else if (from === 'home' || from === 'favorite' || from === 'history') {
+      navigate(`/cakeinformation${isEdit ? `/${cakeId}` : ''}`, {
+        state: {
+          orderDetails: currentDetails,
+          originalDetails, // ✅ still useful for CakeDetails
+          isEdit,
+          from,
+        },
+      });
+    }
+  };
 
-    navigate(`/cakeinformation${isEdit ? `/${cakeId}` : ''}`, {
-    state: { orderDetails, isEdit }
-  });
-
-  }
   const totalTabs = 5;
   const isAllSelected = selectedShape && selectedFlavor && selectedTopping;
   const handleNext = () => {
@@ -169,23 +189,23 @@ export default function VerticalTabs() {
       else if (!selectedTopping) setValue(3);
     }
   };
-  const navHeight = { xs: 48, sm: 64 };
+  const navHeight = { xs: 48, md: 64 };
   const heightPreview = { xs: 300 };
   return (
     <>
       {
         loading ? <Loader /> :
-          <Box sx={{ display: 'flex', flexDirection: 'column-reverse', flexWrap: 'wrap', width: '100%', height: { sm: `calc(100vh - ${navHeight.sm}px)` } }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column-reverse', flexWrap: 'wrap', width: '100%', height: { md: `calc(100vh - ${navHeight.md}px)` } }}>
             {/* TABS */}
             <Box
               sx={{
-                width: { xs: '100%', sm: '50%' },
+                width: { xs: '100%', md: '50%' },
                 flexGrow: 1,
                 bgcolor: 'background.paper',
                 display: 'flex',
                 height: {
                   xs: `calc(100vh - ${heightPreview.xs + navHeight.xs}px)`,
-                  sm: `calc(100vh - ${navHeight.sm}px)`
+                  md: `calc(100vh - ${navHeight.md}px)`
                 },
               }}
             >
@@ -202,7 +222,7 @@ export default function VerticalTabs() {
                 sx={{
                   borderRight: 1,
                   borderColor: 'divider',
-                  width: { xs: '25%', sm: 'none' },
+                  width: { xs: '25%', md: 'none' },
                   '& .Mui-selected': {
                     color: theme.palette.primary.main,
                   },
@@ -219,7 +239,7 @@ export default function VerticalTabs() {
               </Tabs>
 
               {/* CONTENT RIGHT OF TABS */}
-              <Box sx={{ width: { xs: '75%', sm: 'none' }, position: 'relative' }}>
+              <Box sx={{ width: { xs: '75%', md: 'none' }, position: 'relative' }}>
 
                 <TabPanel value={value} index={0}>
 
@@ -241,6 +261,8 @@ export default function VerticalTabs() {
                         selectedFlavor={selectedFlavor}
                         setSelectedFlavor={setSelectedFlavor}
                         handlePriceChange={handlePriceChange}
+                        navHeight={navHeight}
+                        heightPreview={heightPreview}
                       />
                       : <Typography sx={{ textAlign: 'center' }} variant='body1'>No flavors available</Typography>
                   }
@@ -250,7 +272,8 @@ export default function VerticalTabs() {
                   <ColorTab
                     selectedColor={selectedColor}
                     setSelectedColor={setSelectedColor}
-
+                    navHeight={navHeight}
+                    heightPreview={heightPreview}
                   />
                 </TabPanel>
 
@@ -261,6 +284,9 @@ export default function VerticalTabs() {
                       selectedTopping={selectedTopping}
                       setSelectedTopping={setSelectedTopping}
                       handlePriceChange={handlePriceChange}
+                      navHeight={navHeight}
+                      heightPreview={heightPreview}
+
                     /> : <Typography sx={{ textAlign: 'center' }} variant='body1'>No toppings available</Typography>}
                 </TabPanel>
                 <TabPanel value={value} index={4}>
@@ -272,6 +298,8 @@ export default function VerticalTabs() {
                     instructions={instructions}
                     setInstructions={setInstructions}
                     handlePriceChange={handlePriceChange}
+                    heightPreview={heightPreview}
+                    navHeight={navHeight}
                   />
                 </TabPanel>
 
@@ -285,7 +313,7 @@ export default function VerticalTabs() {
                     },
                     width: { xs: '100%' },
                     height: '30px',
-                    fontSize: { xs: '14px', sm: '17px' },
+                    fontSize: { xs: '14px', md: '17px' },
                     padding: '0 12px',
                     textTransform: 'none',
                     boxShadow: 'none',
@@ -306,8 +334,8 @@ export default function VerticalTabs() {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                width: { xs: '100%', sm: '50%' },
-                height: { xs: 300, sm: 'inherit' },
+                width: { xs: '100%', md: '50%' },
+                height: { xs: 285, md: 'inherit' },
                 position: 'relative',
               }}
             >

@@ -2,10 +2,34 @@ import React from 'react';
 import { Box, TextField, Typography } from '@mui/material';
 import UploadFile from '../../../../pages/UploadFile';
 import InstructionAccordion from '../../../../pages/Accordion';
-
-function CollectionTab({ message, setMessage,file, setFile,instructions, setInstructions,handlePriceChange }) {
+import theme from '../../../../theme'
+function CollectionTab({ message, setMessage,file, setFile,instructions, setInstructions,heightPreview,navHeight,handlePriceChange }) {
   return (
-    <Box padding={2} display="flex" flexDirection="column" gap={2}>
+    <Box 
+    padding={2} display="flex" flexDirection="column" gap={2}
+     sx={{
+                pb: 3,
+                height: {
+                    xs: `calc(100vh - ${heightPreview.xs + navHeight.xs}px)`,
+                    md: `calc(100vh - ${navHeight.md}px)`
+                },
+
+                overflowY: 'auto',
+                margin: 0,
+                '&::-webkit-scrollbar': {
+                    width: '10px',
+                },
+                '&::-webkit-scrollbar-track': {
+                    borderRadius: '8px',
+                    backgroundColor: '#e7e7e7',
+                    border: '1px solid #cacaca',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                    borderRadius: '8px',
+                    backgroundColor: theme.palette.primary.main,
+                },
+            }}
+    >
       <Box position="relative" sx={{ bgcolor: '#f5f5f5', mb: 2 }}>
         <TextField
         
