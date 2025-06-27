@@ -1,24 +1,27 @@
 import { CheckCircleOutline } from '@mui/icons-material'
 import { Box, ImageList, ImageListItem, ImageListItemBar, Typography } from '@mui/material'
 import React from 'react'
-
-function ToppingTab({ toppings, selectedTopping, setSelectedTopping,handlePriceChange }) {
+import theme from '../../../../theme'
+function ToppingTab({ toppings, selectedTopping, setSelectedTopping, handlePriceChange, navHeight, heightPreview }) {
 
   const handleSelectedTopping = (topping) => {
-    const oldPrice =selectedTopping?.price||0;
+    const oldPrice = selectedTopping?.price || 0;
     setSelectedTopping(topping);
-    const newPrice =topping?.price||0;
-    handlePriceChange(oldPrice,newPrice);
+    const newPrice = topping?.price || 0;
+    handlePriceChange(oldPrice, newPrice);
   }
-  
+
   return (
     <ImageList
       sx={{
-        m: '1px',
-        height: { xs: 360, sm: 500, md: 600 },
+        height: {
+          xs: `calc(100vh - ${heightPreview.xs + navHeight.xs}px)`,
+          md: `calc(100vh - ${navHeight.md}px)`
+        },
+        pb: 3,
+
         overflowY: 'auto',
         margin: 0,
-        pb: 3,
         '&::-webkit-scrollbar': {
           width: '10px',
         },
@@ -29,7 +32,7 @@ function ToppingTab({ toppings, selectedTopping, setSelectedTopping,handlePriceC
         },
         '&::-webkit-scrollbar-thumb': {
           borderRadius: '8px',
-          backgroundColor: '#723d46',
+          backgroundColor: theme.palette.primary.main,
         },
       }}
     >
@@ -50,7 +53,7 @@ function ToppingTab({ toppings, selectedTopping, setSelectedTopping,handlePriceC
           {
             selectedTopping?._id === item?._id &&
             <CheckCircleOutline
-            
+
               sx={{
                 position: 'absolute',
                 top: 8,
@@ -63,27 +66,27 @@ function ToppingTab({ toppings, selectedTopping, setSelectedTopping,handlePriceC
           }
 
           <img
-                      srcSet={`${item.image.secure_url}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                      src={`${item.image.secure_url}?w=248&fit=crop&auto=format`}
-                      alt={item.name}
-                      loading="lazy"
-                    />
-                    <ImageListItemBar
-                      sx={{ textAlign: 'center' }}
-                      title={item.name.split('_')[1]}
-                      subtitle={
-                        <Box>
-                          <Typography variant="body2" fontWeight="bold">
-                            {item.price > 0 ? `+${item.price} ₪` : 'Free'}
-                          </Typography>
-                        </Box>
-                      }
-                      position="below"
-                    />
-            </ImageListItem>
-            ))}
-        </ImageList>
-      )
+            srcSet={`${item.image.secure_url}?w=248&fit=crop&auto=format&dpr=2 2x`}
+            src={`${item.image.secure_url}?w=248&fit=crop&auto=format`}
+            alt={item.name}
+            loading="lazy"
+          />
+          <ImageListItemBar
+            sx={{ textAlign: 'center' }}
+            title={item.name.split('_')[1]}
+            subtitle={
+              <Box>
+                <Typography variant="body2" fontWeight="bold">
+                  {item.price > 0 ? `+${item.price} ₪` : 'Free'}
+                </Typography>
+              </Box>
+            }
+            position="below"
+          />
+        </ImageListItem>
+      ))}
+    </ImageList>
+  )
 }
 
-      export default ToppingTab
+export default ToppingTab

@@ -9,7 +9,8 @@ import Theme from "../../../../src/theme.js";
 import { api } from '../../../api/api.js';
 import { UserContext } from '../../context/User';
 import { toast } from 'react-toastify';
-
+import Loader from '../../Loaders/Loader';
+import { useParams } from 'react-router-dom';
 const StyledRating = styled(Rating)({
   '& .MuiRating-iconFilled': {
     color: '#ffc107',
@@ -20,10 +21,16 @@ const StyledRating = styled(Rating)({
 });
 
 export default function CakeDetails() {
+  const [loadingCake, setLoadingCake] = useState(false);
   const { userToken, userInfo } = useContext(UserContext)
   const location = useLocation();
   const navigate = useNavigate();
-  const [isEditMode, setIsEditMode] = useState(false);
+  const [from, setFrom] = useState(null);
+
+  const isUnchanged = location?.state?.isEdit !== undefined ? location.state.isEdit : true;
+  console.log(isUnchanged)
+  const { id: cakeId } = useParams();
+  const [originalDetails, setOriginalDetails] = useState(location?.state?.originalDetails || null)
   const [orderDetails, setOrderDetails] = useState({
     cakeId: null,
     shape: null,
@@ -36,27 +43,34 @@ export default function CakeDetails() {
     price: 0,
   });
 
-  /** Authorization: if no state, you are not allowd to preview this component */
   useEffect(() => {
-    const passedState = location?.state?.orderDetails;
-    const isEdit = location?.state?.isEdit;
-
-    if (passedState) {
-      setOrderDetails(passedState);
-      setIsEditMode(!!isEdit);
+    const { orderDetails, from: sourceFrom } = location?.state || {};
+    setFrom(sourceFrom || null);
+    if (orderDetails) {
+      setOrderDetails(orderDetails);
+    } else if (cakeId && sourceFrom) {
+      (async () => {
+        try {
+          setLoadingCake(true);
+          const { data } = await api.get(`/cake/${cakeId}`);
+          setOrderDetails(data.cake);
+          setOriginalDetails(data.cake);
+        } catch (error) {
+          toast.error("Failed to load cake details.");
+          navigate('/');
+        } finally {
+          setLoadingCake(false);
+        }
+      })();
     } else {
       toast.warn('No cake information provided.');
       navigate('/custom-cake');
     }
   }, [location]);
-
-
   const [open, setOpen] = useState(false);
-
   const handleClose = () => {
     setOpen(false);
   };
-
   const reviews = [
     { user: 'Alice', rating: 4, comment: 'Delicious cake! Highly recommend.' },
     { user: 'Bob', rating: 3, comment: 'Good, but a bit too sweet for my taste.' },
@@ -136,19 +150,18 @@ export default function CakeDetails() {
         }
         formData.append('cakeMessage', orderDetails.cakeMessage);
         formData.append('instructions', orderDetails.instructions);
-        formData.append('type', 'system');
-        formData.append('basecake',file );
+        formData.append('basecake', file);
         // Open the generated file in a new window
-        console.log(1232214421241)
         formData.forEach((value, key) => {
           console.log(`${key}:`, value);
         });
-        if (isEditMode && orderDetails.cakeId) {
-          await api.put(`/cake/custom/${orderDetails.cakeId}`, formData);
+        if (!isUnchanged && from === 'cart' && originalDetails._id) {
+          console.log("gtewtewgweg", originalDetails._id)
+          await api.put(`/cake/custom/${originalDetails._id}`, formData);
           toast.success('Cake updated successfully!');
         } else {
+        formData.append('type', 'custom');
           const { data } = await api.post('/cake/custom/new', formData);
-          console.log(data.cake)
           const fileURL = window.URL.createObjectURL(file);
           window.open(fileURL, '_blank');
           const payload = {
@@ -156,7 +169,9 @@ export default function CakeDetails() {
             cakeId: data.cake,
             quantity: 1
           };
-          
+
+
+
           await api.post('/cart/add', payload);
           toast.success('Custom cake added to cart successfully!');
         }
@@ -167,32 +182,28 @@ export default function CakeDetails() {
     } catch (error) {
       console.error('Error adding to cart:', error);
       toast.error("Failed to add cake to cart.");
-
     }
 
   };
 
 
-
-
-
-
-
-
-
-
-
-
-
+  if (loadingCake) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+        <Loader />
+      </Box>
+    );
+  }
 
   return (
     <>
+
 
       <RateandReview open={open} onClose={handleClose} cakeId={orderDetails?.shape?._id || 'unknown'} />
 
       <Box py={4} sx={{ px: { xs: 6, md: 2 }, maxWidth: 1200, mx: 'auto' }}>
         <Grid container spacing={4}>
-          <Grid item xs={12} md={6} sx={{mx:'auto'}}>
+          <Grid item xs={12} md={6} sx={{ mx: 'auto' }}>
             <CakePreview
               selectedShape={orderDetails.shape}
               selectedFlavor={orderDetails.flavor}
@@ -203,7 +214,7 @@ export default function CakeDetails() {
 
           </Grid>
 
-          <Grid item xs={12} md={6} sx={{mx:'auto'}}>
+          <Grid item xs={12} md={6} sx={{ mx: 'auto' }}>
             <Typography variant="h5" fontWeight="bold" textAlign="center">
               Customized Cake
             </Typography>
@@ -264,18 +275,45 @@ export default function CakeDetails() {
               <Button
                 variant="contained"
                 fullWidth
-                sx={{ py: 1.5, fontWeight: 'bold', backgroundColor: Theme.palette.primary.main, color: 'white', borderRadius: 2 }}
-                onClick={handleCart}
+                sx={{
+                  py: 1.5,
+                  fontWeight: 'bold',
+                  backgroundColor: Theme.palette.primary.main,
+                  color: 'white',
+                  borderRadius: 2
+                }}
+                onClick={() => {
+                  if (from === 'cart' && isUnchanged) {
+                    navigate(-1); // ✅ Return to cart without updating
+                  } else {
+                    handleCart(); // ✅ Add or update cake
+                  }
+                }}
               >
-                {isEditMode ? 'Update Cake in Cart' : 'Add to Cart'}
+                {from === 'cart'
+                  ? !isUnchanged
+                    ? 'Update Cake in Cart'
+                    : 'Return to Cart'
+                  : 'Add to Cart'}
               </Button>
+
+
               <Button
                 variant="contained"
                 fullWidth
                 sx={{ py: 1.5, fontWeight: 'bold', backgroundColor: Theme.palette.primary.main, color: 'white', borderRadius: 2 }}
-                onClick={() => navigate('/custom-cake', { state: { orderDetails } })} // Navigate back to custom cake creation
+                onClick={() =>
+                  // Navigate back to custom cake creation
+                  navigate('/custom-cake', {
+                    state: {
+                      orderDetails,
+                      originalDetails, // ✅ pass it here
+                      from,
+                    },
+                  })
+                }
               >
-                Edit Cake
+                Custom Cake
               </Button>
             </Box>
           </Grid>
@@ -306,7 +344,7 @@ export default function CakeDetails() {
             ))
           )}
         </Box>
-      </Box>
+      </Box >
     </>
   );
 }

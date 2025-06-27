@@ -1,6 +1,6 @@
 import axios from 'axios';
 export const api = axios.create({
-  baseURL: "https://bimicake-c8zf.onrender.com",
+  baseURL: "https://bimicake-hanmza.onrender.com",
 });
 // Add a request interceptor to dynamically attach token
 api.interceptors.request.use(

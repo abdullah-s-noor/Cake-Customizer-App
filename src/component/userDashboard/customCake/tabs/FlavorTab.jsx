@@ -1,8 +1,9 @@
 import { CheckCircleOutline } from '@mui/icons-material'
 import { Box, ImageList, ImageListItem, ImageListItemBar, Typography } from '@mui/material'
 import React, { useEffect } from 'react'
+import theme from '../../../../theme'
 
-function FlavorTab({ flavors, selectedFlavor, setSelectedFlavor,handlePriceChange }) {
+function FlavorTab({ flavors, selectedFlavor, setSelectedFlavor,handlePriceChange,navHeight,heightPreview }) {
   useEffect(() => {
     console.log('flavors', flavors);
   },[]);
@@ -14,25 +15,29 @@ function FlavorTab({ flavors, selectedFlavor, setSelectedFlavor,handlePriceChang
     }
     return (
       <ImageList
-        sx={{
-          m: '1px',
-          height: { xs: 360, sm: 500, md: 600 },
-          overflowY: 'auto',
-          margin: 0,
-           pb: 3,
-          '&::-webkit-scrollbar': {
-            width: '10px',
-          },
-          '&::-webkit-scrollbar-track': {
-            borderRadius: '8px',
-            backgroundColor: '#e7e7e7',
-            border: '1px solid #cacaca',
-          },
-          '&::-webkit-scrollbar-thumb': {
-            borderRadius: '8px',
-            backgroundColor: '#723d46',
-          },
-        }}
+         sx={{
+                m: '1px',
+                height: {
+                    xs: `calc(100vh - ${heightPreview.xs + navHeight.xs}px)`,
+                    md: `calc(100vh - ${navHeight.md}px)`
+                },
+               pb: 3,
+
+                overflowY: 'auto',
+                margin: 0,
+                '&::-webkit-scrollbar': {
+                    width: '10px',
+                },
+                '&::-webkit-scrollbar-track': {
+                    borderRadius: '8px',
+                    backgroundColor: '#e7e7e7',
+                    border: '1px solid #cacaca',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                    borderRadius: '8px',
+                    backgroundColor: theme.palette.primary.main,
+                },
+            }}
       >
         {flavors.map((item) => (
           <ImageListItem

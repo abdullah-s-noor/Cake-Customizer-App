@@ -19,7 +19,6 @@ import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import Theme from "../../../../src/theme.js";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import { api } from "../../../api/api";
-
 import { useOutletContext } from "react-router-dom";
 import theme from "../../../../src/theme.js";
 import { toast } from "react-toastify";
@@ -70,14 +69,11 @@ export default function Home() {
         navigate('/login');
         return;
       }
-
       setIsLoading(true);
-
       const deploy = {
         userId: userInfo._id,
         cakeId,
       };
-
       try {
         if (isFavorited) {
           await api.post("/favorite/remove", deploy);
@@ -106,6 +102,7 @@ export default function Home() {
       >
         <Box display="flex" justifyContent={'center'} position="relative">
           <Box
+            bgcolor={'#fffcf4'}
             component="img"
             src={cake.image}
             alt={"Cake"}
@@ -113,6 +110,11 @@ export default function Home() {
             sx={{
               width: '100%',
               transform: "translateY(-10%)",
+            }}
+            onClick={() => {
+              navigate(`/cakeinformation/${cake.cakeId}`, {
+                state: { from: 'home' }
+              });
             }}
           />
           <IconButton
