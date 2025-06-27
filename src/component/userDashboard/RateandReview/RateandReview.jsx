@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -10,43 +10,67 @@ import {
   Typography,
   Rating,
 } from "@mui/material";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 import { api } from "../../../api/api.js";
 import Theme from "../../../../src/theme.js";
 
-export default function ReviewModal({ open, onClose, cakeId  }) {
+export default function ReviewModal({
+  open,
+  onClose,
+  cakeId,
+  onReviewAdded,
+  reviewToEdit,
+}) {
   const [reviewData, setReviewData] = useState({
-    rating: 0,
-    comment: "",
+    rating: reviewToEdit?.rating || 0,
+    comment: reviewToEdit?.comment || "",
   });
+  useEffect(() => {
+  if (reviewToEdit) {
+    
+    setReviewData({
+      rating: reviewToEdit.rating,
+      comment: reviewToEdit.comment,
+    });
+  } else {
+    setReviewData({ rating: 0, comment: "" });
+  }
+}, [reviewToEdit, open]);
+
 
   const submitReview = async () => {
-    console.log(cakeId);
-    if(!cakeId){
-        toast.error("Please select a cake");
-        return;
+    if (!cakeId) {
+      toast.error("Please select a cake");
+      return;
     }
-    if (!reviewData.comment||!reviewData.rating) {
+    if (!reviewData.comment || !reviewData.rating) {
       toast.error("Please fill in all fields");
       return;
     }
-    const formData = new FormData();
-    formData.append("cakeId", cakeId);
-    for(const key in reviewData){
-      formData.append(key, reviewData[key]);
-    }
-    
-    try {
 
-      const response = await api.post("/rate/add/",formData);
+    try {
+      let response;
+      if (reviewToEdit) {
+        response = await api.put("/rate/update", {
+          id: reviewToEdit._id,
+          rating: reviewData.rating,
+          comment: reviewData.comment,
+        });
+      } else {
+        response = await api.post("/rate/add/", {
+          cakeId,
+          ...reviewData,
+        });
+      }
       toast.success("Review submitted successfully!");
-      return response.data; 
-    }
-     
-     catch (error) {
-      toast.error(error.response?.data?.message ||error.message);
-    }finally{
-        onClose();
+      setReviewData({ rating: 0, comment: "" });
+      if (onReviewAdded && response?.data?.review) {
+        onReviewAdded(response?.data?.review);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    } finally {
+      onClose();
     }
   };
 
@@ -81,10 +105,21 @@ export default function ReviewModal({ open, onClose, cakeId  }) {
         </Box>
       </DialogContent>
       <DialogActions sx={{ px: 3, pb: 2 }}>
-        <Button onClick={onClose} variant="outlined" sx={{color:Theme.palette.primary.main,border:'#723d46 1px solid'}}>
+        <Button
+          onClick={onClose}
+          variant="outlined"
+          sx={{
+            color: Theme.palette.primary.main,
+            border: "#723d46 1px solid",
+          }}
+        >
           Cancel
         </Button>
-        <Button onClick={submitReview} variant="contained" sx={{ fontWeight: "bold",bgcolor:Theme.palette.primary.main }}>
+        <Button
+          onClick={submitReview}
+          variant="contained"
+          sx={{ fontWeight: "bold", bgcolor: Theme.palette.primary.main }}
+        >
           Post
         </Button>
       </DialogActions>
