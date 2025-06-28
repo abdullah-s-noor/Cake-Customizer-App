@@ -13,6 +13,7 @@ import theme from "../../../../src/theme";
 export default function GetCakesByOrder() {
     const { state } = useLocation();
     const cakes = state?.cakes || [];
+    console.log(cakes)
     const [loading, setLoading] = React.useState(false); // Optional if you want a loader
 
     const total = cakes.reduce(
@@ -57,6 +58,12 @@ export default function GetCakesByOrder() {
                             {/* Cake Info */}
                             <Box flex={1} display="flex" alignItems="center" justifyContent={'space-between'}>
                                 <CardContent sx={{ py: 1, pl: 0, pr: 0 }}>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{ fontSize: { xs: "10px", sm: "15px" }, mt: 0.5 }}
+                                    >
+                                        {item.cake.name} 
+                                    </Typography>
                                     <Typography
                                         variant="body2"
                                         sx={{ fontSize: { xs: "10px", sm: "15px" }, mt: 0.5 }}
