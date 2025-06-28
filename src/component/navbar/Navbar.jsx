@@ -120,8 +120,7 @@ function Navbar({ drawerWidth }) {
   ];
   const drawerAdmin = [
     { text: 'Dashboard Home', icon: <Dashboard />, path: '/dashboard/' },
-    { text: 'Manage Categories', icon: <Category />, path: '/dashboard/categories' },
-
+    
     { text: 'Create New Cake', icon: <Create />, path: '/dashboard/addnewcake' },
     {
       text: 'Add List',
@@ -139,17 +138,18 @@ function Navbar({ drawerWidth }) {
         { text: 'Manage Orders', icon: <ListAlt />, path: '/dashboard/adminmanageorders' },
         { text: 'Manage Collections', icon: <CollectionsBookmark />, path: '/dashboard/adminmanagecollections' },
         { text: 'Manage Users', icon: <Group />, path: '/dashboard/adminmanageusers' },
+        {
+          text: "Manage Cake",
+          icon: <Cake />,
+          children: [
+            { text: 'Manage Toppings', icon: <BrushTwoTone />, path: '/dashboard/adminmanagetoppings' },
+            { text: 'Manage Shapes', icon: <Cake />, path: '/dashboard/adminmanageshapes' },
+            { text: 'Manage Flavors', icon: <Icecream />, path: '/dashboard/adminmanageflavors' },
+          ],
+        },
       ],
     },
-    {
-      text: "Manage Cake",
-      icon: <Cake />,
-      children: [
-        { text: 'Manage Toppings', icon: <BrushTwoTone />, path: '/dashboard/adminmanagetoppings' },
-        { text: 'Manage Shapes', icon: <Cake />, path: '/dashboard/adminmanageshapes' },
-        { text: 'Manage Flavors', icon: <Icecream />, path: '/dashboard/adminmanageflavors' },
-      ],
-    },
+
     {
       text: "Get All Cake", icon: <Cake />, path: "/dashboard/getcakes",
     },
@@ -168,57 +168,45 @@ function Navbar({ drawerWidth }) {
     }));
   };
 
+  // Add this function inside your Navbar component
+  const renderDrawerItems = (items, level = 0) => (
+    <List sx={level > 0 ? { pl: 4 } : {}}>
+      {items.map(({ text, icon, path, action, children }, idx) => {
+        const hasChildren = Array.isArray(children) && children.length > 0;
+        const key = typeof text === 'string' ? text + level + idx : `menu-item-${level}-${idx}`;
+        return (
+          <React.Fragment key={key}>
+            <ListItem disablePadding>
+              <ListItemButton
+                component={path && !hasChildren ? RouterLink : 'button'}
+                to={path && !hasChildren ? path : undefined}
+                onClick={
+                  hasChildren
+                    ? (e) => {
+                      e.stopPropagation();
+                      handleToggleMenu(key);
+                    }
+                    : action
+                }
+              >
+                <ListItemIcon>{icon}</ListItemIcon>
+                <ListItemText primary={text} />
+                {hasChildren &&
+                  (openMenus[key] ? <ExpandLess /> : <ExpandMore />)}
+              </ListItemButton>
+            </ListItem>
+            {hasChildren && openMenus[key] && renderDrawerItems(children, level + 1)}
+          </React.Fragment>
+        );
+      })}
+    </List>
+  );
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
       <Toolbar />
-      <List>
-        {drawerItems?.map(({ text, icon, path, action, children }) => {
-          const hasChildren = Array.isArray(children) && children.length > 0;
-          const key = typeof text === 'string' ? text : Math.random();
-          return (
-            <React.Fragment key={key}>
-              <ListItem disablePadding>
-                <ListItemButton
-                  component={path && !hasChildren ? RouterLink : 'button'}
-                  to={path && !hasChildren ? path : undefined}
-                  onClick={
-                    hasChildren
-                      ? (e) => {
-                        e.stopPropagation();
-                        handleToggleMenu(key);
-                      }
-                      : action
-                  }
-                >
-                  <ListItemIcon>{icon}</ListItemIcon>
-                  <ListItemText primary={text} />
-                  {hasChildren &&
-                    (openMenus[key] ? <ExpandLess /> : <ExpandMore />)}
-                </ListItemButton>
-              </ListItem>
-              {hasChildren && openMenus[key] && (
-                <List sx={{ pl: 4 }}>
-                  {children.map((child) => (
-                    <ListItem key={child.text} disablePadding>
-                      <ListItemButton
-                        component={child.path ? RouterLink : 'button'}
-                        to={child.path || undefined}
-                        onClick={child.action}
-                      >
-                        <ListItemIcon>{child.icon}</ListItemIcon>
-                        <ListItemText primary={child.text} />
-                      </ListItemButton>
-                    </ListItem>
-                  ))}
-                </List>
-              )}
-            </React.Fragment>
-          );
-        })}
-      </List>
+      {renderDrawerItems(drawerItems)}
     </Box>
   );
-
   return (
     <>
       <AppBar enableColorOnDark {...navBarProps}>
