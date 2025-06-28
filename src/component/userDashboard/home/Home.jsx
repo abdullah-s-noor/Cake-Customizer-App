@@ -30,7 +30,7 @@ import Loader from "../../Loaders/Loader";
 // Home Page
 export default function Home() {
   const [favorites, setFavorites] = useState([]);
-  const { userToken, userInfo } = useContext(UserContext)
+  const { userToken, userInfo,getUserCounts } = useContext(UserContext)
   const [collections, setCollections] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -39,13 +39,16 @@ export default function Home() {
       try {
         let favRes = { data: { favorite: { cakes: [] } } };
         if (userToken) {
-          favRes = await api.get("/favorite");
+          try{
+            favRes=await api.get("/favorite")
+          }catch(err){
+            favRes = { data: { favorite: { cakes: [] } } }
+          }
         }
         const colRes = await api.get("/collections/collections-with-cakes");
-
-        const cakeIds = favRes.data.favorite?.cakes?.map(cake => cake._id) || [];
+        
+        const cakeIds = favRes.data.favorites?.cakes?.map(cake => cake._id) || [];
         setFavorites(cakeIds);
-
         setCollections(colRes.data.data || []);
       } catch (err) {
         toast.error("Error fetching home data");
@@ -77,9 +80,12 @@ export default function Home() {
       try {
         if (isFavorited) {
           await api.post("/favorite/remove", deploy);
+          await getUserCounts()
           setFavorites((prev) => prev.filter((id) => id !== cakeId));
         } else {
+          console.log(deploy)
           await api.post("/favorite/add", deploy);
+          await getUserCounts()
           setFavorites((prev) => [...prev, cakeId]);
         }
       } catch (err) {
