@@ -119,10 +119,11 @@ export default function ManageOrders() {
       headerAlign: "center",
       renderCell: (params) => {
         const items = params.value;
+        console.log(items)
         if (Array.isArray(items) && items.length > 0) {
           return items
             .map(
-              (item) => `${item.cake?.name || "Cake"} x${item.quantity || 1}`
+              (item) => `${item.cake?.name.split('_')[1] || "Cake"} x${item.quantity || 1}`
             )
             .join(", ");
         }

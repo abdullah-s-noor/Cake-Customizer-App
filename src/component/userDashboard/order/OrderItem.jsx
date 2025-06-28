@@ -1,11 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
   Typography,
   List,
-  ListItem,
   ListItemAvatar,
   Avatar,
   ListItemText,
@@ -13,20 +13,24 @@ import {
   Chip,
   Button,
 } from "@mui/material";
+// Removed ListItem from named import above, only using default import below
+import ListItem from "@mui/material/ListItem";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CancelIcon from "@mui/icons-material/Cancel";
-import {toast} from "react-toastify"
+import { toast } from "react-toastify"
 import { api } from "../../../api/api";
 import Loader from "../../Loaders/Loader";
 
 export default function OrderItem({ order }) {
   const [expanded, setExpanded] = useState(false);
   const [status, setStatus] = useState(order.status || "Pending");
-  const[loading,setLoading]=useState(false)
+  const [loading, setLoading] = useState(false)
+  console.log(order)
+  const navigate = useNavigate();
   const handleToggle = () => {
     setExpanded(!expanded);
   };
- const handleCancel = async () => {
+  const handleCancel = async () => {
     setLoading(true);
     try {
       await api.post(`/order/cancel`, { orderId: order._id });
@@ -55,7 +59,7 @@ export default function OrderItem({ order }) {
         return "default";
     }
   };
-    if(loading)return <Loader/>
+  if (loading) return <Loader />
 
   return (
     <Accordion expanded={expanded} onChange={handleToggle} sx={{ mb: 2 }}>
@@ -73,23 +77,33 @@ export default function OrderItem({ order }) {
       <AccordionDetails>
         <List dense>
           {(order.items || []).map((item, index) => (
-            <ListItem key={index}>
-              <ListItemAvatar>
-                <Avatar
-                  variant="rounded"
-                  src={item.cake?.basecake?.secure_url}
-                  alt={item.cake?._id}
-                  sx={{ width: 64, height: 64 }}
-                />
-              </ListItemAvatar>
+            <ListItem
+              key={index}
+              button
+              onClick={() => navigate(`/cakeinformation/${item.cake._id}`, {
+                state: { from: 'history' }
+              })}
+              sx={{ cursor: "pointer" }}>
+              <Box
+                component="img"
+                src={item.cake?.basecake?.secure_url}
+                alt={item.cake?._id}
+                sx={{ height: 100, borderRadius: 2, objectFit: "cover" }}
+              />
               <ListItemText
-                primary={`Cake ID: ${item.cake?._id}`}
+                primary={`Cake Name: ${item.cake?.name}`}
                 secondary={`Price: ${item.cake?.finalPrice} | Quantity: ${item.quantity}`}
                 sx={{ ml: 2, display: "flex", justifyContent: "space-between" }}
               />
             </ListItem>
           ))}
         </List>
+        {/* Show total price */}
+        <Box display="flex" justifyContent="flex-end" mt={2}>
+          <Typography fontWeight="bold">
+            Total Price: {order.totalPrice}₪
+          </Typography>
+        </Box>
         {status === "pending" && (
           <Box display="flex" justifyContent="flex-end" mt={2}>
             <Button

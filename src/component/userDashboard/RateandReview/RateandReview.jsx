@@ -54,6 +54,7 @@ export default function ReviewModal({
       let response;
       if (reviewToEdit) {
         response = await api.put("/rate/update", {
+          
           id: reviewToEdit._id,
           rating: reviewData.rating,
           comment: reviewData.comment,

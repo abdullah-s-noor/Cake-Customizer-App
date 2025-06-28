@@ -8,7 +8,8 @@ import { toast } from "react-toastify";
 import { api } from "../../../api/api";
 import Theme from "../../../../src/theme.js";
 import AddNewCollection from "../../userDashboard/addNewTopping/AddNewCollection";
-
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
+import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 export default function AdminManageCakes() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +20,17 @@ export default function AdminManageCakes() {
   const handleDisactive = async (params) => {
     console.log(params);
     try {
-      await api.put(`/collections/${params._id}`);
+      const newStatus = (params.status === 'active' ? 'inactive' : 'active')
+
+      await api.put(`/collections/${params._id}`, { status: newStatus });
+      setRows((prevRows) =>
+        prevRows.map((row) =>
+          row._id === params._id ? { ...row, status: newStatus } : row
+        )
+      );
+
+
+
       toast.success("Collection edited successfully");
     } catch {
       toast.error("Failed to update collection");
@@ -33,11 +44,13 @@ export default function AdminManageCakes() {
         const mappedRows = responseData.collections.map((item) => ({
           _id: item._id,
           name: item.name,
+          status: item.status,
           image:
             typeof item.image === "string"
               ? item.image
               : item.image?.secure_url || "",
         }));
+        console.log(mappedRows)
         setRows(mappedRows);
       } catch {
         toast.error("An error occurred during fetching collections");
@@ -103,19 +116,31 @@ export default function AdminManageCakes() {
             sx={{
               width: "70%",
               textTransform: "none",
-              color: Theme.palette.success.main,
-              borderColor: Theme.palette.success.main,
+              borderColor: params.row.status === 'inactive'
+                ? Theme.palette.success.main
+                : Theme.palette.error.main,
+              color: params.row.status === 'inactive'
+                ? Theme.palette.success.main
+                : Theme.palette.error.main,
+              fontWeight: 'bold',
+              letterSpacing: 1,
               "&:hover": {
-                borderColor: Theme.palette.success.dark,
-                color: Theme.palette.success.dark,
+                borderColor: params.row.status === 'inactive'
+                  ? Theme.palette.success.dark
+                  : Theme.palette.error.dark,
+                color: params.row.status === 'inactive'
+                  ? Theme.palette.success.dark
+                  : Theme.palette.error.dark,
+                backgroundColor: "#f9f9f9",
               },
             }}
           >
-            Activate
+            {params.row.status === 'active' ? 'Inactive' : 'Activate'}
           </Button>
         </Box>
       ),
     },
+
   ];
 
   return (

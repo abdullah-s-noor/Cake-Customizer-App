@@ -51,7 +51,7 @@ import { styles } from './styles';
 import Search from '../../pages/Search';
 import './navBarStyle.css';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-
+import HistoryIcon from '@mui/icons-material/History';
 function Navbar({ drawerWidth }) {
   const navigate = useNavigate();
   const { userToken, userInfo, logout, userCounts } = useContext(UserContext);
@@ -111,7 +111,7 @@ function Navbar({ drawerWidth }) {
     { text: (<><span>Customize</span><br /><span>Your Cake</span></>), icon: <Cake />, path: '/custom-cake' },
     { text: 'Profile', icon: <Person2 />, path: '/profile' },
     { text: 'Favorite', icon: <Favorite />, path: '/favorite' },
-    { text: 'Order', icon: <ShoppingCart />, path: '/order' },
+    { text: 'Order', icon: <HistoryIcon />, path: '/order' },
     { text: 'Cart', icon: <ShoppingCart />, path: '/cart' },
     { text: 'About Us', icon: <Info />, path: '/' },
     { text: 'Contact Us', icon: <ContactMail />, path: '/' },
