@@ -174,7 +174,9 @@ export default function ManageOrders() {
             size="small"
             sx={{ color: "#1976d2", borderColor: "#1976d2" }}
             onClick={() => {
-              navigate("/cart");
+              navigate(`/dashboard/getcakesbyorder/${params.row._id}`, {
+                state: { cakes: params.row.items, }
+              });
             }}
           >
             VIEW

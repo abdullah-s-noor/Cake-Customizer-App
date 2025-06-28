@@ -12,6 +12,7 @@ import { Password, Token } from '@mui/icons-material'
 import { UserContext } from '../context/User'
 import { api } from '../../api/api'
 import { jwtDecode } from 'jwt-decode'
+import { toast } from 'react-toastify';
 function Login() {
     const navigate = useNavigate()
     const { userToken, setUserToken, setLoader } = useContext(UserContext);
@@ -31,6 +32,7 @@ function Login() {
             } else {
                 if (from === "/cakeinformation" && orderDetails) {
                     navigate("/cakeinformation", { state: { orderDetails }, replace: true });
+
                 } else {
                     navigate(from.startsWith("/dashboard") ? "/" : from, { replace: true });
                 }
@@ -59,6 +61,10 @@ function Login() {
 
         } catch (error) {
             if (error.response && error.response.data && error.response.data.message) {
+                if (error.response.data.message.includes('confirm')) {
+                    await api.post('/auth/resend-confirmation', { phone: values.phone })
+                    toast.success('The email is not confirmed. Confirmation email resent!');
+                }
                 setServerError(error.response.data.message)
             } else {
                 setServerError('Something went wrong. Please try again.')
