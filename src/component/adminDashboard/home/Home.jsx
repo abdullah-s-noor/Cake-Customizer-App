@@ -5,29 +5,17 @@ const Dashboard = () => {
     const cards = [
     {
       title: 'Orders',
-      subtitle: "Today's Orders: 156\nPending Orders: 23\nCompleted Orders: 120",
+      subtitle: "Today's Orders: 5\nPending Orders: 2",
     },
+    
     {
-      title: 'Cakes',
-      subtitle: 'Total Cakes: 87\nCustom Cakes: 34\nPopular Cake: Chocolate Fudge',
-    },
-    {
-      title: 'Collections',
-      subtitle: 'Total Collections: 12\nActive Collections: 10',
-    },
-    {
-      title: 'Users',
-      subtitle: 'Total Users: 1,235\nNew Signups: 17\nAdmins: 2',
+      title: 'User Management',
+      subtitle: 'Total Users: 10\nNew Signups: 3',
     },
     {
       title: 'Reviews',
-      subtitle: 'New Reviews: 8\nAverage Rating: 4.7★',
+      subtitle: 'New Reviews: 4\nAverage Rating: 4.0★',
     },
-    {
-      title: 'Favorites',
-      subtitle: 'Total Favorites: 320\nMost Favorited: Red Velvet',
-    },
-
   ];
 
 return (

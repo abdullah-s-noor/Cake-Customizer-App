@@ -120,7 +120,6 @@ function Navbar({ drawerWidth }) {
   ];
   const drawerAdmin = [
     { text: 'Dashboard Home', icon: <Dashboard />, path: '/dashboard/' },
-    
     { text: 'Create New Cake', icon: <Create />, path: '/dashboard/addnewcake' },
     {
       text: 'Add List',
