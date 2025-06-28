@@ -5,35 +5,16 @@ const Dashboard = () => {
   const cards = [
     {
       title: 'Orders',
-      subtitle: "Today's Orders: 156\nPending Orders: 23",
+      subtitle: "Today's Orders: 5\nPending Orders: 2",
     },
-    {
-      title: 'Product Management',
-      subtitle: 'Total Products: 1,234\nNew Products: 12',
-    },
+    
     {
       title: 'User Management',
-      subtitle: 'Total Users: 1,235\nNew Signups: 17',
-    },
-    {
-      title: 'Finance Overview',
-      subtitle: "Today's Revenue: $4,560\nPending Payouts: $1,200",
-    },
-    {
-      title: 'Delivery Status',
-      subtitle: 'Ongoing: 12\nCompleted: 144',
+      subtitle: 'Total Users: 10\nNew Signups: 3',
     },
     {
       title: 'Reviews',
-      subtitle: 'New Reviews: 8\nAverage Rating: 4.3★',
-    },
-    {
-      title: 'System Alerts',
-      subtitle: 'Warnings: 2\nErrors: 0',
-    },
-    {
-      title: 'Settings Overview',
-      subtitle: 'Last Update: 2 days ago\nAdmin Users: 5',
+      subtitle: 'New Reviews: 4\nAverage Rating: 4.0★',
     },
   ];
 
