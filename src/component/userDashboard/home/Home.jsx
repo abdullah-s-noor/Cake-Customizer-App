@@ -326,10 +326,18 @@ export default function Home() {
         </Box>
 
         {/* Carousels */}
-        {loading ? <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
-          <Loader />
-        </Box> : (
-          <CakeCarousel title={collections[0]?.collectionName || "Collection"} cakes={collections[0]?.cakes || []} />
+        {loading ? (
+          <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+            <Loader />
+          </Box>
+        ) : (
+          collections.map((collection, index) => (
+            <CakeCarousel
+              key={index}
+              title={collection?.collectionName || "Collection"}
+              cakes={collection?.cakes || []}
+            />
+          ))
         )}
       </Box>
     </>
