@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -8,23 +8,24 @@ import {
   MenuItem,
   Grid,
   Card,
-  CardMedia,
-  CardContent,
   Divider,
-  TextField,
+  Button,
 } from "@mui/material";
 import { api } from "../../../api/api.js";
 import { toast } from "react-toastify";
+import CakePreview from "../../userDashboard/customCake/CakePreview.jsx";
+import { UserContext } from "../../context/User.jsx";
 
 const AddNewCake = () => {
   const [shapes, setShapes] = useState([]);
+  const [selectedShape, setSelectedShape] = useState(null);
+  const [selectedFlavor, setSelectedFlavor] = useState(null);
+  const [selectedTopping, setSelectedTopping] = useState(null);
+  const [selectedColor, setSelectedColor] = useState("");
   const [flavors, setFlavors] = useState([]);
   const [toppings, setToppings] = useState([]);
-  const [selectedShape, setSelectedShape] = useState(null);
-  const [selectedFlavor, setSelectedFlavor] = useState("");
-  const [selectedTopping, setSelectedTopping] = useState("");
-  const [selectedColor, setSelectedColor] = useState("#ffffff");
-
+  const [value, setValue] = useState(0);
+  const {userInfo} =useContext(UserContext)
   useEffect(() => {
     const fetchShapes = async () => {
       try {
@@ -37,48 +38,131 @@ const AddNewCake = () => {
     fetchShapes();
   }, []);
 
-  const handleShapeSelect = (id) => {
-    const shape = shapes.find((s) => s._id === id);
+  const handleShapeSelect = (shapeId) => {
+    const shape = shapes.find((s) => s._id === shapeId);
+    if (!shape) return;
+    setValue(0);
     setSelectedShape(shape);
-    setSelectedFlavor("");
-    setSelectedTopping("");
     setFlavors(shape.flavors || []);
     setToppings(shape.toppings || []);
+    setSelectedFlavor(null);
+    setSelectedTopping(null);
   };
 
-  const formatName = (name) => {
-    const idx = name.indexOf("_");
-    return idx !== -1 ? name.slice(idx + 1) : name;
+  const handleFlavorSelect = (flavorId) => {
+    const flavor = flavors.find((f) => f._id === flavorId);
+    setSelectedFlavor(flavor || null);
+    setValue(1);
   };
 
-  return (
-    <Box sx={{ p: 4 }}>
-      <Typography variant="h4" mb={4}>
-        Add New Cake
-      </Typography>
+  const handleToppingSelect = (toppingId) => {
+    const topping = toppings.find((t) => t._id === toppingId);
+    setSelectedTopping(topping || null);
+    setValue(3);
+  };
+  function loadImage(src) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = src;
+    });
+  }
+  const handleSubmit = async () => {
+    if (!selectedShape || !selectedFlavor || !selectedTopping) return;
+    const orderDetails = {
+      shape: selectedShape,
+      flavor: selectedFlavor,
+      topping: selectedTopping,
+      color: selectedColor,
+    };
+    const [x, y, width, height] = orderDetails.shape.viewBox.split(' ').map(Number);
 
-      <Grid
-        container
-        spacing={4}
-        sx={{ display: "flex", justifyContent: "space-between" }}
-      >
-        {/* Left: Inputs */}
-        <Grid
-          item
-          xs={12}
-          md={6}
-          sx={{ display: "flex", flexDirection: "column" }}
-        >
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+
+    try {
+      // 1. Draw shape base
+      const shapeImg = await loadImage(orderDetails.shape.image.secure_url);
+      ctx.drawImage(shapeImg, 0, 0, width, height);
+
+      // 2. Draw color if provided
+      if (orderDetails.color && orderDetails.shape.d) {
+        const path = new Path2D(orderDetails.shape.d);
+
+        ctx.save();
+        ctx.clip(path); // only color inside shape
+        ctx.globalCompositeOperation = 'multiply';
+        ctx.fillStyle = orderDetails.color;
+        ctx.fillRect(0, 0, width, height);
+        ctx.restore();
+
+        ctx.globalCompositeOperation = 'source-over';
+      } else if (orderDetails.flavor?.image?.secure_url) {
+        // 3. If no color, draw flavor
+        const flavorImg = await loadImage(orderDetails.flavor.image.secure_url);
+        ctx.drawImage(flavorImg, 0, 0, width, height);
+      }
+
+      // 4. Draw topping if exists
+      if (orderDetails.topping?.image?.secure_url) {
+        const toppingImg = await loadImage(orderDetails.topping.image.secure_url);
+        ctx.drawImage(toppingImg, 0, 0, width, height);
+      }
+
+      // 5. Convert to blob and submit
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+      if (blob) {
+        const file = new File([blob], 'custom-cake.png', { type: 'image/png' });
+        const formData = new FormData();
+        formData.append('shape', orderDetails.shape._id);
+        formData.append('flavor', orderDetails.flavor._id);
+        formData.append('topping', orderDetails.topping._id);
+        formData.append('color', orderDetails.color);
+        formData.append('cakeMessage', '');
+        formData.append('instructions', '');
+        formData.append('basecake', file);
+        // Open the generated file in a new window
+        formData.forEach((value, key) => {
+          console.log(`${key}:`, value);
+        });
+        formData.append('type', 'system');
+        const { data } = await api.post('/cake/custom/new', formData);
+        const fileURL = window.URL.createObjectURL(file);
+        window.open(fileURL, '_blank');
+      }
+    } catch (error) {
+    console.error('Error adding to cart:', error);
+    toast.error("Failed to add cake to cart.");
+  }
+
+};
+const formatName = (name) =>
+  name.includes("_") ? name.split("_")[1] : name;
+
+const isReadyToSubmit =
+  selectedShape && selectedFlavor && selectedTopping;
+
+return (
+  <Box sx={{ p: 4 }}>
+    <Typography variant="h4" mb={4} fontWeight="bold">
+      🎂 Add a New Custom Cake
+    </Typography>
+
+    <Grid container spacing={4}>
+      {/* FORM SECTION */}
+      <Grid item xs={12} md={6}>
+        <Box display="flex" flexDirection="column" gap={3}>
           {/* Shape */}
-          <FormControl fullWidth margin="normal" sx={{ width: 200 }}>
-            <InputLabel sx={{ fontSize: "1.2rem" }} id="shape-label">
-              Shape
-            </InputLabel>
+          <FormControl sx={{ width: 250 }}>
+            <InputLabel id="shape-label">Shape</InputLabel>
             <Select
+              labelId="shape-label"
               value={selectedShape?._id || ""}
-              label="Shape"
               onChange={(e) => handleShapeSelect(e.target.value)}
-              sx={{ fontSize: "1.1rem", minHeight: 56 }}
             >
               <MenuItem value="">None</MenuItem>
               {shapes.map((shape) => (
@@ -90,16 +174,13 @@ const AddNewCake = () => {
           </FormControl>
 
           {/* Flavor */}
-          {selectedShape && flavors.length > 0 && (
-            <FormControl fullWidth margin="normal" sx={{ width: 200 }}>
-              <InputLabel sx={{ fontSize: "1.2rem" }} id="flavor-label">
-                Flavor
-              </InputLabel>
+          {flavors.length > 0 && (
+            <FormControl sx={{ width: 250 }}>
+              <InputLabel id="flavor-label">Flavor</InputLabel>
               <Select
-                value={selectedFlavor}
-                label="Flavor"
-                onChange={(e) => setSelectedFlavor(e.target.value)}
-                sx={{ fontSize: "1.1rem", minHeight: 56 }}
+                labelId="flavor-label"
+                value={selectedFlavor?._id || ""}
+                onChange={(e) => handleFlavorSelect(e.target.value)}
               >
                 <MenuItem value="">None</MenuItem>
                 {flavors.map((flavor) => (
@@ -112,16 +193,13 @@ const AddNewCake = () => {
           )}
 
           {/* Topping */}
-          {selectedShape && toppings.length > 0 && (
-            <FormControl fullWidth margin="normal" sx={{ width: 200 }}>
-              <InputLabel sx={{ fontSize: "1.2rem" }} id="topping-label">
-                Topping
-              </InputLabel>
+          {toppings.length > 0 && (
+            <FormControl sx={{ width: 250 }}>
+              <InputLabel id="topping-label">Topping</InputLabel>
               <Select
-                value={selectedTopping}
-                label="Topping"
-                onChange={(e) => setSelectedTopping(e.target.value)}
-                sx={{ fontSize: "1.1rem", minHeight: 56 }}
+                labelId="topping-label"
+                value={selectedTopping?._id || ""}
+                onChange={(e) => handleToppingSelect(e.target.value)}
               >
                 <MenuItem value="">None</MenuItem>
                 {toppings.map((topping) => (
@@ -133,110 +211,76 @@ const AddNewCake = () => {
             </FormControl>
           )}
 
-          {/* Color Picker */}
-          {selectedShape&& (
-          <Box mt={2} mb={2}>
-            <Typography variant="body1" mb={1}>
-              Color
-            </Typography>
-            <input
-              type="color"
-              value={selectedColor}
-              onChange={(e) => setSelectedColor(e.target.value)}
-              style={{
-                width: 48,
-                height: 48,
-                border: "none",
-                background: "none",
-                cursor: "pointer",
-              }}
-            />
-          </Box>
-            )}
-        </Grid>
+          {/* Color */}
+          {selectedShape && (
+            <Box>
+              <Typography variant="subtitle1" fontWeight="bold" mb={1}>
+                Color
+              </Typography>
+              <Box display="flex" alignItems="center" gap={2}>
+                <input
+                  type="color"
+                  value={selectedColor || "#ffffff"}
+                  onChange={(e) => {
+                    setSelectedColor(e.target.value);
+                    setValue(2);
+                  }}
+                  style={{
+                    width: 48,
+                    height: 48,
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                />
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={() => {
+                    setSelectedColor('');
+                    setValue(2);
+                  }}
+                >
+                  None Color
+                </Button>
+              </Box>
+            </Box>
+          )}
 
-        {/* Right: Preview */}
+          {/* Submit Button */}
+          <Box mt={3}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSubmit}
+              disabled={!isReadyToSubmit}
+            >
+              Submit Cake
+            </Button>
+          </Box>
+        </Box>
+      </Grid>
+
+      {/* PREVIEW SECTION */}
+      {selectedShape && (
         <Grid item xs={12} md={6}>
           <Card sx={{ p: 2, borderRadius: 3 }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom fontWeight="bold">
               Cake Preview
             </Typography>
             <Divider sx={{ mb: 2 }} />
-            <CardContent>
-              <Box
-                position="relative"
-                width="250px"
-                height="250px"
-                mx="auto"
-                mb={2}
-              >
-                {/* SVG Shape with color fill */}
-                {selectedShape?.d && selectedShape?.viewBox && (
-                  <svg
-                    width="100%"
-                    height="100%"
-                    viewBox={selectedShape.viewBox}
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      width: "100%",
-                      height: "100%",
-                      zIndex: 2,
-                    }}
-                  >
-                    <path d={selectedShape.d} fill={selectedColor} />
-                  </svg>
-                )}
-
-                {/* Flavor Image */}
-                {selectedFlavor && (
-                  <CardMedia
-                    component="img"
-                    image={
-                      flavors.find((f) => f._id === selectedFlavor)?.image
-                        ?.secure_url
-                    }
-                    alt="Flavor"
-                    sx={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "contain",
-                      zIndex: 1,
-                    }}
-                  />
-                )}
-
-                {/* Topping Image */}
-                {selectedTopping && (
-                  <CardMedia
-                    component="img"
-                    image={
-                      toppings.find((t) => t._id === selectedTopping)?.image
-                        ?.secure_url
-                    }
-                    alt="Topping"
-                    sx={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "contain",
-                      zIndex: 3,
-                    }}
-                  />
-                )}
-              </Box>
-            </CardContent>
+            <CakePreview
+              selectedShape={selectedShape}
+              selectedFlavor={selectedFlavor}
+              selectedTopping={selectedTopping}
+              selectedColor={selectedColor}
+              value={value}
+            />
           </Card>
         </Grid>
-      </Grid>
-    </Box>
-  );
+      )}
+    </Grid>
+  </Box>
+);
 };
 
 export default AddNewCake;

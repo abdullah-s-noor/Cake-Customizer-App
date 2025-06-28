@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Dialog,
   DialogTitle,
@@ -25,19 +26,20 @@ export default function ReviewModal({
     rating: reviewToEdit?.rating || 0,
     comment: reviewToEdit?.comment || "",
   });
+  const navigate = useNavigate()
   useEffect(() => {
-  if (reviewToEdit) {
-    
-    setReviewData({
-      rating: reviewToEdit.rating,
-      comment: reviewToEdit.comment,
-    });
-  } else {
-    setReviewData({ rating: 0, comment: "" });
-  }
-}, [reviewToEdit, open]);
+    if (reviewToEdit) {
 
-
+      setReviewData({
+        rating: reviewToEdit.rating,
+        comment: reviewToEdit.comment,
+      });
+    } else {
+      setReviewData({ rating: 0, comment: "" });
+    }
+  }, [reviewToEdit, open]);
+  
+  
   const submitReview = async () => {
     if (!cakeId) {
       toast.error("Please select a cake");
@@ -47,7 +49,7 @@ export default function ReviewModal({
       toast.error("Please fill in all fields");
       return;
     }
-
+    
     try {
       let response;
       if (reviewToEdit) {
@@ -56,17 +58,21 @@ export default function ReviewModal({
           rating: reviewData.rating,
           comment: reviewData.comment,
         });
+        await navigate(0);
       } else {
         response = await api.post("/rate/add/", {
           cakeId,
           ...reviewData,
         });
+        navigate(0)
       }
+
       toast.success("Review submitted successfully!");
       setReviewData({ rating: 0, comment: "" });
       if (onReviewAdded && response?.data?.review) {
         onReviewAdded(response?.data?.review);
       }
+
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
     } finally {

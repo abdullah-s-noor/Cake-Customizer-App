@@ -4,25 +4,28 @@ import { Box, Typography, Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../Loaders/Loader";
-import {toast} from "react-toastify";
-import {api} from "../../../api/api";
+import { toast } from "react-toastify";
+import { api } from "../../../api/api";
 import Theme from "../../../../src/theme.js";
+import AddNewCollection from "../../userDashboard/addNewTopping/AddNewCollection";
 
 export default function AdminManageCakes() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [openAddCollection, setOpenAddCollection] = useState(false);
   const navigate = useNavigate();
   document.title = "Manage collections";
-  
-  const handleDelete = async (id) => {
+
+  const handleDisactive = async (params) => {
+    console.log(params);
     try {
-      await api.delete(`/collections/${id}`);
-      setRows((prev) => prev.filter((row) => row._id !== id));
-      toast.success("Collection deleted successfully");
+      await api.put(`/collections/${params._id}`);
+      toast.success("Collection edited successfully");
     } catch {
-      toast.error("Failed to delete collection");
+      toast.error("Failed to update collection");
     }
   };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -30,29 +33,32 @@ export default function AdminManageCakes() {
         const mappedRows = responseData.collections.map((item) => ({
           _id: item._id,
           name: item.name,
-          image: typeof item.image === "string" ? item.image : item.image?.secure_url || "",
+          image:
+            typeof item.image === "string"
+              ? item.image
+              : item.image?.secure_url || "",
         }));
         setRows(mappedRows);
       } catch {
-        toast.error("An error occured during fetching cakes");
+        toast.error("An error occurred during fetching collections");
       } finally {
         setLoading(false);
       }
     };
     fetchData();
   }, []);
+
   const columns = [
-  
     {
       field: "image",
       headerName: "Image",
       flex: 0.15,
       align: "center",
       headerAlign: "center",
-      renderCell: (params) => {
-        console.log(params);
-        return(<img
+      renderCell: (params) => (
+        <img
           src={params.row.image}
+          alt={params.row.name}
           style={{
             width: 100,
             height: 100,
@@ -61,15 +67,14 @@ export default function AdminManageCakes() {
             borderRadius: "5%",
             objectFit: "cover",
           }}
-        />)
-        
-        },
+        />
+      ),
     },
     {
       field: "name",
       headerName: "Name",
       editable: true,
-      flex: 0.2, 
+      flex: 0.2,
       align: "center",
       headerAlign: "center",
     },
@@ -82,31 +87,31 @@ export default function AdminManageCakes() {
       align: "center",
       headerAlign: "center",
       renderCell: (params) => (
-        <Box sx={{ display: "flex",flexDirection: "column", gap: 1, alignItems: "center", justifyContent: "center", height: "100%" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+          }}
+        >
           <Button
             variant="outlined"
-            color="primary"
-            onClick={() => {
-              navigate("/cakeinformation");
-            }}
+            onClick={() => handleDisactive(params.row)}
             sx={{
               width: "70%",
               textTransform: "none",
+              color: Theme.palette.success.main,
+              borderColor: Theme.palette.success.main,
+              "&:hover": {
+                borderColor: Theme.palette.success.dark,
+                color: Theme.palette.success.dark,
+              },
             }}
           >
-            View
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={() => handleDelete(params.row._id)}
-            sx={{
-              width: "70%",
-              textTransform: "none",
-              color: Theme.palette.error.main,
-            }}
-          >
-
-            Delete
+            Activate
           </Button>
         </Box>
       ),
@@ -115,29 +120,50 @@ export default function AdminManageCakes() {
 
   return (
     <>
-      {loading ? <Loader/>:
-        <Box sx={{maxWidth:{xs:"700px",md:"600px"}, mx: "auto", mt: 7, mb: 7 }}>
+      {loading ? (
+        <Loader />
+      ) : (
+        <Box sx={{ maxWidth: { xs: "700px", md: "600px" }, mx: "auto", mt: 7, mb: 7 }}>
+          {/* Header and Button */}
           <Box display="flex" justifyContent="space-between" mb={2}>
-            <Typography variant="h6" sx={{color:Theme.palette.primary.main}}>
-              Admin - Manage Cakes
+            <Typography variant="h6" sx={{ color: Theme.palette.primary.main }}>
+              Admin - Manage collection
             </Typography>
             <Button
               variant="contained"
               sx={{
                 backgroundColor: Theme.palette.primary.main,
               }}
-              onClick={() => {
-                navigate("/addnewcake");
-              }}
+              onClick={() => setOpenAddCollection(true)}
             >
-              Add New Cake
+              Add Collection
             </Button>
           </Box>
+
+          {/* Add Collection Modal */}
+          <AddNewCollection
+            open={openAddCollection}
+            onClose={() => setOpenAddCollection(false)}
+            onSuccess={(newCollection) => {
+              setRows((prevRows) => [
+                ...prevRows,
+                {
+                  _id: newCollection._id,
+                  name: newCollection.name,
+                  image:
+                    typeof newCollection.image === "string"
+                      ? newCollection.image
+                      : newCollection.image?.secure_url || "",
+                },
+              ]);
+            }}
+          />
+
+          {/* Data Grid */}
           <DataGrid
             rows={rows}
-            // @ts-ignore
             columns={columns}
-            getRowId={row => row._id}
+            getRowId={(row) => row._id}
             autoHeight
             pageSizeOptions={[3]}
             rowHeight={100}
@@ -158,7 +184,7 @@ export default function AdminManageCakes() {
             }}
           />
         </Box>
-      }
+      )}
     </>
   );
 }
