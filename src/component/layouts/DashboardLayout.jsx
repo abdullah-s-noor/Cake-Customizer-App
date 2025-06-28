@@ -31,18 +31,6 @@ function Layout() {
         </Box>
       </Box>
 
-      {!isAuthPage &&
-
-        < Box
-          component="div"
-          sx={{
-            width: { md: `calc(100% - ${drawerWidth}px)` }, // Fixed
-            ml: { md: `${drawerWidth}px` }
-          }}
-        >
-          <Footer />
-        </Box >
-      }
     </>
   );
 }

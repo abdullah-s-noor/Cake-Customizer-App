@@ -12,18 +12,25 @@ export default function UserContextProvider({ children }) {
   const [userToken, setUserToken] = useState(() => { return localStorage.getItem('userToken') || null });
   const [userInfo, setUserInfo] = useState(null);
   const [loader, setLoader] = useState(true);
+  const [userCounts, setUserCounts] = useState({
+    cartCount: 0,
+    favoritesCount: 0,
+  });
   useEffect(() => {
     if (userToken) {
       getUserData();
+      getUserCounts();
     } else {
-      setLoader(false);
       setUserInfo(null);
+      setLoader(false);
+      setUserCounts({ cartCount: 0, favoritesCount: 0 });
     }
   }, [userToken]);
   const logout = () => {
     localStorage.removeItem('userToken');
     setUserToken(null);
     setUserInfo(null);
+    setUserCounts({ cartCount: 0, favoritesCount: 0 });
     setLoader(true);
 
   }
@@ -45,6 +52,17 @@ export default function UserContextProvider({ children }) {
       setLoader(false);
     }
   };
+  const getUserCounts = async () => {
+    try {
+      const response = await api.get(`/user/counts`);
+      if (response?.data) {
+        setUserCounts(response.data);
+        
+      }
+    } catch (err) {
+      console.error("Error fetching user counts:", err);
+    }
+  };
   if (loader) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
@@ -54,7 +72,7 @@ export default function UserContextProvider({ children }) {
   }
 
   return (
-    <UserContext.Provider value={{ userToken, setUserToken, logout, getUserData, userInfo, setUserInfo, loader ,setLoader}}>
+    <UserContext.Provider value={{ userToken, setUserToken, logout, getUserData, userInfo, setUserInfo, loader, setLoader,userCounts ,getUserCounts}}>
       {children}
     </UserContext.Provider>
   );

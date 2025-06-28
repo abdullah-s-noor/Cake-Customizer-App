@@ -38,8 +38,12 @@ import {
   ListAlt,
   CollectionsBookmark,
   Group,
-  Create
+  Create,
+  Icecream,
+  BrushTwoTone
+
 } from '@mui/icons-material';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import { Heart } from 'lucide-react';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { UserContext } from '../context/User';
@@ -48,9 +52,9 @@ import Search from '../../pages/Search';
 import './navBarStyle.css';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 
-function Navbar({drawerWidth}) {
+function Navbar({ drawerWidth }) {
   const navigate = useNavigate();
-  const { userToken, userInfo, logout } = useContext(UserContext);
+  const { userToken, userInfo, logout, userCounts } = useContext(UserContext);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
@@ -87,6 +91,8 @@ function Navbar({drawerWidth}) {
     }
   }, [location.pathname]);
 
+
+
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
   const handleLogout = () => {
@@ -100,7 +106,7 @@ function Navbar({drawerWidth}) {
     { text: 'Contact Us', icon: <ContactMail />, path: '/' },
     { text: 'Login', icon: <Login />, path: '/Login' },
   ];
-   const drawerUser = [
+  const drawerUser = [
     { text: 'Home', icon: <Home />, path: '/' },
     { text: (<><span>Customize</span><br /><span>Your Cake</span></>), icon: <Cake />, path: '/custom-cake' },
     { text: 'Profile', icon: <Person2 />, path: '/profile' },
@@ -110,49 +116,49 @@ function Navbar({drawerWidth}) {
     { text: 'About Us', icon: <Info />, path: '/' },
     { text: 'Contact Us', icon: <ContactMail />, path: '/' },
     { text: 'Logout', icon: <Logout />, action: handleLogout }
-    
+
   ];
   const drawerAdmin = [
-  { text: 'Dashboard Home', icon: <Dashboard />, path: '/dashboard/home' },
-  { text: 'Manage Categories', icon: <Category />, path: '/dashboard/categories' },
+    { text: 'Dashboard Home', icon: <Dashboard />, path: '/dashboard/' },
+    { text: 'Manage Categories', icon: <Category />, path: '/dashboard/categories' },
 
-  { text: 'Create New Cake', icon: <Create />, path: '/dashboard/addnewcake' },
-  {
-    text: 'Add List',
-    icon: <AddCircle />,
-    children: [
-      { text: 'Add New Topping', icon: <AddCircle />, path: '/dashboard/addnewtopping' },
-      { text: 'Add New Shape', icon: <AddCircle />, path: '/dashboard/addnewshape' },
-      { text: 'Add New Flavor', icon: <AddCircle />, path: '/dashboard/addnewflavor' },
-    ],
-  },
-  {
-    text: 'Manage List',
-    icon: <AddCircle />,
-    children: [
-  { text: 'Manage Orders', icon: <ListAlt />, path: '/dashboard/adminmanageorders' },
-  { text: 'Manage Collections', icon: <CollectionsBookmark />, path: '/dashboard/adminmanagecollections' },
-  { text: 'Manage Users', icon: <Group />, path: '/dashboard/adminmanageusers' },
-    ],
-  },
-  {
-    text:"Manage Cake",
-    icon: <Cake />,
-    children: [
-      { text: 'Manage Toppings', icon: <Cake />, path: '/dashboard/adminmanagetoppings' },
-      { text: 'Manage Shapes', icon: <Cake />, path: '/dashboard/adminmanageshapes' },
-      { text: 'Manage Flavors', icon: <Cake />, path: '/dashboard/adminmanageflavors' },
-    ],
-  },
-  {
-    text:"Get All Cake",icon:<Cake/>,path:"/dashboard/getcakes",
-  },
-  
-  { text: 'Profile', icon: <Person2 />, path: '/profile' },
-  { text: 'Logout', icon: <Logout />, action: handleLogout },
-];
+    { text: 'Create New Cake', icon: <Create />, path: '/dashboard/addnewcake' },
+    {
+      text: 'Add List',
+      icon: <AddCircle />,
+      children: [
+        { text: 'Add New Topping', icon: <AddCircle />, path: '/dashboard/addnewtopping' },
+        { text: 'Add New Shape', icon: <AddCircle />, path: '/dashboard/addnewshape' },
+        { text: 'Add New Flavor', icon: <AddCircle />, path: '/dashboard/addnewflavor' },
+      ],
+    },
+    {
+      text: 'Manage List',
+      icon: <FormatListBulletedIcon />,
+      children: [
+        { text: 'Manage Orders', icon: <ListAlt />, path: '/dashboard/adminmanageorders' },
+        { text: 'Manage Collections', icon: <CollectionsBookmark />, path: '/dashboard/adminmanagecollections' },
+        { text: 'Manage Users', icon: <Group />, path: '/dashboard/adminmanageusers' },
+      ],
+    },
+    {
+      text: "Manage Cake",
+      icon: <Cake />,
+      children: [
+        { text: 'Manage Toppings', icon: <BrushTwoTone />, path: '/dashboard/adminmanagetoppings' },
+        { text: 'Manage Shapes', icon: <Cake />, path: '/dashboard/adminmanageshapes' },
+        { text: 'Manage Flavors', icon: <Icecream />, path: '/dashboard/adminmanageflavors' },
+      ],
+    },
+    {
+      text: "Get All Cake", icon: <Cake />, path: "/dashboard/getcakes",
+    },
 
-const drawerItems = isAdmin ? drawerAdmin : userToken ? drawerUser : drawerGuest;
+    { text: 'Profile', icon: <Person2 />, path: '/profile' },
+    { text: 'Logout', icon: <Logout />, action: handleLogout },
+  ];
+
+  const drawerItems = isAdmin ? drawerAdmin : userToken ? drawerUser : drawerGuest;
   const [openMenus, setOpenMenus] = useState({});
 
   const handleToggleMenu = (text) => {
@@ -178,9 +184,9 @@ const drawerItems = isAdmin ? drawerAdmin : userToken ? drawerUser : drawerGuest
                   onClick={
                     hasChildren
                       ? (e) => {
-                          e.stopPropagation();
-                          handleToggleMenu(key);
-                        }
+                        e.stopPropagation();
+                        handleToggleMenu(key);
+                      }
                       : action
                   }
                 >
@@ -217,21 +223,27 @@ const drawerItems = isAdmin ? drawerAdmin : userToken ? drawerUser : drawerGuest
     <>
       <AppBar enableColorOnDark {...navBarProps}>
         <Toolbar sx={styles.toolbar}>
-          {isMobile && (
-            <Box sx={styles.leftSection}>
-              <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                sx={{ mr: 2 }}
-                onClick={handleDrawerToggle}
-              >
-                <MenuIcon />
-              </IconButton>
-            </Box>
-          )}
+          {/* Left section: Drawer menu button (except for admin) */}
+          {(
+            (userToken && userInfo?.role === 'user') ||
+            (userToken && userInfo?.role === 'admin' && isMobile) ||
+            (!userToken)
+          ) && (
+              <Box sx={styles.leftSection}>
+                <IconButton
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  sx={{ mr: 2 }}
+                  onClick={handleDrawerToggle}
+                >
+                  <MenuIcon />
+                </IconButton>
+              </Box>
+            )}
 
-          <Box sx={styles.logoBox}>
+          {/* Center section: Logo */}
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <Link
               component={RouterLink}
               to={(userToken && userInfo && userInfo.role === 'admin') ? '/dashboard' : "/"}
@@ -262,46 +274,24 @@ const drawerItems = isAdmin ? drawerAdmin : userToken ? drawerUser : drawerGuest
             </Link>
           </Box>
 
-          {!isMobile && !(userToken && userInfo && userInfo.role === 'admin') && (
-            <div className="navbar-links">
-              <RouterLink
-                className={location.pathname === '/' ? 'nav-link' : 'nav-link-notHome'}
-                to="/"
-              >
-                Home
-              </RouterLink>
-              <RouterLink
-                className={location.pathname === '/' ? 'nav-link' : 'nav-link-notHome'}
-                to="/about"
-              >
-                About us
-              </RouterLink>
-              <RouterLink
-                className={location.pathname === '/' ? 'nav-link' : 'nav-link-notHome'}
-                to="/contact"
-              >
-                Contact us
-              </RouterLink>
-            </div>
-          )}
-
+          {/* Right section: Icons */}
           <Box sx={styles.rightSection}>
             {(userToken && userInfo && userInfo.role === 'user') && (
               <>
-                <IconButton 
+                <IconButton
                   sx={{ ...styles.iconBtn, ...styles.favoriteIcon }}
                   onClick={() => navigate('/favourite')}
                 >
-                  <Badge badgeContent={2} color="error">
-                    <Heart size={24} color="#fff" />
+                  <Badge badgeContent={userCounts.favoritesCount} color="error" onClick={() => { navigate('/favourite') }}>
+                    <Heart fontSize="small" />
                   </Badge>
                 </IconButton>
-                <IconButton 
+                <IconButton
                   sx={{ ...styles.iconBtn, ...styles.cartIcon }}
                   onClick={() => navigate('/cart')}
                 >
-                  <Badge badgeContent={4} color="info">
-                    <ShoppingCart fontSize="medium" />
+                  <Badge badgeContent={userCounts.cartCount} color="info" onClick={() => { navigate('/cart') }}>
+                    <ShoppingCart fontSize="small" />
                   </Badge>
                 </IconButton>
               </>
@@ -353,22 +343,20 @@ const drawerItems = isAdmin ? drawerAdmin : userToken ? drawerUser : drawerGuest
           </Drawer>
         )
       ) : (
-        isMobile && (
-          <Drawer
-            variant="temporary"
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            ModalProps={{ keepMounted: true }}
-            sx={{
-              '& .MuiDrawer-paper': {
-                boxSizing: 'border-box',
-                width: drawerWidth
-              }
-            }}
-          >
-            {drawer}
-          </Drawer>
-        )
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{ keepMounted: true }}
+          sx={{
+            '& .MuiDrawer-paper': {
+              boxSizing: 'border-box',
+              width: drawerWidth
+            }
+          }}
+        >
+          {drawer}
+        </Drawer>
       )}
     </>
   );

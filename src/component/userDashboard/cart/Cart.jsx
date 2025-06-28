@@ -32,7 +32,7 @@ export default function Cart() {
   const { userInfo } = useContext(UserContext);
   const [savingItemId, setSavingItemId] = useState(null);
   const [deletingItemId, setDeletingItemId] = useState(null);
-
+  const {getUserCounts}=useContext(UserContext)
   const handleSaveQuantity = async (item) => {
     try {
       setSavingItemId(item.id);
@@ -114,10 +114,13 @@ export default function Cart() {
       };
 
       await api.post('/cart/remove', payload);
+      await getUserCounts()
+
 
       setCartItems((prev) =>
         prev.filter((item) => item.id !== itemToDelete.id)
       );
+      
       toast.success("Item deleted successfully");
     } catch (err) {
       toast.error("Failed to delete item");
