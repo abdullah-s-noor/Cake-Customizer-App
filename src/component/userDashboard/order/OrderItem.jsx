@@ -91,7 +91,7 @@ export default function OrderItem({ order }) {
                 sx={{ height: 100, borderRadius: 2, objectFit: "cover" }}
               />
               <ListItemText
-                primary={`Cake Name: ${item.cake?.name}`}
+                primary={item.cake?.name.split('_')[1]}
                 secondary={`Price: ${item.cake?.finalPrice} | Quantity: ${item.quantity}`}
                 sx={{ ml: 2, display: "flex", justifyContent: "space-between" }}
               />

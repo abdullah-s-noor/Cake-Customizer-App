@@ -131,7 +131,12 @@ export default function Cart() {
       setItemToDelete(null);
     }
   };
-
+const handleSubmit=async ()=>{
+  await api.post('/order/create',{userId:userInfo._id})
+  toast.success('Your order has been placed successfully!')
+  navigate('/order')
+  
+}
 
 
   const total = cartItems.reduce(
@@ -274,6 +279,9 @@ export default function Cart() {
                   borderRadius: 2,
                   textTransform: "none",
                   py: 1.5,
+                }}
+                onClick={()=>{
+                  handleSubmit()
                 }}
               >
                 Place Order

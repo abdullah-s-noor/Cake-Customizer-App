@@ -26,7 +26,7 @@ const StyledRating = styled(Rating)({
 export default function CakeDetails() {
 
   const [loadingCake, setLoadingCake] = useState(false);
-  const { userToken, userInfo } = useContext(UserContext)
+  const { userToken, userInfo ,getUserCounts} = useContext(UserContext)
   const location = useLocation();
   const navigate = useNavigate();
   const [from, setFrom] = useState(null);
@@ -191,9 +191,8 @@ export default function CakeDetails() {
           await api.post('/cart/add', payload);
           toast.success('Custom cake added to cart successfully!');
         }
-        toast.success('Custom cake added to cart successfully!');
-        const url = URL.createObjectURL(file);
-        window.open(url);
+        await getUserCounts();
+        navigate('/cart')
       }
     } catch (error) {
       console.error('Error adding to cart:', error);
