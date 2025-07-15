@@ -29,7 +29,7 @@ export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { userInfo } = useContext(UserContext);
+  const { userInfo ,} = useContext(UserContext);
   const [savingItemId, setSavingItemId] = useState(null);
   const [deletingItemId, setDeletingItemId] = useState(null);
   const {getUserCounts}=useContext(UserContext)
@@ -133,6 +133,7 @@ export default function Cart() {
   };
 const handleSubmit=async ()=>{
   await api.post('/order/create',{userId:userInfo._id})
+  await getUserCounts
   toast.success('Your order has been placed successfully!')
   navigate('/order')
   

@@ -18,6 +18,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Conformation from "../Conformation/ConfDelete";
 import { UserContext } from "../context/User";
+import { useNavigate } from "react-router-dom";
 
 
 export default function FavouritesPage() {
@@ -25,9 +26,14 @@ export default function FavouritesPage() {
   const [loading, setLoading] = useState(true);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectedCakeId, setSelectedCakeId] = useState(null);
-  const { userInfo } = useContext(UserContext);
+  const { userInfo, getUserCounts } = useContext(UserContext);
+  const navigate = useNavigate();
 
-
+  const handleCardClick = (cakeId) => {
+    navigate(`/cakeinformation/${cakeId}`, {
+      state: { from: 'favorite' }
+    }) // Change the path based on your routes
+  };
   const fetchFavourites = async () => {
     try {
       const response = await api.get("/favorite/");
@@ -58,9 +64,12 @@ export default function FavouritesPage() {
           cakeId: selectedCakeId,
         }
       );
+      await getUserCounts()
+
       setFavourites((prev) =>
         prev.filter((cake) => cake._id !== selectedCakeId)
       );
+
       toast.success("Removed from favourites.");
     } catch {
       toast.error("Failed to remove item.");
@@ -116,6 +125,7 @@ export default function FavouritesPage() {
               {favourites.map((cake) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={cake._id}>
                   <Card
+                    onClick={() => handleCardClick(cake._id)}
                     sx={{
                       borderRadius: 4,
                       boxShadow: 3,
@@ -123,6 +133,7 @@ export default function FavouritesPage() {
                       "&:hover": {
                         transform: "translateY(-8px) scale(1.03)",
                         boxShadow: 6,
+                        cursor: "pointer",
                       },
                       display: "flex",
                       flexDirection: "column",
@@ -148,7 +159,10 @@ export default function FavouritesPage() {
                       />
                       <IconButton
                         aria-label="remove from favourites"
-                        onClick={() => handleDeleteClick(cake._id)}
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent card click
+                          handleDeleteClick(cake._id);
+                        }}
                         sx={{
                           position: "absolute",
                           top: 10,
@@ -160,6 +174,7 @@ export default function FavouritesPage() {
                       >
                         <DeleteIcon color="error" />
                       </IconButton>
+
                     </Box>
                     <CardContent sx={{ flexGrow: 1 }}>
                       <Typography variant="h6" fontWeight="bold" gutterBottom>
