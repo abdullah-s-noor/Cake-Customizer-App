@@ -19,6 +19,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Loader from '../../Loaders/Loader';
 import { api } from '../../../api/api';
 import theme from '../../../theme'
+import { toast } from 'react-toastify';
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -123,6 +124,9 @@ export default function VerticalTabs() {
     const matchedtopping = shape.toppings.find(
       (topping) => topping.name.split('_')[1] === selectedTopping?.name.split('_')[1]
     );
+    if (selectedTopping&&!matchedtopping) {
+      toast.warning('No matching topping found for this shape.')
+    }
     setSelectedTopping(matchedtopping);
     const filePrice = uploadedFile ? 4 : 0;
     setPrice(shape.price + (matchedFlavor?.price || 0) + (matchedtopping?.price || 0) + filePrice);
@@ -130,7 +134,6 @@ export default function VerticalTabs() {
   const handlePriceChange = (oldPrice, newPrice) => {
     setPrice((prev) => prev - oldPrice + newPrice);
   }
-
   const handleSubmit = () => {
     const cakeId = location?.state?.originalDetails?._id || null;
     const from = location?.state?.from;

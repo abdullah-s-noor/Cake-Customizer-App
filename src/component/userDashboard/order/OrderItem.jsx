@@ -47,9 +47,9 @@ export default function OrderItem({ order }) {
 
   const getStatusColor = () => {
     switch (status) {
-      case "Accepted":
+      case "accepted":
         return "success";
-      case "pending":
+      case "shipped":
         return "warning";
       case "Rejected":
         return "error";
@@ -76,14 +76,15 @@ export default function OrderItem({ order }) {
       </AccordionSummary>
       <AccordionDetails>
         <List dense>
-          {(order.items || []).map((item, index) => (
+          {(order.items || []).map((item, idx) => (
             <ListItem
-              key={index}
+              key={idx}
               button
               onClick={() => navigate(`/cakeinformation/${item.cake._id}`, {
                 state: { from: 'history' }
               })}
               sx={{ cursor: "pointer" }}>
+              <Typography sx={{ minWidth: 24, mr: 2 }}>{idx + 1}.</Typography>
               <Box
                 component="img"
                 src={item.cake?.basecake?.secure_url}
