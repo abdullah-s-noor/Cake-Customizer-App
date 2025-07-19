@@ -31,7 +31,6 @@ export default function CakeDetails() {
   const [from, setFrom] = useState(null);
 
   const isUnchanged = location?.state?.isEdit !== undefined ? location.state.isEdit : true;
-  console.log(isUnchanged)
   const { id: cakeId } = useParams();
   const [originalDetails, setOriginalDetails] = useState(location?.state?.originalDetails || null)
   const [orderDetails, setOrderDetails] = useState({
@@ -45,7 +44,7 @@ export default function CakeDetails() {
     instructions: null,
     price: 0,
   });
-
+  const [loadingCart,setLoadingCart]=useState(false)
   useEffect(() => {
     const { orderDetails, from: sourceFrom } = location?.state || {};
     setFrom(sourceFrom || null);
@@ -85,7 +84,9 @@ export default function CakeDetails() {
     });
   }
   const handleCart = async () => {
+    
     if (!userToken) {
+
       toast.warn("You need to log in before adding to cart.");
       navigate('/login', { state: { from: location, orderDetails }, replace: true });
       return;
@@ -98,6 +99,7 @@ export default function CakeDetails() {
     const ctx = canvas.getContext('2d');
 
     try {
+      setLoadingCake(true)
       // 1. Draw shape base
       const shapeImg = await loadImage(orderDetails.shape.image.secure_url);
       ctx.drawImage(shapeImg, 0, 0, width, height);
@@ -142,11 +144,7 @@ export default function CakeDetails() {
         formData.append('instructions', orderDetails.instructions);
         formData.append('basecake', file);
         // Open the generated file in a new window
-        formData.forEach((value, key) => {
-          console.log(`${key}:`, value);
-        });
         if (!isUnchanged && from === 'cart' && originalDetails._id) {
-          console.log("gtewtewgweg", originalDetails._id)
           await api.put(`/cake/custom/${originalDetails._id}`, formData);
           toast.success('Cake updated successfully!');
         } else {
@@ -167,6 +165,8 @@ export default function CakeDetails() {
     } catch (error) {
       console.error('Error adding to cart:', error);
       toast.error("Failed to add cake to cart.");
+    }finally{
+      setLoadingCart(false);
     }
 
   };

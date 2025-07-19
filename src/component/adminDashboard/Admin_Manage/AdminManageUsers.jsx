@@ -18,7 +18,7 @@ function formatDateToLong(dateString) {
 
 export default function Admin_Manage() {
   const columns = [
-    
+
     {
       field: "username",
       headerName: "Full Name",
@@ -101,43 +101,60 @@ export default function Admin_Manage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseData = (await api.get('/user?page=1&limit=5')).data
-        setRows(responseData.users)
+        let page = 1;
+        let allUsers = [];
+        let hasMore = true;
+
+        while (hasMore) {
+          const response = await api.get(`/user?page=${page}&limit=5`);
+          const users = response.data.users;
+
+          if (users && users.length > 0) {
+            allUsers = [...allUsers, ...users];
+            page++;
+          } else {
+            hasMore = false;
+          }
+        }
+
+        setRows(allUsers);
       } catch {
-        toast.error("An error occured during fetching users")
+        toast.error("An error occurred during fetching users");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
+
     fetchData()
   }, [])
 
   const handleStatus = async (id) => {
-  try {
-    // Find the user to check their status
-    const user = rows.find((row) => row._id === id);
-    if ( user.status === "active") {
-      // Update user status to "inactive"
-      await api.patch(`/user/${id}`);
-      setRows((prev) =>
-        prev.map((row) =>
-          row._id === id ? { ...row, status: "inactive" } : row
-        )
-      );
-      toast.success("User inactivated successfully");
-    } else {
-       await api.patch(`/user/${id}`);
-      setRows((prev) =>
-        prev.map((row) =>
-          row._id === id ? { ...row, status: "active" } : row
-        )
-      );
-      toast.success("User activated successfully");
+    try {
+      // Find the user to check their status
+      const user = rows.find((row) => row._id === id);
+      if (user.status === "active") {
+        // Update user status to "inactive"
+        await api.patch(`/user/${id}`);
+        setRows((prev) =>
+          prev.map((row) =>
+            row._id === id ? { ...row, status: "inactive" } : row
+          )
+        );
+        toast.success("User inactivated successfully");
+      } else {
+        await api.patch(`/user/${id}`);
+        setRows((prev) =>
+          prev.map((row) =>
+            row._id === id ? { ...row, status: "active" } : row
+          )
+        );
+        toast.success("User activated successfully");
+      }
+    } catch {
+      toast.error("Failed to update user status");
     }
-  } catch {
-    toast.error("Failed to update user status");
-  }
-};
+
+  };
 
   return (
     <>
@@ -156,14 +173,14 @@ export default function Admin_Manage() {
             // @ts-ignore
             columns={columns}
             getRowId={(row) => row._id}
-             autoHeight
+            autoHeight
             initialState={{
               pagination: {
                 paginationModel: { pageSize: 5 },
               },
             }}
             pageSizeOptions={[5]}
-             sx={{
+            sx={{
               "& .MuiDataGrid-cell": {
                 justifyContent: "center",
                 alignItems: "center",

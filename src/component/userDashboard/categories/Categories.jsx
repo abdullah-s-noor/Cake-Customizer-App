@@ -6,7 +6,6 @@ function Categories() {
     const {data}=await axios.get(`${import.meta.env.VITE_API_URL}/category`)
     return data.categories;
   }
-  console.log(getCategories())
   const query=useQuery({
     queryKey:['categories'],
     queryFn:getCategories

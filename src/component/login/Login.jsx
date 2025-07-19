@@ -49,10 +49,8 @@ function Login() {
     }
 
     const onSubmit = async (values, { setSubmitting }) => {
-        console.log('Sending Data:', values)
         try {
             const { data } = await api.post('/auth/login', values)
-            console.log('Response from server:', data)
             setServerError('') // Clear any previous error
             localStorage.setItem("userToken", data.token);
             const token = localStorage.getItem('userToken');

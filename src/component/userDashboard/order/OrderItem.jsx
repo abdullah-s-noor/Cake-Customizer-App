@@ -25,7 +25,6 @@ export default function OrderItem({ order }) {
   const [expanded, setExpanded] = useState(false);
   const [status, setStatus] = useState(order.status || "Pending");
   const [loading, setLoading] = useState(false)
-  console.log(order)
   const navigate = useNavigate();
   const handleToggle = () => {
     setExpanded(!expanded);

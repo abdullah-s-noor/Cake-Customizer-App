@@ -3,7 +3,6 @@ import { UserContext } from '../context/User';
 import React, { useContext } from 'react';
 
 function ProtectedRoute({ children }) {
-    console.log("ProtectedRoute rendered");
     const { userToken } = useContext(UserContext);// for (user,admin) protected route
     const location =useLocation();
     

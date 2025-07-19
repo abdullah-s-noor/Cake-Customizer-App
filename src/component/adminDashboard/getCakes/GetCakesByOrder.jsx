@@ -13,7 +13,6 @@ import theme from "../../../../src/theme";
 export default function GetCakesByOrder() {
     const { state } = useLocation();
     const cakes = state?.cakes || [];
-    console.log(cakes)
     const [loading, setLoading] = React.useState(false); // Optional if you want a loader
 
     const total = cakes.reduce(

@@ -3,7 +3,6 @@ import { Box, ImageList, ImageListItem, ImageListItemBar, Typography } from '@mu
 import React, { useEffect, useState } from 'react'
 import theme from '../../../../theme'
 function ShapeTab({ shapes, selectedShape, setSelectedShape, navHeight, heightPreview }) {
-    console.log(`calc(100vh - ${heightPreview.xs + navHeight.xs}px)`);
     return (
         <ImageList
             sx={{
