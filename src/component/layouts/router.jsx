@@ -25,7 +25,6 @@ import Profile from "../Profile/Profile.jsx";
 import Favourite from "../Favourite/Favourite.jsx"
 import ProtectedRoute from "../protectedRoute/ProtectedRoute.jsx";
 import AddNewShape from "../userDashboard/addNewShape/AddNewShape.jsx";
-import SeeAll from "../userDashboard/home/SeeAll.jsx";
 import AddNewFlavor from "../userDashboard/addNewFlavor/AddNewFlavor.jsx";
 import AddNewTopping from "../userDashboard/addNewTopping/AddNewTopping.jsx";
 import AdminProtectedRoute from "../protectedRoute/AdminProtectedRoute.jsx";
@@ -73,11 +72,6 @@ export const router = createBrowserRouter([
       {
         path: "changepassword",
         element: <ProtectedRoute><ChangePassword /></ProtectedRoute>,//user and admin can access this page
-      },
-
-      {
-        path: "seeall",
-        element: <SeparateProtectedRoute><SeeAll /></SeparateProtectedRoute>,////non logged in user and user can access this page not admin
       },
       {
         path: "custom-cake",
