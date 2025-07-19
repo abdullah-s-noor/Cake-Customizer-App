@@ -32,6 +32,7 @@ export default function Cart() {
   const { userInfo ,} = useContext(UserContext);
   const [savingItemId, setSavingItemId] = useState(null);
   const [deletingItemId, setDeletingItemId] = useState(null);
+  const [loadingOrder,setLoadingOrder]=useState(false)
   const {getUserCounts}=useContext(UserContext)
   const handleSaveQuantity = async (item) => {
     try {
@@ -71,7 +72,6 @@ export default function Cart() {
           quantity: item.quantity || 1,
           originalQuantity: item.quantity || 1, // used for comparison
         }));
-        console.log(itemsWithQuantity)
         setCartItems(itemsWithQuantity);
       } catch (err) {
         toast.error("Failed to load cart items.");
@@ -132,11 +132,13 @@ export default function Cart() {
     }
   };
 const handleSubmit=async ()=>{
+  setLoadingOrder(true)
+
   await api.post('/order/create',{userId:userInfo._id})
   await getUserCounts
   toast.success('Your order has been placed successfully!')
   navigate('/order')
-  
+  setLoadingOrder(false)
 }
 
 
@@ -273,6 +275,7 @@ const handleSubmit=async ()=>{
               <Button
                 fullWidth
                 variant="contained"
+                disabled={loadingOrder}
                 sx={{
                   background: theme.palette.primary.main,
                   color: "#fff",
@@ -285,7 +288,7 @@ const handleSubmit=async ()=>{
                   handleSubmit()
                 }}
               >
-                Place Order
+                {loadingOrder?"Placing Order..":"Place Order"}
               </Button>
             </Box>
           </Box>

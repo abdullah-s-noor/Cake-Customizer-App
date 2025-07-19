@@ -18,7 +18,6 @@ export default function AdminManageCakes() {
   document.title = "Manage collections";
 
   const handleDisactive = async (params) => {
-    console.log(params);
     try {
       const newStatus = (params.status === 'active' ? 'inactive' : 'active')
 
@@ -50,7 +49,6 @@ export default function AdminManageCakes() {
               ? item.image
               : item.image?.secure_url || "",
         }));
-        console.log(mappedRows)
         setRows(mappedRows);
       } catch {
         toast.error("An error occurred during fetching collections");

@@ -1,21 +1,123 @@
-# React + Vite
+# Designing a Cake Selling System for Bimi Cake Shop
+An interactive web application that allows users to design and customize cakes, preview them in real-time, and place orders easily.
+Built with React.js, Material-UI, and a Node.js/Express API (MongoDB), this app provides a seamless experience for both guests and registered users.
+
+# Features
+# Home Page
+    Browse categories, featured cakes and select favorite cakes.
+
+# Custom Cake Builder:
+    Select:
+
+    Shape ✅ (mandatory)
+
+    Flavor ✅ (mandatory)
+
+    Topping ✅ (mandatory)
+
+    Pick a custom color for your cake (optional).
+
+    Add a custom message or special instructions (optional).
+
+    Real-time Cake Preview with merged image.
+
+# Authentication Flow
+    Guests can customize cakes but must log in before checkout.
+
+    Secure Login process.
+
+    If the user signs up instead of logging in, the customization will be cleared for security.
+
+# Cart & Order Management
+    Add custom cakes to cart.
+
+    Submit order details to backend with final merged image (Shape + Flavor + Topping + Color).
+
+    Order Cancellation:
+
+    Users can cancel pending orders only if less than 24 hours have passed since placement.
+
+    View order history and reorder previous cakes.
+
+# Admin Dashboard
+    Manage Collections:
+        Add, activate/inactivate collections (control visibility on home page).
+
+    Manage Cakes:
+        Add new cakes to specific collections.
+        Activate/inactivate cakes (control availability).
+
+    Manage Shapes, Flavors, Toppings:
+        Add new options.
+        Activate/inactivate items.
+
+    Manage Users:
+        Activate/inactivate accounts.
+
+    Order Management:
+        View, accept, reject, or ship orders.
+
+# Order Status Flow
+    Each order goes through multiple states:
+
+    Pending (initial case after user places an order)
+
+    Accepted (admin approves order)
+
+    Rejected (admin rejects order)
+
+    Shipped (admin marks as shipped)
+
+    Canceled (user cancels the order if still pending and within 24 hours)
+
+# Tech Stack
+    React.js
+
+    Material-UI (MUI)
+
+    React Router DOM
+
+    React Toastify
+
+    Canvas API (for merging preview images)
 
 
-api=https://bimicake-c8zf.onrender.com
+# How It Works (Flow)
+    Guest visits the site → Browses cakes → Clicks Customize Cake.
 
-## user : mahmoud
-    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoiNjg1MTliNjVjOTRkOTQ0YTlhOGFjMjg3IiwiZW1haWwiOiJkYXJ4eDAzZWhAZ21haWwuY29tIiwiaWF0IjoxNzUwMTc4ODYwLCJleHAiOjE3NTI3NzA4NjB9.9gRxjHr07d-wWPoEMrSxdNgXrZSmDP2CazHVlwI_cB4
+    Custom Cake Builder → Select shape, flavor, topping → Preview updates in real-time.
 
-    userId:68519b65c94d944a9a8ac287
-    phone:+970599728020
+    Add to Cart → If not logged in → Redirect to Login page.
 
-## user : hamza
-    email :hamzaraed755@gmail.com
+    Login → Redirect back → Add to cart and proceed.
 
-    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoiNjg1MWU1Y2E5YWIwOTQ4OGI0ODYwOTBlIiwiZW1haWwiOiJoYW16YXJhZWQ3NTVAZ21haWwuY29tIiwiaWF0IjoxNzUwMTk3ODc5LCJleHAiOjE3NTI3ODk4Nzl9.72yGmkXA-PTxM-Yl01RZJ9zR1nCV3LggvLb9_aNwruw
+    If user chooses Sign Up, the customization resets.
 
-    userId:6851e5ca9ab09488b486090e
-    phone:+970599728023
+    Place Order → Backend stores merged image and details.
 
-## cakeid: 68514238546929c52c9b13c8
+    Admin updates status (Pending → Accepted/Rejected → Shipped).
 
+    User can cancel only if order is Pending and within 24 hours.
+
+# Installation & Run
+    # Install dependencies
+    npm install
+
+    # Start development server
+    npm run dev
+
+# Future Enhancements
+    Activate Translation Service
+        Enable multi-language support for users worldwide.
+
+    3D Image View
+        Provide an interactive 3D cake preview for a realistic customization experience.
+
+    Social Media Login Support
+        Allow users to log in with Google, Facebook, and other social platforms for quick access.
+
+    Online Payment Methods
+        Integrate secure payment gateways (Visa, MasterCard, PayPal) for seamless checkout.
+
+    On-Site Chat Functionality
+        Add live chat support to assist customers in real-time.

@@ -94,7 +94,7 @@ const MediaGrid = () => {
 
       <Grid container spacing={3} justifyContent="center">
         {mediaItems.map((item, index) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+          <Grid item xs={12} sm={6} md={4} lg={3} key={index} >
             <Card sx={{ borderRadius: 3, overflow: "hidden", height: "100%", position: "relative" }}>
               <Box display="flex" justifyContent="center" bgcolor="#f5f5f5">
                 <CardMedia

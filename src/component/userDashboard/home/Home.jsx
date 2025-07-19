@@ -83,7 +83,6 @@ export default function Home() {
           await getUserCounts()
           setFavorites((prev) => prev.filter((id) => id !== cakeId));
         } else {
-          console.log(deploy)
           await api.post("/favorite/add", deploy);
           await getUserCounts()
           setFavorites((prev) => [...prev, cakeId]);
@@ -159,21 +158,16 @@ export default function Home() {
   };
 
   const CakeCarousel = ({ title, cakes }) => {
-
     // @ts-ignore
     // @ts-ignore
     const scrollRef = useRef();
-
     const scroll = (direction) => {
       const container = scrollRef.current;
       if (!container) return;
-
       const card = container.querySelector("div > div"); // gets one CakeCard wrapper
       if (!card) return;
-
       const cardWidth = card.offsetWidth + 16; // get actual card width + margin (mx: 1 = 8px each side)
       const scrollAmount = cardWidth * (window.innerWidth < theme.breakpoints.values.sm ? 1 : 2); // scroll 1 card on xs, 2 on sm+
-
       container.scrollBy({
         left: direction === "right" ? scrollAmount : -scrollAmount,
         behavior: "smooth",

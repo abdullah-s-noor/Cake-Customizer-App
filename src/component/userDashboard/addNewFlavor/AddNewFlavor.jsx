@@ -40,26 +40,16 @@ export default function AddNewFlavor() {
                 formData.append('name', `${selectedShape.name}_${values.flavor.toLowerCase()}`);
                 formData.append('price', values.price);
                 formData.append('image', file);
-                console.log('Form Data Content:');
-                formData.forEach((value, key) => {
-                    if (key === 'name' && typeof value === 'string') {
-                        console.log(`${key}:`, value.split('_')[1]); // Show just the flavor name
-                    } else {
-                        console.log(`${key}:`, value);
-                    }
-                });
+
 
 
                 // First post the flavor data to the server
                 const response1 = await api.post('/custom/flavor', formData);
-                console.log('Server response:', response1.data.item._id);
                 const payload = {
                     flavorIds: [response1.data.item._id],
                 };
                 // Then update the shape with the new flavor
                 const response2 = await api.patch(`/custom/shapes/${selectedShape._id}/add-customization`, payload);
-                console.log('Shape updated with flavor:', response2.data);
-
                 toast.success('Flavor added successfully!');
                 setServerError('');
                 resetForm();

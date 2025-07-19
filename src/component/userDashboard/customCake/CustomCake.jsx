@@ -153,7 +153,6 @@ export default function VerticalTabs() {
     }
 
     const isEdit = !isCakeEdited(originalDetails, currentDetails);
-    console.log(isEdit)
     if (from === 'cart') {
       navigate(`/cakeinformation/${cakeId}`, {
         state: {

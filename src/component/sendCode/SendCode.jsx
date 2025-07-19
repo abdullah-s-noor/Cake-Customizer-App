@@ -27,16 +27,13 @@ function SendCode() {
 
   }
   const onSubmit = async (values) => {
-    console.log('Sending Data:', values)
     try {
       const { data } = await api.post('/auth/send-code', values)
-      console.log('Response from server:', data)
       setServerError('') // Clear any previous error
       navigate('/forget-password', { state: { email: values.email,from:location } });
     } catch (error) {
       if (error.response && error.response.data && error.response.data.message) {
         if (error.response.data.message === "validation error") {
-          console.log('Error during sending code:', error)
           setServerError(error.response.data.errormessages[0].email)
 
         } else {

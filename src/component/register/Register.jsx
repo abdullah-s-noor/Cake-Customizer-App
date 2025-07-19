@@ -28,15 +28,12 @@ function Register() {
         birthdate: ''
     }
     const onSubmit = async (values,{setSubmitting}) => {
-        console.log('Sending Data:', values);
         try {
         const {data} = await api.post('/auth/register', values)
-        console.log('Response from server:', data)
         setServerError('') // Clear any previous error
         toast.success('Registration successful! Please log in.');
         navigate('/login')
         } catch (error) {
-            console.log('Error during registration:', error);
         if (error.response && error.response.data && error.response.data.message) {
             setServerError(error.response.data.message)
         } else {

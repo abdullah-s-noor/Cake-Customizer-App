@@ -30,7 +30,7 @@ export default function ManageOrders() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseData = (await api.get("/order/all?limit=20")).data;
+        const responseData = (await api.get("/order/all?limit=all")).data;
         setOrderRows(responseData.orders);
       } catch (error) {
         console.error("Error fetching orders:", error);
@@ -119,7 +119,6 @@ export default function ManageOrders() {
       headerAlign: "center",
       renderCell: (params) => {
         const items = params.value;
-        console.log(items)
         if (Array.isArray(items) && items.length > 0) {
           return items
             .map(

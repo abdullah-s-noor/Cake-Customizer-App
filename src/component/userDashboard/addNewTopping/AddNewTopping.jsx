@@ -49,24 +49,13 @@ export default function Topping() {
                 formData.append('cakeCollection', selectedCollection._id);
                 formData.append('image', file);
 
-                console.log('Form Data Content:');
-                formData.forEach((value, key) => {
-                    if (key === 'name' && typeof value === 'string') {
-                        console.log(`${key}:`, value.split('_')[1]); // Show just the flavor name
-                    } else {
-                        console.log(`${key}:`, value);
-                    }
-                });
-
                 // first post the topping data to the server
                 const response1 = await api.post('/custom/topping', formData);
-                console.log('Server response:', response1.data.item._id);
                 const payload = {
                     toppingIds: [response1.data.item._id],
                 };
                 // then patch the shape with the topping data
                 const response2 = await api.patch(`/custom/shapes/${selectedShape._id}/add-customization`, payload);
-                console.log('Shape updated with topping:', response2.data);
 
                 toast.success('Topping added successfully!');
                 setServerError('');

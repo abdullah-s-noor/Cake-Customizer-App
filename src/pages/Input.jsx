@@ -4,7 +4,6 @@ import { Email, Person, Phone, Visibility, VisibilityOff } from '@mui/icons-mate
 function Input({ type, title, id, name, value, onChange, errors,onBlur,touched,disabled }) {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword(prev => !prev);
-// console.log(touched) 
   return (
     <>
       <TextField

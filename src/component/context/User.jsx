@@ -8,7 +8,6 @@ import Loader from "../Loaders/Loader";
 // @ts-ignore
 export let UserContext = createContext();
 export default function UserContextProvider({ children }) {
-  console.log("UserContext created");
   const [userToken, setUserToken] = useState(() => { return localStorage.getItem('userToken') || null });
   const [userInfo, setUserInfo] = useState(null);
   const [loader, setLoader] = useState(true);
@@ -39,7 +38,6 @@ export default function UserContextProvider({ children }) {
     try {
 
       const response = await api.get(`/auth/profile`);
-      console.log("User data response:", response);
       if (response && response.data && response.data.user) {
         setUserInfo(response.data.user);
       } else {

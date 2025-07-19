@@ -42,10 +42,7 @@ function AddNewShape() {
                 formData.append('d', values.d);
                 formData.append('viewBox', values.viewBox);
                 formData.append('image', file);
-                console.log('Form Data Content:');
-                formData.forEach((value, key) => {
-                    console.log(`${key}:`, value);
-                });
+
                 const response = await api.post("/custom/shape", formData);
                 setServerError('');
                 toast.success('Shape added successfully!');

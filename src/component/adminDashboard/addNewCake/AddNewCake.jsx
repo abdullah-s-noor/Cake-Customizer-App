@@ -126,9 +126,7 @@ const AddNewCake = () => {
         formData.append('instructions', '');
         formData.append('basecake', file);
         // Open the generated file in a new window
-        formData.forEach((value, key) => {
-          console.log(`${key}:`, value);
-        });
+
         formData.append('type', 'system');
         const { data } = await api.post('/cake/custom/new', formData);
         const fileURL = window.URL.createObjectURL(file);

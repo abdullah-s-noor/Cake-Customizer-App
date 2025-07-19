@@ -7,14 +7,12 @@ function test() {
     const handleApi =async()=>{
         try{
             const {data} = await axios.get('/data/data.json');
-            console.log(data.shapes[0].flavors[0].image.secure_url);
             setShape(data.shapes[0].image.secure_url);
             setFlavor(data.shapes[0].flavors[0].image.secure_url)
 
         }catch(err){
             console.log(err)
         }finally{
-            console.log('finally')
         }
     }
   return (

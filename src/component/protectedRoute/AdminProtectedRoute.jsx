@@ -3,7 +3,6 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import { UserContext } from '../context/User';
 export default function AdminProtectedRoute({ children }) {//for admin protected route
-  console.log("AdminProtectedRoute rendered");
   const { userToken } = React.useContext(UserContext);
   const location = useLocation();
 

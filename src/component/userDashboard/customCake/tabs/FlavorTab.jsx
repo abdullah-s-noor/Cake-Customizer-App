@@ -4,9 +4,7 @@ import React, { useEffect } from 'react'
 import theme from '../../../../theme'
 
 function FlavorTab({ flavors, selectedFlavor, setSelectedFlavor,handlePriceChange,navHeight,heightPreview }) {
-  useEffect(() => {
-    console.log('flavors', flavors);
-  },[]);
+
     const handleSelectedFlavor = (flavor) => {
       const newPrice = flavor?.price||0;
       const oldPrice = selectedFlavor?.price||0;
