@@ -1,5 +1,5 @@
 # Designing a Cake Selling System for Bimi Cake Shop
-🔗 Live App: bimicakes.vercel.app
+[🔗 Live App: bimicakes.vercel.app](https://bimicakes.vercel.app)
 
 An interactive web application that allows users to design and customize cakes, preview them in real-time, and place orders easily.
 Built with React.js, Material-UI, and a Node.js/Express API (MongoDB), this app provides a seamless experience for both guests and registered users.
