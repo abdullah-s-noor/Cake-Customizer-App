@@ -30,7 +30,7 @@ import Loader from "../../Loaders/Loader";
 // Home Page
 export default function Home() {
   const [favorites, setFavorites] = useState([]);
-  const { userToken, userInfo,getUserCounts } = useContext(UserContext)
+  const { userToken, userInfo, getUserCounts } = useContext(UserContext)
   const [collections, setCollections] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -39,14 +39,14 @@ export default function Home() {
       try {
         let favRes = { data: { favorite: { cakes: [] } } };
         if (userToken) {
-          try{
-            favRes=await api.get("/favorite")
-          }catch(err){
+          try {
+            favRes = await api.get("/favorite")
+          } catch (err) {
             favRes = { data: { favorite: { cakes: [] } } }
           }
         }
         const colRes = await api.get("/collections/collections-with-cakes");
-        
+
         const cakeIds = favRes.data.favorites?.cakes?.map(cake => cake._id) || [];
         setFavorites(cakeIds);
         setCollections(colRes.data.data || []);
@@ -197,6 +197,7 @@ export default function Home() {
           mb={1}
           pr={1}
         >
+{/* 
           <Button
             variant="text"
             endIcon={<ArrowOutwardIcon />}
@@ -214,6 +215,7 @@ export default function Home() {
           >
             See all
           </Button>
+*/}
         </Box>
         <Box position="relative" display="flex" alignItems="center" width="100%">
           {/* Left Arrow */}
